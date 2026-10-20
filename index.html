@@ -427,6 +427,128 @@ svg.lock{width:12px;height:12px;flex:none;color:var(--g4);vertical-align:-1px;ma
   .list .li .when{width:84px}
   .mechip .n{display:none}
 }
+
+/* ---------- Depth layer (October 2026) ----------
+   Shape: the workspace is a desk. Trays (kanban columns, the board rail) sit recessed; work items (tiles, cards, rows) sit raised on them.
+   Depth comes from shadow only (the brand book allows no gradients); colour is the charcoal ramp plus the one brand teal. */
+:root{
+  --radius:10px; --radius-s:7px;
+  --sh-rgb:27,25,26;
+  --hi:rgba(255,255,255,.75);
+  --shadow-1:0 1px 0 rgba(var(--sh-rgb),.03),0 1px 2px rgba(var(--sh-rgb),.06),0 6px 16px -8px rgba(var(--sh-rgb),.14);
+  --shadow-2:0 2px 4px rgba(var(--sh-rgb),.05),0 18px 36px -14px rgba(var(--sh-rgb),.28);
+  --shadow-in:inset 0 2px 5px rgba(var(--sh-rgb),.07),inset 0 0 0 1px rgba(var(--sh-rgb),.04);
+  --lift:none;
+  --accent:#056D69; --accent-ink:#FFFFFF; --accent-soft:color-mix(in srgb,#056D69 14%,var(--surface));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --sh-rgb:0,0,0; --hi:rgba(255,255,255,.06); --lift:none;
+    --shadow-1:0 1px 0 rgba(0,0,0,.2),0 6px 16px -8px rgba(0,0,0,.6); --shadow-2:0 2px 4px rgba(0,0,0,.3),0 20px 40px -14px rgba(0,0,0,.75); --shadow-in:inset 0 2px 6px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.03) }
+}
+:root[data-theme="dark"]{ --sh-rgb:0,0,0; --hi:rgba(255,255,255,.06); --lift:none;
+  --shadow-1:0 1px 0 rgba(0,0,0,.2),0 6px 16px -8px rgba(0,0,0,.6); --shadow-2:0 2px 4px rgba(0,0,0,.3),0 20px 40px -14px rgba(0,0,0,.75); --shadow-in:inset 0 2px 6px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.03) }
+
+.topbar{background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);box-shadow:0 1px 0 var(--g2),0 8px 20px -18px rgba(var(--sh-rgb),.4);border-bottom-color:transparent}
+.search,.iconbtn,.btn,.toolbar select,.toolbar .toggle,.tabs{border-radius:var(--radius-s)}
+.search{box-shadow:var(--shadow-in);border-color:var(--g2)}
+
+/* controls: raised, press down */
+.btn,.iconbtn{background:var(--surface);background-image:var(--lift);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);border-color:var(--g2);transition:transform .12s ease,box-shadow .12s ease,border-color .12s}
+.btn:hover,.iconbtn:hover{box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi);transform:translateY(-1px)}
+.btn:active,.iconbtn:active{transform:translateY(1px);box-shadow:var(--shadow-in)}
+.btn.primary{background:var(--fg);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 8px 18px -8px rgba(var(--sh-rgb),.55)}
+.btn.primary:hover{opacity:1}
+.tabs{box-shadow:var(--shadow-in);background:var(--g1);border-color:transparent}
+.tabs button{border-radius:5px;transition:background .15s,box-shadow .15s}
+.tabs button.on{box-shadow:0 4px 10px -4px rgba(var(--sh-rgb),.5)}
+.toolbar select,.toolbar .toggle{box-shadow:var(--shadow-1);border-color:var(--g2)}
+
+/* rail: a recessed tray, the current board lifted out of it */
+.rail .item{border-radius:var(--radius-s);transition:background .15s,box-shadow .15s,transform .15s}
+.rail .item.on{background:var(--surface);background-image:var(--lift);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi)}
+.rail .item.on::before{inset-inline-start:0;top:9px;bottom:9px;border-radius:3px}
+.rail .item:hover:not(.on){transform:translateX(0);background:var(--g1)}
+
+/* surfaces */
+.tscroll,.list,.tl-wrap,.lockpanel,.notice{border-radius:var(--radius);border-color:var(--g2);box-shadow:var(--shadow-1)}
+.matrix{border-radius:var(--radius);border-collapse:separate;border-spacing:0;overflow:hidden;box-shadow:var(--shadow-1)}
+.matrix th:first-child{border-start-start-radius:var(--radius)}
+.matrix tr.row td{transition:background .15s}
+.ttable tr.task td{transition:background .15s}
+.empty{border-radius:var(--radius);box-shadow:var(--shadow-in);border-color:transparent;background:var(--g1)}
+
+/* 3D tilt (driven by the script: --rx, --ry set on hover) */
+.tilt{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));transform-style:preserve-3d;transition:transform .18s ease,box-shadow .18s ease;will-change:transform}
+.tilt > *{position:relative;z-index:1}
+.tilt.hot{--ty:-3px;box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+
+/* overview tiles: raised blocks; the overdue tile is the one solid block, because it is the one that asks for action */
+.tiles{gap:14px}
+.tile{position:relative;border-radius:var(--radius);border-color:var(--g2);background:var(--surface);background-image:var(--lift);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);padding:16px 18px 18px}
+.tile .v{font-size:40px;letter-spacing:-.02em;text-shadow:0 1px 0 var(--hi),0 6px 14px rgba(var(--sh-rgb),.12)}
+.tile.overdue{background:var(--fg);color:var(--bg);border-color:var(--fg);box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 16px 30px -14px rgba(var(--sh-rgb),.6)}
+.tile.overdue .k{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.tile.overdue .v{text-shadow:0 6px 18px rgba(0,0,0,.35)}
+.tile.overdue .v::after{background:var(--bg)}
+
+/* progress bars: a groove with raised segments */
+.bar{height:10px;border-radius:999px;background:var(--g1);box-shadow:var(--shadow-in);gap:1px}
+.bar i{border-radius:999px;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 1px 2px rgba(var(--sh-rgb),.15)}
+.bar .b-todo{background-image:none;box-shadow:none}
+
+/* kanban: recessed trays, raised cards */
+.col{border-radius:calc(var(--radius) + 4px);background:var(--g1);box-shadow:var(--shadow-in);padding:12px;border-color:transparent}
+.col.over{box-shadow:var(--shadow-in),0 0 0 2px var(--fg)}
+.card{position:relative;border-radius:var(--radius);border-color:var(--g2);background:var(--surface);background-image:var(--lift);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);transition:transform .16s ease,box-shadow .16s ease;margin-bottom:10px}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+.card.dragging{transform:rotate(-2deg) scale(1.02);box-shadow:var(--shadow-2)}
+.col.c-stuck .card{border-inline-start:3px solid var(--fg)}
+
+/* timeline bars get the same raised finish */
+.tl .tbar{border-radius:999px;box-shadow:0 2px 6px -2px rgba(var(--sh-rgb),.35)}
+.tl .tbar.s-todo{box-shadow:none;background-image:none}
+
+/* achievements: the count stands in relief; each achievement is a raised plaque */
+.ach-hero{position:relative;padding:22px 24px;border-radius:calc(var(--radius) + 4px);background:var(--fg);color:var(--bg);box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 22px 40px -20px rgba(var(--sh-rgb),.7);margin-bottom:26px;overflow:hidden}
+.ach-hero .n{font-size:72px;letter-spacing:-.03em;text-shadow:0 10px 24px rgba(0,0,0,.4)}
+.ach-hero .l{color:color-mix(in srgb,var(--bg) 72%,transparent);font-size:16px}
+.ach-sec h3{border-bottom:0;padding-bottom:0}
+.ach-sec h3 span{font-size:16px}
+.ach-sec h3::after{content:"";flex:1;height:1px;align-self:center;background:var(--g2)}
+.ach-grid{gap:14px}
+.ach-card{position:relative;border-radius:var(--radius);border-color:var(--g2);background:var(--surface);background-image:var(--lift);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);padding:16px 18px 14px}
+.ach-card::before{content:"";position:absolute;inset-inline-start:0;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--fg);opacity:.85}
+.ach-card .t{font-size:15px}
+
+/* drawer and toasts float above the desk */
+.drawer{box-shadow:-24px 0 60px -20px rgba(var(--sh-rgb),.35)}
+#app[dir="rtl"] .drawer{box-shadow:24px 0 60px -20px rgba(var(--sh-rgb),.35)}
+.scrim{backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.toast{border-radius:var(--radius-s);box-shadow:0 14px 30px -10px rgba(var(--sh-rgb),.6)}
+.field input,.field select,.field textarea,.compose textarea,.lockpanel input,.idbar input{border-radius:var(--radius-s);border-color:var(--g2);box-shadow:var(--shadow-in)}
+
+@media (prefers-reduced-motion:reduce){ .tilt,.card,.btn,.iconbtn,.rail .item{transition:none!important} .tilt{transform:none!important} }
+@media (max-width:900px){ .rail .item{border-radius:999px} .rail .item.on{background:var(--fg);background-image:none;color:var(--bg);box-shadow:0 6px 14px -8px rgba(var(--sh-rgb),.6)} .ach-hero .n{font-size:56px} .tile .v{font-size:32px} }
+
+/* Brand accent: teal 056D69 (Brand Book COM-24 section 5), used for action and for what is achieved.
+   Urgency (stuck, overdue) stays charcoal so the accent never competes with a warning. */
+:focus-visible{outline-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 20px -10px rgba(5,109,105,.7)}
+.tabs button.on{background:var(--accent);color:var(--accent-ink);box-shadow:0 6px 12px -6px rgba(5,109,105,.7)}
+.rail .item.on::before{background:var(--accent)}
+.rail .item.on .lbl{color:var(--fg)}
+.bar .b-done{background:var(--accent)}
+.legend .l-done::before{background:var(--accent)}
+.chip.s-done{border-color:var(--accent);color:var(--accent);background-color:var(--accent-soft)}
+.col.c-done h3 b{color:var(--accent)}
+.col.c-done .card{opacity:1;border-inline-start:3px solid var(--accent)}
+.tl .tbar.s-done{background:var(--accent);color:var(--accent-ink)}
+.ach-hero{background:var(--accent);color:var(--accent-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 24px 44px -22px rgba(5,109,105,.85)}
+.ach-hero .l{color:rgba(255,255,255,.82)}
+.ach-card::before{background:var(--accent);opacity:1}
+.ach-sec h3 b{color:var(--accent)}
+.toast{background:var(--fg)}
+@media (max-width:900px){ .rail .item.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)} .rail .item.on .lbl{color:var(--accent-ink)} }
 </style>
 
 <div id="app" dir="rtl" lang="ar">
@@ -1308,5 +1430,34 @@ boot();
 })();
 </script>
 
+<script>
+/* 3D tilt for tiles and achievement plaques: follows the pointer, gently; off for touch and reduced motion */
+(function(){
+  var fine = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!fine || calm) return;
+  var SEL = '.tile, .ach-card', cur = null, raf = 0, last = null;
+  function reset(el){ el.classList.remove('hot'); el.style.removeProperty('--rx'); el.style.removeProperty('--ry'); }
+  document.addEventListener('pointerover', function(e){ var el = e.target.closest && e.target.closest(SEL); if(el && !el.classList.contains('tilt')) el.classList.add('tilt'); });
+  document.addEventListener('pointermove', function(e){
+    var el = e.target.closest && e.target.closest(SEL);
+    if(cur && cur !== el) reset(cur);
+    cur = el; if(!el) return; last = e;
+    if(raf) return;
+    raf = requestAnimationFrame(function(){
+      raf = 0; if(!cur || !last) return;
+      var r = cur.getBoundingClientRect(), x = (last.clientX - r.left) / r.width, y = (last.clientY - r.top) / r.height;
+      var max = cur.classList.contains('tile') ? 6 : 4;
+      cur.classList.add('tilt','hot');
+      cur.style.setProperty('--ry', ((x - .5) * max * 2).toFixed(2) + 'deg');
+      cur.style.setProperty('--rx', ((.5 - y) * max * 2).toFixed(2) + 'deg');
+      cur.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+      cur.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+    });
+  }, {passive:true});
+  document.addEventListener('pointerleave', function(){ if(cur){ reset(cur); cur = null; } }, true);
+  window.addEventListener('blur', function(){ if(cur){ reset(cur); cur = null; } });
+})();
+</script>
 </body>
 </html>
