@@ -449,12 +449,15 @@ const BOARDS = [
   {id:'customer-success', en:'Customer Success',            ar:'نجاح العملاء'},
   {id:'technology',       en:'Technology',                  ar:'التقنية'},
   {id:'finance',          en:'Finance',                     ar:'المالية'},
-  {id:'human-capital',    en:'Human Capital',               ar:'رأس المال البشري'},
+  {id:'human-capital',    en:'Human Capital',               ar:'رأس المال البشري', locked:true},
   {id:'grc-legal',        en:'GRC and Legal',               ar:'الحوكمة والمخاطر والالتزام والشؤون القانونية'},
   {id:'operations',       en:'Operations',                  ar:'العمليات'},
   {id:'committee',        en:'Business Committee',          ar:'لجنة الأعمال', locked:true},
 ];
 const COMMITTEE = 'committee';
+const LOCKED = BOARDS.filter(b=>b.locked).map(b=>b.id);
+const isLocked = (id)=> LOCKED.includes(id);
+const keyOf = (id)=> S.keys[id] || null;
 const STATUSES = ['todo','doing','stuck','done'];
 const PRIORITIES = ['high','med','low'];
 const FOCUS = [
@@ -486,7 +489,7 @@ const POSITIONS = [
 const T = {
 en:{
   product:'Tasks', overview:'Overview', mine:'My tasks', overdueV:'Overdue', activity:'Activity', boards:'Boards', views:'Views',
-  table:'Table', kanban:'Kanban', timeline:'Timeline', newTask:'New task', export:'Export to Excel', search:'Search tasks, owners, references',
+  table:'Table', kanban:'Kanban', timeline:'Timeline', newTask:'New task', export:'Export to Excel', import:'Import from Excel', importing:'Importing…', imported:(n,k)=> `${n} tasks imported`+(k?` · ${k} already on the board`:''), importFail:'The file could not be read. Use an Excel export with Name, Owner, Status columns.', search:'Search tasks, owners, references',
   allStatuses:'All statuses', allOwners:'All owners', allPriorities:'All priorities', hideDone:'Hide done', tasksCount:(n)=> n===1?'1 task':`${n} tasks`, updatesCount:(n)=> n===1?'1 update':`${n} updates`,
   cTask:'Task', cOwner:'Owner', cStatus:'Status', cPriority:'Priority', cStart:'Start', cDue:'Due', cRef:'Reference', cGroup:'Group', cUpdated:'Updated', cNotes:'Notes', cBoard:'Board', cDaysLate:'Days late', cFocus:'Focus area', cDecision:'Decision reference', cSitting:'Sitting date',
   st:{todo:'Not started', doing:'Working on it', stuck:'Stuck', done:'Done'}, pr:{high:'High', med:'Medium', low:'Low'},
@@ -495,16 +498,16 @@ en:{
   open:'Open', working:'Working on it', stuck:'Stuck', overdue:'Overdue', done:'Done', notStarted:'Not started', share:'Progress', recent:'Recent activity', seeAll:'See all',
   save:'Save', cancel:'Cancel', close:'Close', create:'Create task', deleteTask:'Delete task', deleteAsk:'Delete this task? This cannot be undone.', yesDelete:'Yes, delete', updates:'Updates', writeUpdate:'Write an update', post:'Post', history:'History', noUpdates:'No updates yet.',
   created:'created the task', changedStatus:(s)=>`changed status to ${s}`, changedField:(f)=>`changed ${f}`, postedUpdate:'posted an update', moved:(b)=>`moved the task to ${b}`, someone:'Someone', you:'you', viewOnly:'View only',
-  lockedTitle:'Business Committee board', lockedText:'This board is locked. Enter the password to open it.', password:'Password', unlock:'Open', lock:'Lock', setPwTitle:'Set the committee password', setPwText:'Set a password for the Business Committee board. The password also encrypts the committee tasks, so keep it safe.', confirmPw:'Confirm password', setPw:'Set password', rcTitle:'Recovery code', rcText:'Save this code somewhere safe. It is the only way to open the board again if the password is lost. It is shown once.', rcSaved:'I have saved it', changePw:'Change password', currentPw:'Current password', newPw:'New password', useRc:'Use recovery code', rcLabel:'Recovery code', wrongPw:'Wrong password.', wrongRc:'That recovery code is not right.', pwShort:'Use at least 8 characters.', pwMismatch:'The two passwords do not match.', notSetOwner:'The password has not been set yet. Ask the Human Capital Business Partner Manager.', unlockedToast:'Committee board opened', lockedToast:'Committee board locked', pwChanged:'Password changed', newPwAfterRc:'Set a new password now.', committeeNote:'Committee tasks are encrypted with this password. Status, priority and dates stay visible on the overview; titles, owners and notes do not.',
+  lockedTitle:'Locked board', lockedText:'This board is locked. Enter the password to open it.', password:'Password', unlock:'Open', lock:'Lock', setPwTitle:'Set the board password', setPwText:'Set a password for this board. The password also encrypts the board tasks, so keep it safe.', confirmPw:'Confirm password', setPw:'Set password', rcTitle:'Recovery code', rcText:'Save this code somewhere safe. It is the only way to open the board again if the password is lost. It is shown once.', rcSaved:'I have saved it', changePw:'Change password', currentPw:'Current password', newPw:'New password', useRc:'Use recovery code', rcLabel:'Recovery code', wrongPw:'Wrong password.', wrongRc:'That recovery code is not right.', pwShort:'Use at least 8 characters.', pwMismatch:'The two passwords do not match.', notSetOwner:'The password has not been set yet. Ask the Human Capital Business Partner Manager.', unlockedToast:'Board opened', lockedToast:'Board locked', pwChanged:'Password changed', newPwAfterRc:'Set a new password now.', committeeNote:'Tasks on this board are encrypted with this password. Status, priority and dates stay visible on the overview; titles, owners and notes do not.',
   nameTitle:'How should your name appear on tasks?', namePh:'Your name', posPh:'Your position (optional)', nameSave:'Save',
   signinTitle:'Sign in to open Marn Tasks', signinText:'Marn Tasks is shared by invitation. Sign in to Claude with the email that was invited. If you cannot open it, ask the Human Capital Business Partner Manager to invite your email.', connecting:'Connecting to the shared boards',
-  saved:'Saved', saveFail:'Could not save. Check your access.', deleted:'Task deleted', exported:'Workbook ready', exportFail:'Export is not available here.', lockedTask:'Committee task (locked)', noOwner:'Unassigned', other:'Other', all:'All boards', people:'People', positions:'Positions',
-  langSwitch:'العربية', today:'Today', searchResults:'Search results', signOut:'Sign out', noDue:'No date', unlockToSee:'Open the committee board to see this task.', readonlyHint:'You can view the boards. Editing needs an invitation as editor.',
+  saved:'Saved', saveFail:'Could not save. Check your access.', deleted:'Task deleted', exported:'Workbook ready', exportFail:'Export is not available here.', lockedTask:'Locked task', noOwner:'Unassigned', other:'Other', all:'All boards', people:'People', positions:'Positions',
+  langSwitch:'العربية', today:'Today', searchResults:'Search results', signOut:'Sign out', noDue:'No date', unlockToSee:'Open the locked board to see this task.', readonlyHint:'You can view the boards. Editing needs an invitation as editor.',
   tlEmpty:'Add start or due dates to see tasks on the timeline.', dateFmt:'en-GB',
 },
 ar:{
   product:'المهام', overview:'نظرة عامة', mine:'مهامي', overdueV:'المتأخرة', activity:'السجل', boards:'اللوحات', views:'العروض',
-  table:'جدول', kanban:'بطاقات', timeline:'الخط الزمني', newTask:'مهمة جديدة', export:'تصدير إلى Excel', search:'ابحث في المهام والمسؤولين والمراجع',
+  table:'جدول', kanban:'بطاقات', timeline:'الخط الزمني', newTask:'مهمة جديدة', export:'تصدير إلى Excel', import:'استيراد من Excel', importing:'جارٍ الاستيراد…', imported:(n,k)=> `تم استيراد ${n} مهمة`+(k?` · ${k} موجودة مسبقًا`:''), importFail:'تعذّرت قراءة الملف. استخدم ملف Excel يحتوي على أعمدة الاسم والمسؤول والحالة.', search:'ابحث في المهام والمسؤولين والمراجع',
   allStatuses:'كل الحالات', allOwners:'كل المسؤولين', allPriorities:'كل الأولويات', hideDone:'إخفاء المنجزة', tasksCount:(n)=> n===1?'مهمة واحدة': n===2?'مهمتان': (n>=3&&n<=10)?`${n} مهام`:`${n} مهمة`, updatesCount:(n)=> n===1?'تحديث واحد': n===2?'تحديثان': (n>=3&&n<=10)?`${n} تحديثات`:`${n} تحديثًا`,
   cTask:'المهمة', cOwner:'المسؤول', cStatus:'الحالة', cPriority:'الأولوية', cStart:'البداية', cDue:'الاستحقاق', cRef:'المرجع', cGroup:'المجموعة', cUpdated:'آخر تحديث', cNotes:'ملاحظات', cBoard:'اللوحة', cDaysLate:'أيام التأخير', cFocus:'مجال التركيز', cDecision:'مرجع القرار', cSitting:'تاريخ الجلسة',
   st:{todo:'لم تبدأ', doing:'قيد العمل', stuck:'متعثرة', done:'منجزة'}, pr:{high:'عالية', med:'متوسطة', low:'منخفضة'},
@@ -513,11 +516,11 @@ ar:{
   open:'المفتوحة', working:'قيد العمل', stuck:'المتعثرة', overdue:'المتأخرة', done:'المنجزة', notStarted:'لم تبدأ', share:'التقدم', recent:'آخر النشاط', seeAll:'عرض الكل',
   save:'حفظ', cancel:'إلغاء', close:'إغلاق', create:'إنشاء المهمة', deleteTask:'حذف المهمة', deleteAsk:'هل تريد حذف هذه المهمة؟ لا يمكن التراجع.', yesDelete:'نعم، احذف', updates:'التحديثات', writeUpdate:'اكتب تحديثًا', post:'نشر', history:'السجل', noUpdates:'لا توجد تحديثات بعد.',
   created:'أنشأ المهمة', changedStatus:(s)=>`غيّر الحالة إلى «${s}»`, changedField:(f)=>`عدّل ${f}`, postedUpdate:'نشر تحديثًا', moved:(b)=>`نقل المهمة إلى ${b}`, someone:'أحد الأعضاء', you:'أنت', viewOnly:'عرض فقط',
-  lockedTitle:'لوحة لجنة الأعمال', lockedText:'هذه اللوحة مقفلة. أدخل كلمة المرور لفتحها.', password:'كلمة المرور', unlock:'فتح', lock:'قفل', setPwTitle:'تعيين كلمة مرور اللجنة', setPwText:'عيّن كلمة مرور للوحة لجنة الأعمال. تُشفَّر مهام اللجنة بهذه الكلمة، فاحتفظ بها في مكان آمن.', confirmPw:'تأكيد كلمة المرور', setPw:'تعيين كلمة المرور', rcTitle:'رمز الاسترداد', rcText:'احفظ هذا الرمز في مكان آمن؛ فهو الطريقة الوحيدة لفتح اللوحة إذا فُقدت كلمة المرور. يظهر مرة واحدة فقط.', rcSaved:'حفظت الرمز', changePw:'تغيير كلمة المرور', currentPw:'كلمة المرور الحالية', newPw:'كلمة المرور الجديدة', useRc:'استخدام رمز الاسترداد', rcLabel:'رمز الاسترداد', wrongPw:'كلمة المرور غير صحيحة.', wrongRc:'رمز الاسترداد غير صحيح.', pwShort:'استخدم 8 أحرف على الأقل.', pwMismatch:'كلمتا المرور غير متطابقتين.', notSetOwner:'لم تُعيَّن كلمة المرور بعد. اطلبها من مدير شركاء الأعمال لرأس المال البشري.', unlockedToast:'فُتحت لوحة اللجنة', lockedToast:'أُقفلت لوحة اللجنة', pwChanged:'تم تغيير كلمة المرور', newPwAfterRc:'عيّن كلمة مرور جديدة الآن.', committeeNote:'مهام اللجنة مشفّرة بهذه الكلمة. تبقى الحالة والأولوية والتواريخ ظاهرة في النظرة العامة، أما العناوين والمسؤولون والملاحظات فلا.',
+  lockedTitle:'لوحة مقفلة', lockedText:'هذه اللوحة مقفلة. أدخل كلمة المرور لفتحها.', password:'كلمة المرور', unlock:'فتح', lock:'قفل', setPwTitle:'تعيين كلمة مرور اللوحة', setPwText:'عيّن كلمة مرور لهذه اللوحة. تُشفَّر مهام اللوحة بهذه الكلمة، فاحتفظ بها في مكان آمن.', confirmPw:'تأكيد كلمة المرور', setPw:'تعيين كلمة المرور', rcTitle:'رمز الاسترداد', rcText:'احفظ هذا الرمز في مكان آمن؛ فهو الطريقة الوحيدة لفتح اللوحة إذا فُقدت كلمة المرور. يظهر مرة واحدة فقط.', rcSaved:'حفظت الرمز', changePw:'تغيير كلمة المرور', currentPw:'كلمة المرور الحالية', newPw:'كلمة المرور الجديدة', useRc:'استخدام رمز الاسترداد', rcLabel:'رمز الاسترداد', wrongPw:'كلمة المرور غير صحيحة.', wrongRc:'رمز الاسترداد غير صحيح.', pwShort:'استخدم 8 أحرف على الأقل.', pwMismatch:'كلمتا المرور غير متطابقتين.', notSetOwner:'لم تُعيَّن كلمة المرور بعد. اطلبها من مدير شركاء الأعمال لرأس المال البشري.', unlockedToast:'فُتحت اللوحة', lockedToast:'أُقفلت اللوحة', pwChanged:'تم تغيير كلمة المرور', newPwAfterRc:'عيّن كلمة مرور جديدة الآن.', committeeNote:'مهام هذه اللوحة مشفّرة بهذه الكلمة. تبقى الحالة والأولوية والتواريخ ظاهرة في النظرة العامة، أما العناوين والمسؤولون والملاحظات فلا.',
   nameTitle:'كيف يظهر اسمك على المهام؟', namePh:'اسمك', posPh:'منصبك (اختياري)', nameSave:'حفظ',
   signinTitle:'سجّل الدخول لفتح مهام مرن', signinText:'تُشارك «مهام مرن» بالدعوة. سجّل الدخول إلى Claude بالبريد الذي دُعي. إذا تعذّر عليك فتحها فاطلب من مدير شركاء الأعمال لرأس المال البشري دعوة بريدك.', connecting:'جارٍ الاتصال باللوحات المشتركة',
-  saved:'تم الحفظ', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', deleted:'حُذفت المهمة', exported:'الملف جاهز', exportFail:'التصدير غير متاح هنا.', lockedTask:'مهمة لجنة (مقفلة)', noOwner:'غير مسندة', other:'أخرى', all:'كل اللوحات', people:'الأشخاص', positions:'المناصب',
-  langSwitch:'English', today:'اليوم', searchResults:'نتائج البحث', signOut:'تسجيل الخروج', noDue:'بلا تاريخ', unlockToSee:'افتح لوحة اللجنة لعرض هذه المهمة.', readonlyHint:'يمكنك عرض اللوحات. التعديل يحتاج دعوة بصفة محرر.',
+  saved:'تم الحفظ', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', deleted:'حُذفت المهمة', exported:'الملف جاهز', exportFail:'التصدير غير متاح هنا.', lockedTask:'مهمة مقفلة', noOwner:'غير مسندة', other:'أخرى', all:'كل اللوحات', people:'الأشخاص', positions:'المناصب',
+  langSwitch:'English', today:'اليوم', searchResults:'نتائج البحث', signOut:'تسجيل الخروج', noDue:'بلا تاريخ', unlockToSee:'افتح اللوحة المقفلة لعرض هذه المهمة.', readonlyHint:'يمكنك عرض اللوحات. التعديل يحتاج دعوة بصفة محرر.',
   tlEmpty:'أضف تواريخ البداية أو الاستحقاق لعرض المهام على الخط الزمني.', dateFmt:'ar-SA-u-ca-gregory-nu-latn',
 }};
 function arDays(n){ if(n===1) return 'يوم واحد'; if(n===2) return 'يومين'; if(n>=3&&n<=10) return `${n} أيام`; return `${n} يومًا`; }
@@ -526,7 +529,7 @@ function arBy(n){ if(n===1) return 'بيوم واحد'; if(n===2) return 'بيو
 /* ---------- state ---------- */
 const S = {
   lang:'ar', view:'overview', board:null, boardView:'table',
-  tasks:new Map(), members:new Map(), settings:null, settingsLoaded:false, key:null,
+  tasks:new Map(), members:new Map(), lockSettings:{}, lockLoaded:{}, keys:{},
   me:{id:null,name:'',avatarUrl:'',isOwner:false,canEdit:false,canWrite:null},
   profiles:{}, db:null, user:null, downloads:null, connecting:true, dbMissing:false,
   filters:{q:'',status:'',owner:'',priority:'',hideDone:false}, sort:{by:'due',dir:'asc'},
@@ -588,25 +591,26 @@ const rnd = (n)=> crypto.getRandomValues(new Uint8Array(n));
 async function kdf(secret, salt){ const km=await crypto.subtle.importKey('raw', enc8.encode(secret.normalize('NFKC')), 'PBKDF2', false, ['deriveKey']); return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:200000, hash:'SHA-256'}, km, {name:'AES-GCM', length:256}, false, ['wrapKey','unwrapKey']); }
 async function wrapWith(secret, dataKey){ const salt=rnd(16), iv=rnd(12); const wk=await kdf(secret, salt); const wrapped=await crypto.subtle.wrapKey('raw', dataKey, wk, {name:'AES-GCM', iv}); return {salt:b64(salt), iv:b64(iv), wrapped:b64(wrapped)}; }
 async function unwrapWith(secret, w){ const wk=await kdf(secret, unb64(w.salt)); return crypto.subtle.unwrapKey('raw', unb64(w.wrapped), wk, {name:'AES-GCM', iv:unb64(w.iv)}, {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']); }
-async function encryptObj(obj){ const iv=rnd(12); const ct=await crypto.subtle.encrypt({name:'AES-GCM', iv}, S.key, enc8.encode(JSON.stringify(obj))); const out=new Uint8Array(12+ct.byteLength); out.set(iv,0); out.set(new Uint8Array(ct),12); return b64(out); }
-async function decryptObj(s){ const all=unb64(s); const pt=await crypto.subtle.decrypt({name:'AES-GCM', iv:all.slice(0,12)}, S.key, all.slice(12)); return JSON.parse(dec8.decode(pt)); }
+async function encryptObj(obj, key){ const iv=rnd(12); const ct=await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc8.encode(JSON.stringify(obj))); const out=new Uint8Array(12+ct.byteLength); out.set(iv,0); out.set(new Uint8Array(ct),12); return b64(out); }
+async function decryptObj(s, key){ const all=unb64(s); const pt=await crypto.subtle.decrypt({name:'AES-GCM', iv:all.slice(0,12)}, key, all.slice(12)); return JSON.parse(dec8.decode(pt)); }
 function makeRecoveryCode(){ const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; const r=rnd(16); let s=''; for(let i=0;i<16;i++){ s+=a[r[i]%a.length]; if(i%4===3&&i<15) s+='-'; } return 'MRN-'+s; }
-async function rememberKey(){ try{ const raw=await crypto.subtle.exportKey('raw', S.key); sessionStorage.setItem('marn.ck', b64(raw)); }catch(e){} }
-async function restoreKey(){ try{ const s=sessionStorage.getItem('marn.ck'); if(!s) return; S.key=await crypto.subtle.importKey('raw', unb64(s), {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']); }catch(e){ S.key=null; } }
-function forgetKey(){ try{ sessionStorage.removeItem('marn.ck'); }catch(e){} }
-const ENC_FIELDS = ['title','owner','ownerId','ref','group','notes','updates','history','focus','decision','sitting','lastChange'];
+async function rememberKey(b){ try{ const raw=await crypto.subtle.exportKey('raw', S.keys[b]); sessionStorage.setItem('marn.ck.'+b, b64(raw)); }catch(e){} }
+async function restoreKey(){ for(const b of LOCKED){ try{ const s=sessionStorage.getItem('marn.ck.'+b); if(!s) continue; S.keys[b]=await crypto.subtle.importKey('raw', unb64(s), {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']); }catch(e){ delete S.keys[b]; } } }
+function forgetKey(b){ try{ sessionStorage.removeItem('marn.ck.'+b); }catch(e){} }
+const ENC_FIELDS = ['title','owner','ref','group','notes','updates','history','focus','decision','sitting','lastChange'];
 
 async function toStored(task){
   const copy={...task}; delete copy.id; delete copy.locked;
-  if(task.board!==COMMITTEE || !S.key){ delete copy.enc; return copy; }
+  if(!isLocked(task.board)){ delete copy.enc; return copy; }
+  const key=keyOf(task.board); if(!key) throw new Error('board-locked');
   const secret={}; for(const f of ENC_FIELDS){ if(copy[f]!==undefined){ secret[f]=copy[f]; delete copy[f]; } }
-  copy.enc = await encryptObj(secret);
+  copy.enc = await encryptObj(secret, key);
   return copy;
 }
 async function fromStored(id, data){
   const tk={id, ...data};
   if(tk.enc){
-    if(S.key){ try{ Object.assign(tk, await decryptObj(tk.enc)); delete tk.enc; }catch(e){ tk.locked=true; } }
+    const key=keyOf(tk.board); if(key){ try{ Object.assign(tk, await decryptObj(tk.enc, key)); delete tk.enc; }catch(e){ tk.locked=true; } }
     else tk.locked=true;
   }
   tk.updates = Array.isArray(tk.updates)? tk.updates: []; tk.history = Array.isArray(tk.history)? tk.history: [];
@@ -630,7 +634,7 @@ async function rebuildTasks(){
 function subscribeAll(){
   const db=S.db;
   db.collection('tasks').onSnapshot(snap=>{ ingestTasks(snap); }, err=>{ console.warn('tasks', err); S.connecting=false; S.dbMissing = err && err.code==='not_granted'; render(); });
-  db.doc('settings/'+COMMITTEE).onSnapshot(snap=>{ S.settings = snap.exists? snap.data(): null; S.settingsLoaded=true; render(); }, err=>console.warn('settings', err));
+  for(const b of LOCKED) db.doc('settings/'+b).onSnapshot(snap=>{ S.lockSettings[b] = snap.exists? snap.data(): null; S.lockLoaded[b]=true; render(); }, err=>console.warn('settings', err));
   db.collection('members').onSnapshot(snap=>{ S.members=new Map(); snap.docs.forEach(d=>{ if(d.exists) S.members.set(d.id, d.data()); }); render(); }, err=>console.warn('members', err));
 }
 
@@ -645,7 +649,7 @@ async function saveTask(task, histEntry, toastKey){
   if(!tk.createdAt){ tk.createdAt=now; tk.createdBy=S.me.id||null; }
   const id = tk.id || S.db.collection('tasks').doc().id;
   tk.id=id;
-  const stored = await toStored(tk);
+  let stored; try{ stored = await toStored(tk); }catch(e){ console.warn(e); toast(t('saveFail'), true); return null; }
   // optimistic local state
   S.tasks.set(id, tk); rawDocs.set(id, stored);
   try{
@@ -675,29 +679,33 @@ async function doSetPassword(pw, pw2){
   const rc = makeRecoveryCode();
   const [wp, wr] = await Promise.all([wrapWith(pw, dataKey), wrapWith(rc, dataKey)]);
   const doc={v:1, pw:wp, rc:wr, setAt:new Date().toISOString(), setBy:S.me.id||null};
-  try{ await S.db.doc('settings/'+COMMITTEE).set(doc); }catch(e){ S.lockUI.err=t('saveFail'); return renderMain(true); }
-  S.settings=doc; S.key=dataKey; await rememberKey(); S.lockUI={mode:'rc', err:'', rc};
+  const b=S.board; if(!isLocked(b)) return;
+  try{ await S.db.doc('settings/'+b).set(doc); }catch(e){ S.lockUI.err=t('saveFail'); return renderMain(true); }
+  S.lockSettings[b]=doc; S.keys[b]=dataKey; await rememberKey(b); S.lockUI={mode:'rc', err:'', rc};
   await rebuildTasks(); renderMain(true);
 }
 async function doUnlock(pw){
-  if(!S.settings){ S.lockUI.err=t('notSetOwner'); return renderMain(true); }
-  try{ S.key = await unwrapWith(pw, S.settings.pw); }catch(e){ S.key=null; S.lockUI.err=t('wrongPw'); return renderMain(true); }
-  await rememberKey(); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildTasks(); toast(t('unlockedToast')); render();
+  const b=S.board, st=S.lockSettings[b];
+  if(!st){ S.lockUI.err=t('notSetOwner'); return renderMain(true); }
+  try{ S.keys[b] = await unwrapWith(pw, st.pw); }catch(e){ delete S.keys[b]; S.lockUI.err=t('wrongPw'); return renderMain(true); }
+  await rememberKey(b); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildTasks(); toast(t('unlockedToast')); render();
 }
 async function doRecover(code){
-  try{ S.key = await unwrapWith(code.trim().toUpperCase(), S.settings.rc); }catch(e){ S.key=null; S.lockUI.err=t('wrongRc'); return renderMain(true); }
-  await rememberKey(); S.lockUI={mode:'change', err:'', rc:null, afterRc:true}; await rebuildTasks(); renderMain(true);
+  const b=S.board, st=S.lockSettings[b]; if(!st) return;
+  try{ S.keys[b] = await unwrapWith(code.trim().toUpperCase(), st.rc); }catch(e){ delete S.keys[b]; S.lockUI.err=t('wrongRc'); return renderMain(true); }
+  await rememberKey(b); S.lockUI={mode:'change', err:'', rc:null, afterRc:true}; await rebuildTasks(); renderMain(true);
 }
 async function doChangePassword(cur, nw, nw2){
   if(nw.length<8){ S.lockUI.err=t('pwShort'); return renderMain(true); }
   if(nw!==nw2){ S.lockUI.err=t('pwMismatch'); return renderMain(true); }
-  if(!S.lockUI.afterRc){ try{ await unwrapWith(cur, S.settings.pw); }catch(e){ S.lockUI.err=t('wrongPw'); return renderMain(true); } }
-  const wp = await wrapWith(nw, S.key);
-  const doc={...S.settings, pw:wp, changedAt:new Date().toISOString(), changedBy:S.me.id||null};
-  try{ await S.db.doc('settings/'+COMMITTEE).set(doc); }catch(e){ S.lockUI.err=t('saveFail'); return renderMain(true); }
-  S.settings=doc; S.lockUI={mode:'enter',err:'',rc:null}; toast(t('pwChanged')); render();
+  const b=S.board, st=S.lockSettings[b]; if(!st || !keyOf(b)) return;
+  if(!S.lockUI.afterRc){ try{ await unwrapWith(cur, st.pw); }catch(e){ S.lockUI.err=t('wrongPw'); return renderMain(true); } }
+  const wp = await wrapWith(nw, keyOf(b));
+  const doc={...st, pw:wp, changedAt:new Date().toISOString(), changedBy:S.me.id||null};
+  try{ await S.db.doc('settings/'+b).set(doc); }catch(e){ S.lockUI.err=t('saveFail'); return renderMain(true); }
+  S.lockSettings[b]=doc; S.lockUI={mode:'enter',err:'',rc:null}; toast(t('pwChanged')); render();
 }
-async function doLock(){ S.key=null; forgetKey(); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildTasks(); toast(t('lockedToast')); if(S.drawer && S.tasks.get(S.drawer.id)?.locked) S.drawer=null; render(); }
+async function doLock(){ const b=S.board; delete S.keys[b]; forgetKey(b); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildTasks(); toast(t('lockedToast')); if(S.drawer && S.tasks.get(S.drawer.id)?.locked) S.drawer=null; render(); }
 
 /* ---------- filtering and sorting ---------- */
 function boardTasks(boardId){ return [...S.tasks.values()].filter(x=>x.board===boardId); }
@@ -775,8 +783,8 @@ function dueHTML(task){ if(!task.due) return `<span class="muted">${esc(t('noDue
 const titleOf = (task)=> task.locked ? t('lockedTask') : (task.title || '…');
 
 function renderMain(force){
-  const showLock = S.view==='board' && S.board===COMMITTEE && (!S.key || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
-  const key = [S.view,S.board,S.boardView,S.lang,S.key?1:0,S.settingsLoaded?1:0,S.connecting?1:0,S.dbMissing?1:0,S.me.canWrite,showLock?S.lockUI.mode:''].join('|');
+  const showLock = S.view==='board' && isLocked(S.board) && (!keyOf(S.board) || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
+  const key = [S.view,S.board,S.boardView,S.lang,keyOf(S.board)?1:0,S.lockLoaded[S.board]?1:0,S.connecting?1:0,S.dbMissing?1:0,S.me.canWrite,showLock?S.lockUI.mode:''].join('|');
   const main=$('#main');
   if(S.dbMissing || (!S.db && !S.connecting)){
     main.innerHTML = `<div class="notice"><h2>${esc(t('signinTitle'))}</h2><p>${esc(t('signinText'))}</p></div>`; S.mainKey=key; return;
@@ -791,6 +799,7 @@ function headHTML(){
   const ro = !canWrite();
   const newBtn = ro? '' : `<button class="btn primary" data-action="new" type="button">+ ${esc(t('newTask'))}</button>`;
   const exportBtn = S.downloads? `<button class="btn" data-action="export" type="button">${esc(t('export'))}</button>` : '';
+  const importBtn = (!ro && S.view==='board' && S.me.isOwner && (!isLocked(S.board) || keyOf(S.board)))? `<button class="btn" data-action="import" type="button">${esc(t('import'))}</button><input type="file" id="importfile" accept=".xlsx,.xls,.csv" hidden>` : '';
   if(S.view==='board'){
     const b=boardOf(S.board); const list=boardTasks(S.board); const open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length;
     title=b[L()]; sub=`${t('tasksCount')(list.length)} · ${t('open')} ${open}${od?` · ${t('overdue')} ${od}`:''}`;
@@ -802,14 +811,14 @@ function headHTML(){
       <select id="flt-owner" data-action="filter" data-f="owner"><option value="">${esc(t('allOwners'))}</option>${owners.map(o=>`<option value="${esc(o)}" ${S.filters.owner===o?'selected':''}>${esc(o)}</option>`).join('')}</select>
       <label class="toggle"><input type="checkbox" id="flt-hidedone" data-action="filter" data-f="hideDone" ${S.filters.hideDone?'checked':''}>${esc(t('hideDone'))}</label>
       <span class="spacer"></span><span class="count" id="count"></span>
-      ${S.board===COMMITTEE && S.key? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>${S.me.isOwner?`<button class="btn" data-action="changepw" type="button">${esc(t('changePw'))}</button>`:''}`:''}
+      ${isLocked(S.board) && keyOf(S.board)? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>${S.me.isOwner?`<button class="btn" data-action="changepw" type="button">${esc(t('changePw'))}</button>`:''}`:''}
     </div>`;
   } else if(S.view==='mine'){ title=t('mine'); }
   else if(S.view==='overdue'){ title=t('overdueV'); }
   else if(S.view==='activity'){ title=t('activity'); }
   else if(S.view==='search'){ title=t('searchResults'); sub=S.filters.q; }
   else { title=t('overview'); const all=[...S.tasks.values()]; sub=`${t('tasksCount')(all.length)} · ${t('open')} ${all.filter(x=>x.status!=='done').length}`; }
-  return `<div class="vhead"><h1>${esc(title)}</h1>${sub?`<span class="sub num">${esc(sub)}</span>`:''}<div class="actions">${tabs}${exportBtn}${newBtn}</div></div>${tools}`;
+  return `<div class="vhead"><h1>${esc(title)}</h1>${sub?`<span class="sub num">${esc(sub)}</span>`:''}<div class="actions">${tabs}${importBtn}${exportBtn}${newBtn}</div></div>${tools}`;
 }
 function renderBody(){
   const body=$('#body'); if(!body) return;
@@ -909,7 +918,7 @@ function timelineHTML(list){
 }
 function listViewHTML(kind){
   let items;
-  if(kind==='mine'){ const nm=(myName()||'').trim().toLowerCase(); items=[...S.tasks.values()].filter(x=> !x.locked && x.status!=='done' && ((S.me.id && x.ownerId===S.me.id) || (nm && (x.owner||'').trim().toLowerCase()===nm))); }
+  if(kind==='mine'){ const nm=(myName()||'').trim().toLowerCase(); items=[...S.tasks.values()].filter(x=> !x.locked && x.status!=='done' && ((S.me.id && x.ownerId===S.me.id) || (nm && (x.owner||'').split(',').map(v=>v.trim().toLowerCase()).includes(nm)))); }
   else if(kind==='search') items=[...S.tasks.values()].filter(x=>!x.locked);
   else items=[...S.tasks.values()].filter(isOverdue);
   items=applyFilters(items);
@@ -941,26 +950,27 @@ function activityHTML(limit){
 }
 function lockPanelHTML(){
   const u=S.lockUI; const err=u.err?`<div class="err">${esc(u.err)}</div>`:'';
+  const b=S.board, st=S.lockSettings[b];
   let inner='';
-  if(!S.settingsLoaded){ inner=`<p>${esc(t('connecting'))}…</p>`; }
+  if(!S.lockLoaded[b]){ inner=`<p>${esc(t('connecting'))}…</p>`; }
   else if(u.mode==='rc'){
     inner=`<h2>${esc(t('rcTitle'))}</h2><p>${esc(t('rcText'))}</p><div class="rc">${esc(u.rc)}</div><div class="f"><button class="btn primary" data-action="rc-done" type="button">${esc(t('rcSaved'))}</button></div>`;
-  } else if(!S.settings){
+  } else if(!st){
     inner = S.me.isOwner
       ? `<h2>${LOCK_SVG} ${esc(t('setPwTitle'))}</h2><p>${esc(t('setPwText'))}</p><form data-action="setpw"><div class="f"><input type="password" id="pw1" placeholder="${esc(t('password'))}" autocomplete="new-password" required><input type="password" id="pw2" placeholder="${esc(t('confirmPw'))}" autocomplete="new-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('setPw'))}</button></div></form><p class="small">${esc(t('committeeNote'))}</p>`
-      : `<h2>${LOCK_SVG} ${esc(t('lockedTitle'))}</h2><p>${esc(t('notSetOwner'))}</p>`;
+      : `<h2>${LOCK_SVG} ${esc(boardName(b))}</h2><p>${esc(t('notSetOwner'))}</p>`;
   } else if(u.mode==='change'){
     inner=`<h2>${esc(t('changePw'))}</h2>${u.afterRc?`<p>${esc(t('newPwAfterRc'))}</p>`:''}<form data-action="changepw-submit"><div class="f">${u.afterRc?'':`<input type="password" id="pwc" placeholder="${esc(t('currentPw'))}" autocomplete="current-password" required>`}<input type="password" id="pwn" placeholder="${esc(t('newPw'))}" autocomplete="new-password" required><input type="password" id="pwn2" placeholder="${esc(t('confirmPw'))}" autocomplete="new-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('save'))}</button>${u.afterRc?'':`<button class="btn" type="button" data-action="lock-cancel">${esc(t('cancel'))}</button>`}</div></form>`;
   } else if(u.mode==='recover'){
     inner=`<h2>${esc(t('useRc'))}</h2><form data-action="recover"><div class="f"><input id="rcin" placeholder="MRN-XXXX-XXXX-XXXX-XXXX" style="direction:ltr" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('unlock'))}</button><button class="btn" type="button" data-action="lock-cancel">${esc(t('cancel'))}</button></div></form>`;
   } else {
-    inner=`<h2>${LOCK_SVG} ${esc(t('lockedTitle'))}</h2><p>${esc(t('lockedText'))}</p><form data-action="unlock"><div class="f"><input type="password" id="pwin" placeholder="${esc(t('password'))}" autocomplete="current-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('unlock'))}</button>${S.me.isOwner?`<button class="linkbtn" type="button" data-action="lock-recover">${esc(t('useRc'))}</button>`:''}</div></form>`;
+    inner=`<h2>${LOCK_SVG} ${esc(boardName(b))}</h2><p>${esc(t('lockedText'))}</p><form data-action="unlock"><div class="f"><input type="password" id="pwin" placeholder="${esc(t('password'))}" autocomplete="current-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('unlock'))}</button>${S.me.isOwner?`<button class="linkbtn" type="button" data-action="lock-recover">${esc(t('useRc'))}</button>`:''}</div></form>`;
   }
-  return `<div class="vhead"><h1>${esc(boardName(COMMITTEE))}</h1></div><div class="lockpanel">${inner}</div>`;
+  return `<div class="vhead"><h1>${esc(boardName(b))}</h1></div><div class="lockpanel">${inner}</div>`;
 }
 
 /* ---------- drawer ---------- */
-function openTask(id){ const x=S.tasks.get(id); if(!x) return; if(x.locked){ S.view='board'; S.board=COMMITTEE; S.mainKey=''; render(); return; } S.drawer={mode:'edit', id, draft:{...x}, confirm:false}; renderDrawer(); }
+function openTask(id){ const x=S.tasks.get(id); if(!x) return; if(x.locked){ S.view='board'; S.board=x.board; S.mainKey=''; render(); return; } S.drawer={mode:'edit', id, draft:{...x}, confirm:false}; renderDrawer(); }
 function newTask(board){ S.drawer={mode:'new', id:null, draft:blankTask(board||(S.view==='board'?S.board:BOARDS[0].id)), confirm:false}; renderDrawer(); setTimeout(()=>$('#f-title')?.focus(),30); }
 function closeDrawer(){ S.drawer=null; renderDrawer(); }
 function field(id,label,inner){ return `<div class="field" id="w-${id}"><label for="${id}">${esc(label)}</label>${inner}</div>`; }
@@ -969,7 +979,7 @@ function renderDrawer(){
   if(!d){ host.innerHTML=''; return; }
   const x=d.draft, ro=!canWrite(), dis=ro?'disabled':'';
   const isC = x.board===COMMITTEE;
-  const boardOpts = BOARDS.filter(b=> !b.locked || S.key).map(b=>`<option value="${b.id}" ${b.id===x.board?'selected':''}>${esc(b[L()])}</option>`).join('');
+  const boardOpts = BOARDS.filter(b=> !b.locked || keyOf(b.id)).map(b=>`<option value="${b.id}" ${b.id===x.board?'selected':''}>${esc(b[L()])}</option>`).join('');
   const people=[...new Map([...S.members.entries()].map(([id,m])=>[id,m.name]).filter(([id,n])=>n)).entries()];
   const groups=[...new Set(boardTasks(x.board).map(q=>q.group).filter(Boolean))];
   let h=`<div class="scrim" data-action="close"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="${esc(t('cTask'))}">
@@ -993,7 +1003,7 @@ function renderDrawer(){
   if(d.mode==='edit'){
     h+=`<div class="dsec"><h3>${esc(t('updates'))} (${x.updates.length})</h3>`;
     if(!x.updates.length) h+=`<p class="muted small">${esc(t('noUpdates'))}</p>`;
-    for(const u of [...x.updates].reverse()){ const who=u.by===S.me.id?t('you'):(nameOf(u.by)||t('someone')); h+=`<div class="upd"><div class="by">${esc(who)} · ${esc(fmtDateTime(u.at))}</div><div class="tx">${esc(u.text)}</div></div>`; }
+    for(const u of [...x.updates].reverse()){ const who=(u.by&&u.by===S.me.id)?t('you'):(nameOf(u.by)||u.name||t('someone')); h+=`<div class="upd"><div class="by">${esc(who)} · ${esc(fmtDateTime(u.at))}</div><div class="tx">${esc(u.text)}</div></div>`; }
     if(!ro) h+=`<div class="compose"><textarea id="f-update" placeholder="${esc(t('writeUpdate'))}" maxlength="2000"></textarea><button class="btn" data-action="post" type="button">${esc(t('post'))}</button></div>`;
     h+=`</div><div class="dsec"><h3>${esc(t('history'))}</h3><ul class="hist">`;
     const hs=[...x.history].reverse().slice(0,30);
@@ -1050,6 +1060,85 @@ async function exportXlsx(){
   try{ await S.downloads.save({filename:`Marn_Tasks_${date}.xlsx`, data:new Blob([out])}); toast(t('exported')); }catch(e){ if(e&&e.code!=='declined') toast(t('exportFail'), true); }
 }
 
+
+/* ---------- import (Excel, including monday.com board exports) ---------- */
+function xlDate(v){
+  if(v===null||v===undefined||v==='') return '';
+  if(typeof v==='number' && typeof XLSX!=='undefined'){ const d=XLSX.SSF.parse_date_code(v); if(d) return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`; }
+  const s=String(v).trim(); let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if(m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return '';
+}
+const MONTHS={january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12};
+function xlStamp(v){
+  if(typeof v==='number' && typeof XLSX!=='undefined'){ const d=XLSX.SSF.parse_date_code(v); if(d) return new Date(d.y,d.m-1,d.d,d.H||0,d.M||0,Math.floor(d.S||0)).toISOString(); }
+  const s=String(v||'').trim(); const m=s.match(/^(\d{1,2})\/([A-Za-z]+)\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
+  if(m){ let h=+m[4]; const ap=(m[7]||'').toUpperCase(); if(ap==='PM'&&h<12) h+=12; if(ap==='AM'&&h===12) h=0; const mo=MONTHS[m[2].toLowerCase()]; if(mo) return new Date(+m[3],mo-1,+m[1],h,+m[5],+(m[6]||0)).toISOString(); }
+  const d=new Date(s); return isNaN(d)? new Date().toISOString() : d.toISOString();
+}
+const nrm=(v)=> String(v??'').trim().toLowerCase();
+function mapStatus(v){ const s=nrm(v); if(!s) return 'todo';
+  for(const k of STATUSES){ if(nrm(T.en.st[k])===s || nrm(T.ar.st[k])===s || k===s) return k; }
+  if(/done|complete|منجز/.test(s)) return 'done'; if(/stuck|block|متعثر/.test(s)) return 'stuck'; if(/working|progress|doing|قيد/.test(s)) return 'doing'; return 'todo'; }
+function mapPriority(v){ const s=nrm(v); if(!s) return 'med'; if(/critical|high|urgent|عالي|حرج/.test(s)) return 'high'; if(/low|منخفض/.test(s)) return 'low'; return 'med'; }
+function findMember(name){ const n=nrm(String(name||'').split(',')[0]); if(!n) return null; for(const [id,m] of S.members.entries()){ if(nrm(m.name)===n) return id; } return null; }
+function parseWorkbook(wb){
+  const sheets=wb.SheetNames.map(n=>XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:null,raw:true,blankrows:false}));
+  // updates: a sheet whose header holds Item ID and Update Content
+  const upd=new Map();
+  for(const rows of sheets){
+    const hi=rows.findIndex(r=>r && r.some(c=>nrm(c)==='item id') && r.some(c=>nrm(c)==='update content')); if(hi<0) continue;
+    const hdr=rows[hi].map(nrm); const ci=(k)=>hdr.indexOf(k);
+    const cId=ci('item id'), cUser=ci('user'), cAt=ci('created at'), cTx=ci('update content');
+    for(const r of rows.slice(hi+1)){ if(!r) continue; const id=String(r[cId]??'').trim(), tx=String(r[cTx]??'').trim(); if(!id||!tx) continue;
+      if(!upd.has(id)) upd.set(id,[]); upd.get(id).push({at:xlStamp(r[cAt]), by:findMember(r[cUser]), name:String(r[cUser]||'').trim(), text:tx.slice(0,2000)}); }
+  }
+  const tasks=[];
+  for(const rows of sheets){
+    if(rows.some(r=>r && r.some(c=>nrm(c)==='update content'))) continue;
+    let col=null, group='', lastSingle='', sub=null, parent=null;
+    for(const r of rows){
+      if(!r) continue;
+      const cells=r.map(c=> c===null? '' : c); const filled=cells.filter(c=>String(c).trim()!=='').length;
+      const first=String(cells[0]??'').trim();
+      if(nrm(first)==='name' && cells.some(c=>['owner','status','priority'].includes(nrm(c)))){
+        const h=cells.map(nrm); col={name:0, sub:h.indexOf('subitems'), owner:h.indexOf('owner'), pri:h.indexOf('priority'), st:h.indexOf('status'), due:h.findIndex(x=>x==='due date'||x==='date'||x==='due'), start:h.findIndex(x=>x==='start'||x==='start date'), id:h.findIndex(x=>x.startsWith('item id')), notes:h.findIndex(x=>x==='notes'), ref:h.findIndex(x=>x==='ref'||x==='reference')};
+        group=lastSingle; sub=null; continue; }
+      if(nrm(first)==='subitems' && cells.some(c=>nrm(c)==='name')){ const h=cells.map(nrm); sub={name:h.indexOf('name'), owner:h.indexOf('owner'), st:h.indexOf('status'), date:h.indexOf('date')}; continue; }
+      if(!first){ if(sub && parent){ const nm=String(cells[sub.name]||'').trim(); if(nm){ const bits=[sub.st>=0&&cells[sub.st]?String(cells[sub.st]):'', sub.owner>=0&&cells[sub.owner]?String(cells[sub.owner]):'', sub.date>=0?xlDate(cells[sub.date]):''].filter(Boolean); parent.subs.push('• '+nm+(bits.length?` (${bits.join(', ')})`:'')); } } continue; }
+      sub=null;
+      if(filled===1){ lastSingle=first; continue; }
+      if(!col) continue;
+      const g=(i)=> i>=0? cells[i] : '';
+      const srcId=String(g(col.id)||'').trim();
+      parent={title:first.slice(0,200), owner:String(g(col.owner)||'').trim().slice(0,80), status:mapStatus(g(col.st)), priority:mapPriority(g(col.pri)), critical:/critical/i.test(String(g(col.pri)||'')),
+        due:xlDate(g(col.due)), start:xlDate(g(col.start)), group:group.slice(0,60), ref:String(g(col.ref)||'').trim().slice(0,80), notes:String(g(col.notes)||'').trim(), srcId, subs:[]};
+      tasks.push(parent);
+    }
+  }
+  return {tasks, upd};
+}
+async function importFile(file){
+  const board=S.board;
+  if(S.view!=='board' || !board || (isLocked(board) && !keyOf(board))) return;
+  if(typeof XLSX==='undefined'){ toast(t('importFail'), true); return; }
+  let parsed;
+  try{ const wb=XLSX.read(await file.arrayBuffer(), {type:'array'}); parsed=parseWorkbook(wb); }catch(e){ console.warn(e); toast(t('importFail'), true); return; }
+  if(!parsed.tasks.length){ toast(t('importFail'), true); return; }
+  toast(t('importing'));
+  const have=new Set(boardTasks(board).map(x=>x.srcId).filter(Boolean));
+  let n=0, k=0;
+  for(const p of parsed.tasks){
+    if(p.srcId && have.has(p.srcId)){ k++; continue; }
+    const notes=[p.notes, p.critical? (L()==='ar'?'الأولوية في المصدر: حرجة':'Source priority: Critical') : '', p.subs.length? ((L()==='ar'?'المهام الفرعية:':'Subitems:')+'\n'+p.subs.join('\n')) : ''].filter(Boolean).join('\n\n').slice(0,4000);
+    const updates=(parsed.upd.get(p.srcId)||[]).sort((a,b)=>a.at.localeCompare(b.at)).slice(-100);
+    const tk={...blankTask(board), title:p.title, owner:p.owner, ownerId:findMember(p.owner), status:p.status, priority:p.priority, start:p.start, due:p.due, group:p.group, ref:p.ref, notes, updates};
+    if(p.srcId) tk.srcId=p.srcId;
+    const id=await saveTask(tk, hist('created')); if(id){ n++; if(p.srcId) have.add(p.srcId); }
+  }
+  toast(t('imported')(n,k)); render();
+}
+
 /* ---------- toast ---------- */
 function toast(msg, err){ const host=$('#toasts'); const el=document.createElement('div'); el.className='toast'+(err?' err':''); el.textContent=msg; host.appendChild(el); setTimeout(()=>el.remove(), 2600); }
 
@@ -1080,6 +1169,7 @@ document.addEventListener('click', async (ev)=>{
   else if(a==='close'){ closeDrawer(); }
   else if(a==='sort'){ const by=el.dataset.by; if(S.sort.by===by) S.sort.dir=S.sort.dir==='asc'?'desc':'asc'; else S.sort={by,dir:'asc'}; renderBody(); }
   else if(a==='export'){ exportXlsx(); }
+  else if(a==='import'){ $('#importfile')?.click(); }
   else if(a==='signout'){ if(window.__marnSignOut) window.__marnSignOut(); }
   else if(a==='lock'){ doLock(); }
   else if(a==='changepw'){ S.lockUI={mode:'change',err:'',rc:null}; renderMain(true); }
@@ -1117,6 +1207,7 @@ document.addEventListener('submit', async (ev)=>{
 });
 document.addEventListener('change', async (ev)=>{
   const el=ev.target;
+  if(el.id==='importfile'){ const f=el.files&&el.files[0]; el.value=''; if(f) await importFile(f); return; }
   if(el.dataset.action==='status'){ await setStatus(el.dataset.id, el.value); return; }
   if(el.dataset.action==='filter'){ const f=el.dataset.f; S.filters[f]= f==='hideDone'? el.checked : el.value; renderBody(); return; }
   if(el.closest('#drawerhost') && el.dataset.f){ const f=el.dataset.f; const v = el.value; if(f==='board' && S.drawer?.mode==='new'){ S.drawer.draft.board=v; renderDrawer(); return; } await commitDraftField(f, v); if(f==='board'||f==='status') renderDrawer(); }
