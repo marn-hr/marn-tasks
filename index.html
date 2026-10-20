@@ -287,6 +287,19 @@ svg.lock{width:12px;height:12px;flex:none;color:var(--g4);vertical-align:-1px;ma
 .col.c-stuck h3{color:var(--fg)}
 .card{background:var(--surface);border:1px solid var(--g2);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;cursor:grab}
 .card:hover{border-color:var(--g4)}
+.ach-hero{display:flex;align-items:baseline;gap:12px;margin:2px 0 20px;flex-wrap:wrap}
+.ach-hero .n{font-size:56px;font-weight:700;line-height:1}
+.ach-hero .l{color:var(--g5);font-size:15px}
+.ach-sec{margin-bottom:24px}
+.ach-sec h3{display:flex;gap:10px;align-items:baseline;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--g2);font-weight:500}
+.ach-sec h3 span{font-size:15px;font-weight:700}
+.ach-sec h3 b{font-size:13px;color:var(--g5);font-weight:500}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.ach-card{background:var(--surface);border:1px solid var(--g2);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.ach-card:hover{border-color:var(--g4)}
+.ach-card .t{font-weight:600;line-height:1.45}
+.ach-card .imp{font-size:13px;line-height:1.55;color:var(--g6)}
+.ach-card .dep{font-size:12px;color:var(--g5);margin-top:auto;padding-top:4px}
 .card.dragging{opacity:.5}
 .card .t{font-weight:500;margin-bottom:6px;cursor:pointer}
 .card .row{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g5);flex-wrap:wrap}
@@ -453,10 +466,13 @@ const BOARDS = [
   {id:'grc-legal',        en:'GRC and Legal',               ar:'الحوكمة والمخاطر والالتزام والشؤون القانونية'},
   {id:'operations',       en:'Operations',                  ar:'العمليات'},
   {id:'committee',        en:'Business Committee',          ar:'لجنة الأعمال', locked:true},
+  {id:'achievements',     en:'Marn Achievements',           ar:'إنجازات مرن', kind:'ach'},
 ];
 const COMMITTEE = 'committee';
 const LOCKED = BOARDS.filter(b=>b.locked).map(b=>b.id);
 const isLocked = (id)=> LOCKED.includes(id);
+const ACH = 'achievements';
+const isAch = (id)=> id===ACH;
 const keyOf = (id)=> S.keys[id] || null;
 const STATUSES = ['todo','doing','stuck','done'];
 const PRIORITIES = ['high','med','low'];
@@ -489,7 +505,7 @@ const POSITIONS = [
 const T = {
 en:{
   product:'Tasks', overview:'Overview', mine:'My tasks', overdueV:'Overdue', activity:'Activity', boards:'Boards', views:'Views',
-  table:'Table', kanban:'Kanban', timeline:'Timeline', newTask:'New task', export:'Export to Excel', import:'Import from Excel', importing:'Importing…', imported:(n,k)=> `${n} tasks imported`+(k?` · ${k} already on the board`:''), importFail:'The file could not be read. Use an Excel export with Name, Owner, Status columns.', search:'Search tasks, owners, references',
+  table:'Table', kanban:'Kanban', timeline:'Timeline', newTask:'New task', newAch:'New achievement', achTitleAr:'Achievement (Arabic)', achTitleEn:'Achievement (English)', cDept:'Department', cPillar:'Pillar', cImpactAr:'Impact (Arabic)', cImpactEn:'Impact (English)', achHero:'achievements so far', emptyAch:'No achievements yet. Add the first one with New achievement.', allDepts:'All departments', allPillars:'All pillars', achCount:(n)=> `${n} achievements`, export:'Export to Excel', import:'Import from Excel', importing:'Importing…', imported:(n,k)=> `${n} tasks imported`+(k?` · ${k} already on the board`:''), importFail:'The file could not be read. Use an Excel export with Name, Owner, Status columns.', search:'Search tasks, owners, references',
   allStatuses:'All statuses', allOwners:'All owners', allPriorities:'All priorities', hideDone:'Hide done', tasksCount:(n)=> n===1?'1 task':`${n} tasks`, updatesCount:(n)=> n===1?'1 update':`${n} updates`,
   cTask:'Task', cOwner:'Owner', cStatus:'Status', cPriority:'Priority', cStart:'Start', cDue:'Due', cRef:'Reference', cGroup:'Group', cUpdated:'Updated', cNotes:'Notes', cBoard:'Board', cDaysLate:'Days late', cFocus:'Focus area', cDecision:'Decision reference', cSitting:'Sitting date',
   st:{todo:'Not started', doing:'Working on it', stuck:'Stuck', done:'Done'}, pr:{high:'High', med:'Medium', low:'Low'},
@@ -507,7 +523,7 @@ en:{
 },
 ar:{
   product:'المهام', overview:'نظرة عامة', mine:'مهامي', overdueV:'المتأخرة', activity:'السجل', boards:'اللوحات', views:'العروض',
-  table:'جدول', kanban:'بطاقات', timeline:'الخط الزمني', newTask:'مهمة جديدة', export:'تصدير إلى Excel', import:'استيراد من Excel', importing:'جارٍ الاستيراد…', imported:(n,k)=> `تم استيراد ${n} مهمة`+(k?` · ${k} موجودة مسبقًا`:''), importFail:'تعذّرت قراءة الملف. استخدم ملف Excel يحتوي على أعمدة الاسم والمسؤول والحالة.', search:'ابحث في المهام والمسؤولين والمراجع',
+  table:'جدول', kanban:'بطاقات', timeline:'الخط الزمني', newTask:'مهمة جديدة', newAch:'إنجاز جديد', achTitleAr:'الإنجاز (بالعربية)', achTitleEn:'الإنجاز (بالإنجليزية)', cDept:'الإدارة', cPillar:'الركيزة', cImpactAr:'الأثر (بالعربية)', cImpactEn:'الأثر (بالإنجليزية)', achHero:'إنجازًا حتى الآن', emptyAch:'لا توجد إنجازات بعد. أضف أول إنجاز من زر «إنجاز جديد».', allDepts:'كل الإدارات', allPillars:'كل الركائز', achCount:(n)=> `${n} إنجاز`, export:'تصدير إلى Excel', import:'استيراد من Excel', importing:'جارٍ الاستيراد…', imported:(n,k)=> `تم استيراد ${n} مهمة`+(k?` · ${k} موجودة مسبقًا`:''), importFail:'تعذّرت قراءة الملف. استخدم ملف Excel يحتوي على أعمدة الاسم والمسؤول والحالة.', search:'ابحث في المهام والمسؤولين والمراجع',
   allStatuses:'كل الحالات', allOwners:'كل المسؤولين', allPriorities:'كل الأولويات', hideDone:'إخفاء المنجزة', tasksCount:(n)=> n===1?'مهمة واحدة': n===2?'مهمتان': (n>=3&&n<=10)?`${n} مهام`:`${n} مهمة`, updatesCount:(n)=> n===1?'تحديث واحد': n===2?'تحديثان': (n>=3&&n<=10)?`${n} تحديثات`:`${n} تحديثًا`,
   cTask:'المهمة', cOwner:'المسؤول', cStatus:'الحالة', cPriority:'الأولوية', cStart:'البداية', cDue:'الاستحقاق', cRef:'المرجع', cGroup:'المجموعة', cUpdated:'آخر تحديث', cNotes:'ملاحظات', cBoard:'اللوحة', cDaysLate:'أيام التأخير', cFocus:'مجال التركيز', cDecision:'مرجع القرار', cSitting:'تاريخ الجلسة',
   st:{todo:'لم تبدأ', doing:'قيد العمل', stuck:'متعثرة', done:'منجزة'}, pr:{high:'عالية', med:'متوسطة', low:'منخفضة'},
@@ -532,7 +548,7 @@ const S = {
   tasks:new Map(), members:new Map(), lockSettings:{}, lockLoaded:{}, keys:{},
   me:{id:null,name:'',avatarUrl:'',isOwner:false,canEdit:false,canWrite:null},
   profiles:{}, db:null, user:null, downloads:null, connecting:true, dbMissing:false,
-  filters:{q:'',status:'',owner:'',priority:'',hideDone:false}, sort:{by:'due',dir:'asc'},
+  filters:{q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}, sort:{by:'due',dir:'asc'},
   drawer:null, lockUI:{mode:'enter',err:'',rc:null}, mainKey:'', tasksLoaded:false, hasPwdInvite:false,
 };
 const t = (k)=> T[S.lang][k] ?? T.en[k] ?? k;
@@ -669,7 +685,7 @@ async function setStatus(id, status){
   render();
 }
 function canWrite(){ return S.me.canWrite!==false && !!S.db; }
-function blankTask(board){ return {board, title:'', owner:'', ownerId:null, status:'todo', priority:'med', start:'', due:'', ref:'', group:'', notes:'', updates:[], history:[], focus:'', decision:'', sitting:''}; }
+function blankTask(board){ const b0={board, title:'', owner:'', ownerId:null, status:'todo', priority:'med', start:'', due:'', ref:'', group:'', notes:'', updates:[], history:[], focus:'', decision:'', sitting:''}; if(isAch(board)) Object.assign(b0,{status:'done',titleEn:'',dept:'',impact:'',impactEn:''}); return b0; }
 
 /* ---------- committee lock ---------- */
 async function doSetPassword(pw, pw2){
@@ -715,8 +731,10 @@ function applyFilters(list){
     if(f.hideDone && x.status==='done') return false;
     if(f.status && x.status!==f.status) return false;
     if(f.priority && x.priority!==f.priority) return false;
+    if(f.dept && x.dept!==f.dept) return false;
+    if(f.focus && x.focus!==f.focus) return false;
     if(f.owner && (x.owner||'')!==f.owner) return false;
-    if(q){ const hay=[x.title,x.owner,x.ref,x.group,x.notes,x.decision].map(v=>(v||'').toLowerCase()).join(' '); if(!hay.includes(q)) return false; }
+    if(q){ const hay=[x.title,x.titleEn,x.impact,x.impactEn,x.owner,x.ref,x.group,x.notes,x.decision].map(v=>(v||'').toLowerCase()).join(' '); if(!hay.includes(q)) return false; }
     return true;
   });
 }
@@ -769,6 +787,7 @@ function renderRail(){
   h += item('activity', t('activity'), S.view==='activity');
   h += `<span class="rsep"></span><h4>${esc(t('boards'))}</h4>`;
   for(const b of BOARDS){
+    if(isAch(b.id)){ h += `<span class="rsep"></span><button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button"><span class="lbl">${esc(b[L()])}</span><span class="cnt">${boardTasks(b.id).length}</span></button>`; continue; }
     const o=open(b).length, s=stuck(b).length;
     h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button">${b.locked?LOCK_SVG:''}<span class="lbl">${esc(b[L()])}</span><span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`;
   }
@@ -780,7 +799,9 @@ function statusSelect(task, cls){
 }
 const priHTML = (p)=> `<span class="pri p-${p}" title="${esc(t('pr')[p])}"><i></i><i></i><i></i></span><span class="plabel">${esc(t('pr')[p])}</span>`;
 function dueHTML(task){ if(!task.due) return `<span class="muted">${esc(t('noDue'))}</span>`; const di=dueInfo(task); return `<span class="due ${di.cls}">${esc(fmtDate(task.due))}${di.text?`<span class="dl">${esc(di.text)}</span>`:''}</span>`; }
-const titleOf = (task)=> task.locked ? t('lockedTask') : (task.title || '…');
+const achTitle = (x)=> (L()==='en' && x.titleEn) ? x.titleEn : (x.title || x.titleEn || '');
+const achImpact = (x)=> (L()==='en' && x.impactEn) ? x.impactEn : (x.impact || x.impactEn || '');
+const titleOf = (task)=> task.locked ? t('lockedTask') : ((isAch(task.board) ? achTitle(task) : task.title) || '…');
 
 function renderMain(force){
   const showLock = S.view==='board' && isLocked(S.board) && (!keyOf(S.board) || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
@@ -797,10 +818,15 @@ function renderMain(force){
 function headHTML(){
   let title, sub='', tabs='', tools='';
   const ro = !canWrite();
-  const newBtn = ro? '' : `<button class="btn primary" data-action="new" type="button">+ ${esc(t('newTask'))}</button>`;
+  const newBtn = ro? '' : `<button class="btn primary" data-action="new" type="button">+ ${esc(S.view==='board'&&isAch(S.board)?t('newAch'):t('newTask'))}</button>`;
   const exportBtn = S.downloads? `<button class="btn" data-action="export" type="button">${esc(t('export'))}</button>` : '';
   const importBtn = (!ro && S.view==='board' && S.me.isOwner && (!isLocked(S.board) || keyOf(S.board)))? `<button class="btn" data-action="import" type="button">${esc(t('import'))}</button><input type="file" id="importfile" accept=".xlsx,.xls,.csv" hidden>` : '';
-  if(S.view==='board'){
+  if(S.view==='board' && isAch(S.board)){
+    const list=boardTasks(S.board); title=boardOf(S.board)[L()]; sub=t('achCount')(list.length);
+    const depts=[...new Set(list.map(x=>x.dept).filter(Boolean))].sort((a,b)=>boardName(a).localeCompare(boardName(b),L()));
+    const pills=new Set(list.map(x=>x.focus).filter(Boolean));
+    tools=`<div class="toolbar"><select id="flt-dept" data-action="filter" data-f="dept"><option value="">${esc(t('allDepts'))}</option>${depts.map(d=>`<option value="${esc(d)}" ${S.filters.dept===d?'selected':''}>${esc(boardName(d))}</option>`).join('')}</select><select id="flt-focus" data-action="filter" data-f="focus"><option value="">${esc(t('allPillars'))}</option>${FOCUS.filter(f=>pills.has(f.id)).map(f=>`<option value="${f.id}" ${S.filters.focus===f.id?'selected':''}>${esc(f[L()])}</option>`).join('')}</select><span class="spacer"></span><span class="count" id="count"></span></div>`;
+  } else if(S.view==='board'){
     const b=boardOf(S.board); const list=boardTasks(S.board); const open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length;
     title=b[L()]; sub=`${t('tasksCount')(list.length)} · ${t('open')} ${open}${od?` · ${t('overdue')} ${od}`:''}`;
     tabs=`<div class="tabs" role="tablist">${['table','kanban','timeline'].map(v=>`<button type="button" class="${S.boardView===v?'on':''}" data-action="bview" data-v="${v}">${esc(t(v))}</button>`).join('')}</div>`;
@@ -817,7 +843,7 @@ function headHTML(){
   else if(S.view==='overdue'){ title=t('overdueV'); }
   else if(S.view==='activity'){ title=t('activity'); }
   else if(S.view==='search'){ title=t('searchResults'); sub=S.filters.q; }
-  else { title=t('overview'); const all=[...S.tasks.values()]; sub=`${t('tasksCount')(all.length)} · ${t('open')} ${all.filter(x=>x.status!=='done').length}`; }
+  else { title=t('overview'); const all=[...S.tasks.values()].filter(x=>!isAch(x.board)); sub=`${t('tasksCount')(all.length)} · ${t('open')} ${all.filter(x=>x.status!=='done').length}`; }
   return `<div class="vhead"><h1>${esc(title)}</h1>${sub?`<span class="sub num">${esc(sub)}</span>`:''}<div class="actions">${tabs}${importBtn}${exportBtn}${newBtn}</div></div>${tools}`;
 }
 function renderBody(){
@@ -828,14 +854,15 @@ function renderBody(){
   else if(S.view==='activity') body.innerHTML=activityHTML();
   else if(S.view==='search') body.innerHTML=listViewHTML('search');
   else {
-    const list = applyFilters(boardTasks(S.board)); const cnt=$('#count'); if(cnt) cnt.textContent = t('tasksCount')(list.length);
-    if(S.boardView==='kanban') body.innerHTML=kanbanHTML(list);
+    const list = applyFilters(boardTasks(S.board)); const cnt=$('#count'); if(cnt) cnt.textContent = isAch(S.board)? t('achCount')(list.length) : t('tasksCount')(list.length);
+    if(isAch(S.board)) body.innerHTML=achHTML(list);
+    else if(S.boardView==='kanban') body.innerHTML=kanbanHTML(list);
     else if(S.boardView==='timeline') body.innerHTML=timelineHTML(list);
     else body.innerHTML=tableHTML(list, {committee:S.board===COMMITTEE});
   }
 }
 function overviewHTML(){
-  const all=[...S.tasks.values()];
+  const all=[...S.tasks.values()].filter(x=>!isAch(x.board));
   const open=all.filter(x=>x.status!=='done').length, doing=all.filter(x=>x.status==='doing').length, stuck=all.filter(x=>x.status==='stuck').length, od=all.filter(isOverdue).length;
   let h=`<div class="tiles">
     <button class="tile" data-action="nav" data-nav="overview" type="button"><div class="k">${esc(t('open'))}</div><div class="v">${open}</div></button>
@@ -844,7 +871,7 @@ function overviewHTML(){
     <button class="tile overdue" data-action="nav" data-nav="overdue" type="button"><div class="k">${esc(t('overdue'))}</div><div class="v">${od}</div></button>
   </div>`;
   h+=`<div class="section" style="margin-top:0"><div style="overflow-x:auto"><table class="matrix"><thead><tr><th>${esc(t('cBoard'))}</th><th class="c">${esc(t('notStarted'))}</th><th class="c">${esc(t('working'))}</th><th class="c">${esc(t('stuck'))}</th><th class="c">${esc(t('done'))}</th><th class="c">${esc(t('overdue'))}</th><th>${esc(t('share'))}</th></tr></thead><tbody>`;
-  for(const b of BOARDS){
+  for(const b of BOARDS.filter(b=>!isAch(b.id))){
     const l=boardTasks(b.id); const c={todo:0,doing:0,stuck:0,done:0}; l.forEach(x=>c[x.status]++); const o=l.filter(isOverdue).length; const n=l.length||1;
     h+=`<tr class="row" data-action="nav" data-nav="board:${b.id}"><td class="name">${b.locked?LOCK_SVG+' ':''}${esc(b[L()])}</td><td class="n">${c.todo||'<span class="muted">0</span>'}</td><td class="n">${c.doing||'<span class="muted">0</span>'}</td><td class="n">${c.stuck?`<b>${c.stuck}</b>`:'<span class="muted">0</span>'}</td><td class="n">${c.done||'<span class="muted">0</span>'}</td><td class="n">${o?`<b>${o}</b>`:'<span class="muted">0</span>'}</td><td><div class="bar" title="${l.length}"><i class="b-done" style="width:${c.done/n*100}%"></i><i class="b-doing" style="width:${c.doing/n*100}%"></i><i class="b-stuck" style="width:${c.stuck/n*100}%"></i></div></td></tr>`;
   }
@@ -877,6 +904,30 @@ function tableHTML(list, opts){
     }
   }
   return h+`</tbody></table></div>`;
+}
+function achHTML(list){
+  const total=boardTasks(ACH).length;
+  if(!total) return `<div class="empty"><b>${esc(t('emptyAch'))}</b></div>`;
+  let h=`<div class="ach"><div class="ach-hero"><span class="n num">${total}</span><span class="l">${esc(t('achHero'))}</span></div>`;
+  if(!list.length) return h+`<div class="empty"><b>${esc(t('emptyFiltered'))}</b></div></div>`;
+  const by=new Map(); list.forEach(x=>{ const k=FOCUS.some(f=>f.id===x.focus)? x.focus : ''; if(!by.has(k)) by.set(k,[]); by.get(k).push(x); });
+  for(const k of [...FOCUS.map(f=>f.id), '']){
+    const items=by.get(k); if(!items) continue;
+    items.sort((a,b)=> boardName(a.dept||'').localeCompare(boardName(b.dept||''),L()) || achTitle(a).localeCompare(achTitle(b),L()));
+    h+=`<section class="ach-sec"><h3><span>${esc(k? focusName(k) : t('other'))}</span><b class="num">${items.length}</b></h3><div class="ach-grid">`;
+    for(const x of items){ const imp=achImpact(x); h+=`<article class="ach-card" data-action="open" data-id="${x.id}"><div class="t">${esc(achTitle(x))}</div>${imp?`<div class="imp">${esc(imp)}</div>`:''}${x.dept?`<div class="dep">${esc(boardName(x.dept))}</div>`:''}</article>`; }
+    h+=`</div></section>`;
+  }
+  return h+`</div>`;
+}
+function achFields(x, dis){
+  const depts=BOARDS.filter(b=>!isAch(b.id) && b.id!==COMMITTEE);
+  return field('f-titleEn',t('achTitleEn'),`<input id="f-titleEn" data-f="titleEn" dir="ltr" value="${esc(x.titleEn)}" maxlength="200" ${dis}>`)
+    + field('f-dept',t('cDept'),`<select id="f-dept" data-f="dept" ${dis}><option value=""></option>${depts.map(b=>`<option value="${b.id}" ${b.id===x.dept?'selected':''}>${esc(b[L()])}</option>`).join('')}</select>`)
+    + field('f-focus',t('cPillar'),`<select id="f-focus" data-f="focus" ${dis}><option value=""></option>${FOCUS.map(f=>`<option value="${f.id}" ${f.id===x.focus?'selected':''}>${esc(f[L()])}</option>`).join('')}</select>`)
+    + `<div class="full">${field('f-impact',t('cImpactAr'),`<textarea id="f-impact" data-f="impact" maxlength="1000" ${dis}>${esc(x.impact)}</textarea>`)}</div>`
+    + `<div class="full">${field('f-impactEn',t('cImpactEn'),`<textarea id="f-impactEn" data-f="impactEn" dir="ltr" maxlength="1000" ${dis}>${esc(x.impactEn)}</textarea>`)}</div>`
+    + `<div class="full">${field('f-notes',t('cNotes'),`<textarea id="f-notes" data-f="notes" maxlength="4000" ${dis}>${esc(x.notes)}</textarea>`)}</div>`;
 }
 function kanbanHTML(list){
   let h=`<div class="kanban">`;
@@ -978,16 +1029,16 @@ function renderDrawer(){
   const host=$('#drawerhost'); const d=S.drawer;
   if(!d){ host.innerHTML=''; return; }
   const x=d.draft, ro=!canWrite(), dis=ro?'disabled':'';
-  const isC = x.board===COMMITTEE;
+  const isC = x.board===COMMITTEE, isA = isAch(x.board);
   const boardOpts = BOARDS.filter(b=> !b.locked || keyOf(b.id)).map(b=>`<option value="${b.id}" ${b.id===x.board?'selected':''}>${esc(b[L()])}</option>`).join('');
   const people=[...new Map([...S.members.entries()].map(([id,m])=>[id,m.name]).filter(([id,n])=>n)).entries()];
   const groups=[...new Set(boardTasks(x.board).map(q=>q.group).filter(Boolean))];
   let h=`<div class="scrim" data-action="close"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="${esc(t('cTask'))}">
     <div class="dh"><span class="bname">${esc(boardName(x.board))}</span><button class="iconbtn" data-action="close" type="button" aria-label="${esc(t('close'))}">✕</button></div>
     <div class="db">
-      <input class="titlein" id="f-title" data-f="title" value="${esc(x.title)}" placeholder="${esc(t('cTask'))}" maxlength="200" ${dis}>
+      <input class="titlein" id="f-title" data-f="title" value="${esc(x.title)}" placeholder="${esc(isA?t('achTitleAr'):t('cTask'))}" maxlength="200" ${dis}>
       <div class="fgrid">
-        ${field('f-board',t('cBoard'),`<select id="f-board" data-f="board" ${dis}>${boardOpts}</select>`)}
+        ${isA? achFields(x,dis) : `${field('f-board',t('cBoard'),`<select id="f-board" data-f="board" ${dis}>${boardOpts}</select>`)}
         ${field('f-status',t('cStatus'),`<select id="f-status" data-f="status" class="chip lg s-${x.status}" ${dis}>${STATUSES.map(s=>`<option value="${s}" ${s===x.status?'selected':''}>${esc(t('st')[s])}</option>`).join('')}</select>`)}
         ${field('f-owner',t('cOwner'),`<div class="owner-wrap"><input id="f-owner" data-f="owner" value="${esc(x.owner)}" autocomplete="off" maxlength="80" ${dis}><div class="sugg" id="sugg" hidden></div></div>`)}
         ${field('f-priority',t('cPriority'),`<select id="f-priority" data-f="priority" ${dis}>${PRIORITIES.map(p=>`<option value="${p}" ${p===x.priority?'selected':''}>${esc(t('pr')[p])}</option>`).join('')}</select>`)}
@@ -998,7 +1049,7 @@ function renderDrawer(){
         ${isC? field('f-focus',t('cFocus'),`<select id="f-focus" data-f="focus" ${dis}><option value=""></option>${FOCUS.map(f=>`<option value="${f.id}" ${f.id===x.focus?'selected':''}>${esc(f[L()])}</option>`).join('')}</select>`) : ''}
         ${isC? field('f-decision',t('cDecision'),`<input id="f-decision" data-f="decision" value="${esc(x.decision)}" placeholder="D-12" maxlength="80" ${dis}>`) : ''}
         ${isC? field('f-sitting',t('cSitting'),`<input type="date" id="f-sitting" data-f="sitting" value="${esc(x.sitting)}" ${dis}>`) : ''}
-        <div class="full">${field('f-notes',t('cNotes'),`<textarea id="f-notes" data-f="notes" maxlength="4000" ${dis}>${esc(x.notes)}</textarea>`)}</div>
+        <div class="full">${field('f-notes',t('cNotes'),`<textarea id="f-notes" data-f="notes" maxlength="4000" ${dis}>${esc(x.notes)}</textarea>`)}</div>`}
       </div>`;
   if(d.mode==='edit'){
     h+=`<div class="dsec"><h3>${esc(t('updates'))} (${x.updates.length})</h3>`;
@@ -1081,6 +1132,8 @@ function mapStatus(v){ const s=nrm(v); if(!s) return 'todo';
   for(const k of STATUSES){ if(nrm(T.en.st[k])===s || nrm(T.ar.st[k])===s || k===s) return k; }
   if(/done|complete|منجز/.test(s)) return 'done'; if(/stuck|block|متعثر/.test(s)) return 'stuck'; if(/working|progress|doing|قيد/.test(s)) return 'doing'; return 'todo'; }
 function mapPriority(v){ const s=nrm(v); if(!s) return 'med'; if(/critical|high|urgent|عالي|حرج/.test(s)) return 'high'; if(/low|منخفض/.test(s)) return 'low'; return 'med'; }
+function mapBoard(v){ const s=nrm(v); if(!s) return ''; const b=BOARDS.find(b=>[b.id,b.en,b.ar].some(z=>nrm(z)===s)); return b? b.id : ''; }
+function mapFocus(v){ const s=nrm(v); if(!s) return ''; const f=FOCUS.find(f=>[f.id,f.en,f.ar].some(z=>nrm(z)===s)); return f? f.id : ''; }
 function findMember(name){ const n=nrm(String(name||'').split(',')[0]); if(!n) return null; for(const [id,m] of S.members.entries()){ if(nrm(m.name)===n) return id; } return null; }
 function parseWorkbook(wb){
   const sheets=wb.SheetNames.map(n=>XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:null,raw:true,blankrows:false}));
@@ -1101,8 +1154,8 @@ function parseWorkbook(wb){
       if(!r) continue;
       const cells=r.map(c=> c===null? '' : c); const filled=cells.filter(c=>String(c).trim()!=='').length;
       const first=String(cells[0]??'').trim();
-      if(nrm(first)==='name' && cells.some(c=>['owner','status','priority'].includes(nrm(c)))){
-        const h=cells.map(nrm); col={name:0, sub:h.indexOf('subitems'), owner:h.indexOf('owner'), pri:h.indexOf('priority'), st:h.indexOf('status'), due:h.findIndex(x=>x==='due date'||x==='date'||x==='due'), start:h.findIndex(x=>x==='start'||x==='start date'), id:h.findIndex(x=>x.startsWith('item id')), notes:h.findIndex(x=>x==='notes'), ref:h.findIndex(x=>x==='ref'||x==='reference')};
+      if(nrm(first)==='name' && cells.some(c=>['owner','status','priority','impact','pillar','department'].includes(nrm(c)))){
+        const h=cells.map(nrm); col={name:0, sub:h.indexOf('subitems'), owner:h.indexOf('owner'), pri:h.indexOf('priority'), st:h.indexOf('status'), due:h.findIndex(x=>x==='due date'||x==='date'||x==='due'), start:h.findIndex(x=>x==='start'||x==='start date'), id:h.findIndex(x=>x.startsWith('item id')), notes:h.findIndex(x=>x==='notes'), ref:h.findIndex(x=>x==='ref'||x==='reference'), titleEn:h.indexOf('name (english)'), dept:h.indexOf('department'), pillar:h.indexOf('pillar'), impact:h.indexOf('impact'), impactEn:h.indexOf('impact (english)')};
         group=lastSingle; sub=null; continue; }
       if(nrm(first)==='subitems' && cells.some(c=>nrm(c)==='name')){ const h=cells.map(nrm); sub={name:h.indexOf('name'), owner:h.indexOf('owner'), st:h.indexOf('status'), date:h.indexOf('date')}; continue; }
       if(!first){ if(sub && parent){ const nm=String(cells[sub.name]||'').trim(); if(nm){ const bits=[sub.st>=0&&cells[sub.st]?String(cells[sub.st]):'', sub.owner>=0&&cells[sub.owner]?String(cells[sub.owner]):'', sub.date>=0?xlDate(cells[sub.date]):''].filter(Boolean); parent.subs.push('• '+nm+(bits.length?` (${bits.join(', ')})`:'')); } } continue; }
@@ -1112,7 +1165,7 @@ function parseWorkbook(wb){
       const g=(i)=> i>=0? cells[i] : '';
       const srcId=String(g(col.id)||'').trim();
       parent={title:first.slice(0,200), owner:String(g(col.owner)||'').trim().slice(0,80), status:mapStatus(g(col.st)), priority:mapPriority(g(col.pri)), critical:/critical/i.test(String(g(col.pri)||'')),
-        due:xlDate(g(col.due)), start:xlDate(g(col.start)), group:group.slice(0,60), ref:String(g(col.ref)||'').trim().slice(0,80), notes:String(g(col.notes)||'').trim(), srcId, subs:[]};
+        due:xlDate(g(col.due)), start:xlDate(g(col.start)), group:group.slice(0,60), ref:String(g(col.ref)||'').trim().slice(0,80), notes:String(g(col.notes)||'').trim(), srcId, subs:[], titleEn:String(g(col.titleEn)||'').trim().slice(0,200), dept:mapBoard(g(col.dept)), focus:mapFocus(g(col.pillar)), impact:String(g(col.impact)||'').trim().slice(0,1000), impactEn:String(g(col.impactEn)||'').trim().slice(0,1000)};
       tasks.push(parent);
     }
   }
@@ -1126,7 +1179,8 @@ async function importFile(file){
   try{ const wb=XLSX.read(await file.arrayBuffer(), {type:'array'}); parsed=parseWorkbook(wb); }catch(e){ console.warn(e); toast(t('importFail'), true); return; }
   if(!parsed.tasks.length){ toast(t('importFail'), true); return; }
   toast(t('importing'));
-  const have=new Set(boardTasks(board).map(x=>x.srcId).filter(Boolean));
+  if(isAch(board)) parsed.tasks.forEach(p=>{ if(!p.srcId) p.srcId='T:'+nrm(p.titleEn||p.title); });
+  const have=new Set(boardTasks(board).map(x=>x.srcId || (isAch(board)? 'T:'+nrm(x.titleEn||x.title) : '')).filter(Boolean));
   let n=0, k=0;
   for(const p of parsed.tasks){
     if(p.srcId && have.has(p.srcId)){ k++; continue; }
@@ -1134,6 +1188,8 @@ async function importFile(file){
     const updates=(parsed.upd.get(p.srcId)||[]).sort((a,b)=>a.at.localeCompare(b.at)).slice(-100);
     const tk={...blankTask(board), title:p.title, owner:p.owner, ownerId:findMember(p.owner), status:p.status, priority:p.priority, start:p.start, due:p.due, group:p.group, ref:p.ref, notes, updates};
     if(p.srcId) tk.srcId=p.srcId;
+    if(p.focus) tk.focus=p.focus;
+    if(isAch(board)) Object.assign(tk,{status:'done', owner:'', ownerId:null, due:'', start:'', titleEn:p.titleEn, dept:p.dept, impact:p.impact, impactEn:p.impactEn});
     const id=await saveTask(tk, hist('created')); if(id){ n++; if(p.srcId) have.add(p.srcId); }
   }
   toast(t('imported')(n,k)); render();
@@ -1152,7 +1208,7 @@ async function render(){
 }
 function nav(target){
   S.drawer=null; renderDrawer();
-  if(target.startsWith('board:')){ S.view='board'; S.board=target.slice(6); S.filters={q:'',status:'',owner:'',priority:'',hideDone:false}; $('#q').value=''; }
+  if(target.startsWith('board:')){ S.view='board'; S.board=target.slice(6); S.filters={q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}; $('#q').value=''; }
   else { S.view=target; S.board=null; }
   try{ history.replaceState(null,'', '#'+(S.view==='board'?S.board:S.view)); }catch(e){}
   render(); $('#main').scrollTop=0;
