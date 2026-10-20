@@ -549,6 +549,40 @@ svg.lock{width:12px;height:12px;flex:none;color:var(--g4);vertical-align:-1px;ma
 .ach-sec h3 b{color:var(--accent)}
 .toast{background:var(--fg)}
 @media (max-width:900px){ .rail .item.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)} .rail .item.on .lbl{color:var(--accent-ink)} }
+
+/* ---------- sidebar: icon tiles and profile card ---------- */
+.rail{display:flex;flex-direction:column;padding-block:12px 0}
+.rail > *{flex-shrink:0}
+.rail .item .lbl{line-height:1.35}
+.rail .item{gap:12px;padding:6px 8px;min-height:42px}
+.rail .item .ibox{width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:8px;background:var(--surface);color:var(--g5);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);transition:background .15s,color .15s,box-shadow .15s,transform .15s}
+.rail .item .ic{width:17px;height:17px}
+.rail .item:hover .ibox{color:var(--fg);transform:translateY(-1px)}
+.rail .item.on .ibox{background:var(--accent);color:var(--accent-ink);box-shadow:0 6px 12px -6px rgba(5,109,105,.75),inset 0 1px 0 rgba(255,255,255,.18)}
+.rail .item.on::before{display:none}
+.rail .item svg.lock{margin:0;width:11px;height:11px}
+.rail .item.ach .ibox{color:var(--accent)}
+.rail .item.ach.on .ibox{color:var(--accent-ink)}
+.rail .rfoot{margin-top:auto;position:sticky;bottom:0;padding:12px 0 14px;background:var(--bg)}
+.pcard{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);border:1px solid var(--g2)}
+.pcard .av{width:36px;height:36px;border-radius:50%;flex:none;object-fit:cover;background:var(--g2)}
+.pcard .av.ini{display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:13px}
+.pcard .who{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.pcard .who b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard .who span{font-size:12px;color:var(--g5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard .out{width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid var(--g2);border-radius:8px;background:var(--bg);color:var(--g5);box-shadow:var(--shadow-in)}
+.pcard .out:hover{color:var(--fg);border-color:var(--g4)}
+.pcard .out svg{width:16px;height:16px}
+#app[dir="rtl"] .pcard .out svg{transform:scaleX(-1)}
+@media (min-width:901px){ #mechip{display:none} }
+@media (max-width:900px){
+  .rail{flex-direction:row;padding:8px 0}
+  .rail .rfoot{display:none}
+  .rail .item{min-height:0;gap:6px;padding:4px 10px 4px 4px}
+  #app[dir="rtl"] .rail .item{padding:4px 4px 4px 10px}
+  .rail .item .ibox{width:26px;height:26px;border-radius:999px;box-shadow:none;background:transparent}
+  .rail .item.on .ibox{background:transparent;box-shadow:none;color:var(--accent-ink)}
+}
 </style>
 
 <div id="app" dir="rtl" lang="ar">
@@ -664,6 +698,28 @@ ar:{
 }};
 function arDays(n){ if(n===1) return 'يوم واحد'; if(n===2) return 'يومين'; if(n>=3&&n<=10) return `${n} أيام`; return `${n} يومًا`; }
 function arBy(n){ if(n===1) return 'بيوم واحد'; if(n===2) return 'بيومين'; if(n>=3&&n<=10) return `بـ${n} أيام`; return `بـ${n} يومًا`; }
+
+
+/* ---------- sidebar icons (simple line drawings, 24px grid, currentColor) ---------- */
+const IC = (d)=> `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICONS = {
+  overview: IC('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
+  mine: IC('<circle cx="10" cy="8" r="4"/><path d="M3 20c0-3.3 3.1-6 7-6 1.2 0 2.3.2 3.3.7"/><path d="M15.5 17.5l2 2 4-4"/>'),
+  overdue: IC('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M5 3L2 6M19 3l3 3"/>'),
+  activity: IC('<path d="M3 12h4l3-8 4 16 3-8h4"/>'),
+  marketing: IC('<path d="M3 11v2a2 2 0 0 0 2 2h1l4 5V4L6 9H5a2 2 0 0 0-2 2z"/><path d="M14 8a5 5 0 0 1 0 8"/><path d="M17.5 5a9 9 0 0 1 0 14"/>'),
+  sales: IC('<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'),
+  commercial: IC('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/>'),
+  'customer-success': IC('<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2.5" y="14" width="4" height="6" rx="1.5"/><rect x="17.5" y="14" width="4" height="6" rx="1.5"/><path d="M19.5 20c0 1-1.5 2-4.5 2h-2"/>'),
+  technology: IC('<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>'),
+  finance: IC('<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M21 9h-6a3 3 0 0 0 0 6h6z"/><circle cx="15.5" cy="12" r=".6" fill="currentColor"/>'),
+  'human-capital': IC('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.6 0 4.5 1.8 4.5 4.5"/>'),
+  'grc-legal': IC('<path d="M12 3v18"/><path d="M5 21h14"/><path d="M4 7h16"/><path d="M7 7l-3 7a3 3 0 0 0 6 0z"/><path d="M17 7l-3 7a3 3 0 0 0 6 0z"/>'),
+  operations: IC('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'),
+  committee: IC('<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M2 10l10-6 10 6z"/>'),
+  achievements: IC('<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>'),
+};
+const icon = (k)=> `<span class="ibox">${ICONS[k]||''}</span>`;
 
 /* ---------- state ---------- */
 const S = {
@@ -902,7 +958,7 @@ function renderChrome(){
 }
 function renderRail(){
   const open=(b)=> boardTasks(b.id).filter(x=>x.status!=='done'), stuck=(b)=> boardTasks(b.id).filter(x=>x.status==='stuck'||isOverdue(x));
-  const item=(id,label,on,extra)=> `<button class="item ${on?'on':''}" data-action="nav" data-nav="${id}" type="button">${extra||''}<span class="lbl">${esc(label)}</span></button>`;
+  const item=(id,label,on,extra)=> `<button class="item ${on?'on':''}" data-action="nav" data-nav="${id}" type="button" title="${esc(label)}">${icon(id)}<span class="lbl">${esc(label)}</span>${extra||''}</button>`;
   let h = `<h4>${esc(t('views'))}</h4>`;
   h += item('overview', t('overview'), S.view==='overview');
   h += item('mine', t('mine'), S.view==='mine');
@@ -910,9 +966,15 @@ function renderRail(){
   h += item('activity', t('activity'), S.view==='activity');
   h += `<span class="rsep"></span><h4>${esc(t('boards'))}</h4>`;
   for(const b of BOARDS){
-    if(isAch(b.id)){ h += `<span class="rsep"></span><button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button"><span class="lbl">${esc(b[L()])}</span><span class="cnt">${boardTasks(b.id).length}</span></button>`; continue; }
+    if(isAch(b.id)){ h += `<span class="rsep"></span><button class="item ach ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span><span class="cnt">${boardTasks(b.id).length}</span></button>`; continue; }
     const o=open(b).length, s=stuck(b).length;
-    h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button">${b.locked?LOCK_SVG:''}<span class="lbl">${esc(b[L()])}</span><span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`;
+    h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span>${b.locked?LOCK_SVG:''}<span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`;
+  }
+  const me=S.me;
+  if(me.id){
+    const nm=myName()||t('you'), pos=S.members.get(me.id)?.position||'';
+    const ini=nm.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    h += `<div class="rfoot"><div class="pcard">${me.avatarUrl?`<img class="av" src="${esc(me.avatarUrl)}" alt="">`:`<span class="av ini">${esc(ini)}</span>`}<div class="who"><b>${esc(nm)}</b><span>${esc(pos || (S.me.canWrite===false? t('viewOnly') : ''))}</span></div>${window.__marnSignOut?`<button class="out" data-action="signout" type="button" title="${esc(t('signOut'))}" aria-label="${esc(t('signOut'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></svg></button>`:''}</div></div>`;
   }
   $('#rail').innerHTML=h;
 }
