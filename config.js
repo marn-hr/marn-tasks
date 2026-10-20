@@ -10,7 +10,7 @@ window.MARN_CONFIG = {
     appId: "1:543042410165:web:81d135b40192fc8c7250fc"
   },
   // Who may sign in: every Google Workspace account on these domains (the part after @ in Marn work emails)
-  allowedDomains: ["marn.com"],
+  allowedDomains: ["marn.com", "jahez.net"],
   // ... plus these individual emails
   allowedEmails: ["mohammed.albasri12@gmail.com"],
   // Who can set or change the Business Committee password
