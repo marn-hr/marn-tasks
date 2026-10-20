@@ -379,6 +379,12 @@ svg.lock{width:12px;height:12px;flex:none;color:var(--g4);vertical-align:-1px;ma
 .field input,.field select,.field textarea{width:100%;height:36px;border:1px solid var(--g3);border-radius:var(--radius);padding:0 10px;background:var(--surface)}
 .field textarea{height:auto;min-height:84px;padding:8px 10px;resize:vertical;line-height:1.45}
 .field .owner-wrap{position:relative}
+.ochips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:36px;padding:4px 6px;border:1px solid var(--g2);border-radius:var(--radius-s,4px);background:var(--surface);box-shadow:var(--shadow-in,none)}
+.ochips input{flex:1;min-width:120px;border:0!important;box-shadow:none!important;background:transparent!important;height:26px!important;padding:0 4px!important;outline:0}
+.ochip{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 4px 0 10px;border-radius:999px;background:var(--accent,var(--fg));color:var(--accent-ink,var(--bg));font-size:12px;font-weight:500;box-shadow:0 4px 10px -6px rgba(5,109,105,.7)}
+#app[dir="rtl"] .ochip{padding:0 10px 0 4px}
+.ochip button{width:20px;height:20px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:inherit;line-height:1;font-size:14px;display:grid;place-items:center;padding:0}
+.ochip button:hover{background:rgba(255,255,255,.32)}
 .field .sugg{position:absolute;inset-inline:0;top:100%;background:var(--surface);border:1px solid var(--g3);border-radius:var(--radius);z-index:5;max-height:220px;overflow:auto;box-shadow:0 8px 20px rgba(0,0,0,.08)}
 .field .sugg button{display:block;width:100%;text-align:start;border:0;background:transparent;padding:7px 10px}
 .field .sugg button:hover{background:var(--g1)}
@@ -674,7 +680,7 @@ en:{
   lockedTitle:'Locked board', lockedText:'This board is locked. Enter the password to open it.', password:'Password', unlock:'Open', lock:'Lock', setPwTitle:'Set the board password', setPwText:'Set a password for this board. The password also encrypts the board tasks, so keep it safe.', confirmPw:'Confirm password', setPw:'Set password', rcTitle:'Recovery code', rcText:'Save this code somewhere safe. It is the only way to open the board again if the password is lost. It is shown once.', rcSaved:'I have saved it', changePw:'Change password', currentPw:'Current password', newPw:'New password', useRc:'Use recovery code', rcLabel:'Recovery code', wrongPw:'Wrong password.', wrongRc:'That recovery code is not right.', pwShort:'Use at least 8 characters.', pwMismatch:'The two passwords do not match.', notSetOwner:'The password has not been set yet. Ask the Human Capital Business Partner Manager.', unlockedToast:'Board opened', lockedToast:'Board locked', pwChanged:'Password changed', newPwAfterRc:'Set a new password now.', committeeNote:'Tasks on this board are encrypted with this password. Status, priority and dates stay visible on the overview; titles, owners and notes do not.',
   nameTitle:'How should your name appear on tasks?', namePh:'Your name', posPh:'Your position (optional)', nameSave:'Save',
   signinTitle:'Sign in to open Marn Tasks', signinText:'Marn Tasks is shared by invitation. Sign in to Claude with the email that was invited. If you cannot open it, ask the Human Capital Business Partner Manager to invite your email.', connecting:'Connecting to the shared boards',
-  saved:'Saved', saveFail:'Could not save. Check your access.', deleted:'Task deleted', exported:'Workbook ready', exportFail:'Export is not available here.', lockedTask:'Locked task', noOwner:'Unassigned', other:'Other', all:'All boards', people:'People', positions:'Positions',
+  saved:'Saved', saveFail:'Could not save. Check your access.', deleted:'Task deleted', exported:'Workbook ready', exportFail:'Export is not available here.', lockedTask:'Locked task', noOwner:'Unassigned', cOwners:'Owners', addOwner:'Add a person…', remove:'Remove', other:'Other', all:'All boards', people:'People', positions:'Positions',
   langSwitch:'العربية', today:'Today', searchResults:'Search results', signOut:'Sign out', noDue:'No date', unlockToSee:'Open the locked board to see this task.', readonlyHint:'You can view the boards. Editing needs an invitation as editor.',
   tlEmpty:'Add start or due dates to see tasks on the timeline.', dateFmt:'en-GB',
 },
@@ -692,7 +698,7 @@ ar:{
   lockedTitle:'لوحة مقفلة', lockedText:'هذه اللوحة مقفلة. أدخل كلمة المرور لفتحها.', password:'كلمة المرور', unlock:'فتح', lock:'قفل', setPwTitle:'تعيين كلمة مرور اللوحة', setPwText:'عيّن كلمة مرور لهذه اللوحة. تُشفَّر مهام اللوحة بهذه الكلمة، فاحتفظ بها في مكان آمن.', confirmPw:'تأكيد كلمة المرور', setPw:'تعيين كلمة المرور', rcTitle:'رمز الاسترداد', rcText:'احفظ هذا الرمز في مكان آمن؛ فهو الطريقة الوحيدة لفتح اللوحة إذا فُقدت كلمة المرور. يظهر مرة واحدة فقط.', rcSaved:'حفظت الرمز', changePw:'تغيير كلمة المرور', currentPw:'كلمة المرور الحالية', newPw:'كلمة المرور الجديدة', useRc:'استخدام رمز الاسترداد', rcLabel:'رمز الاسترداد', wrongPw:'كلمة المرور غير صحيحة.', wrongRc:'رمز الاسترداد غير صحيح.', pwShort:'استخدم 8 أحرف على الأقل.', pwMismatch:'كلمتا المرور غير متطابقتين.', notSetOwner:'لم تُعيَّن كلمة المرور بعد. اطلبها من مدير شركاء الأعمال لرأس المال البشري.', unlockedToast:'فُتحت اللوحة', lockedToast:'أُقفلت اللوحة', pwChanged:'تم تغيير كلمة المرور', newPwAfterRc:'عيّن كلمة مرور جديدة الآن.', committeeNote:'مهام هذه اللوحة مشفّرة بهذه الكلمة. تبقى الحالة والأولوية والتواريخ ظاهرة في النظرة العامة، أما العناوين والمسؤولون والملاحظات فلا.',
   nameTitle:'كيف يظهر اسمك على المهام؟', namePh:'اسمك', posPh:'منصبك (اختياري)', nameSave:'حفظ',
   signinTitle:'سجّل الدخول لفتح مهام مرن', signinText:'تُشارك «مهام مرن» بالدعوة. سجّل الدخول إلى Claude بالبريد الذي دُعي. إذا تعذّر عليك فتحها فاطلب من مدير شركاء الأعمال لرأس المال البشري دعوة بريدك.', connecting:'جارٍ الاتصال باللوحات المشتركة',
-  saved:'تم الحفظ', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', deleted:'حُذفت المهمة', exported:'الملف جاهز', exportFail:'التصدير غير متاح هنا.', lockedTask:'مهمة مقفلة', noOwner:'غير مسندة', other:'أخرى', all:'كل اللوحات', people:'الأشخاص', positions:'المناصب',
+  saved:'تم الحفظ', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', deleted:'حُذفت المهمة', exported:'الملف جاهز', exportFail:'التصدير غير متاح هنا.', lockedTask:'مهمة مقفلة', noOwner:'غير مسندة', cOwners:'المسؤولون', addOwner:'أضف شخصًا…', remove:'إزالة', other:'أخرى', all:'كل اللوحات', people:'الأشخاص', positions:'المناصب',
   langSwitch:'English', today:'اليوم', searchResults:'نتائج البحث', signOut:'تسجيل الخروج', noDue:'بلا تاريخ', unlockToSee:'افتح اللوحة المقفلة لعرض هذه المهمة.', readonlyHint:'يمكنك عرض اللوحات. التعديل يحتاج دعوة بصفة محرر.',
   tlEmpty:'أضف تواريخ البداية أو الاستحقاق لعرض المهام على الخط الزمني.', dateFmt:'ar-SA-u-ca-gregory-nu-latn',
 }};
@@ -771,7 +777,7 @@ function myName(){ return S.me.name || S.members.get(S.me.id)?.name || ''; }
 async function resolveProfiles(){
   if(!S.user) return;
   const ids=new Set();
-  for(const tk of S.tasks.values()){ if(tk.createdBy) ids.add(tk.createdBy); if(tk.updatedBy) ids.add(tk.updatedBy); if(tk.ownerId) ids.add(tk.ownerId); (tk.history||[]).forEach(h=>h.by&&ids.add(h.by)); (tk.updates||[]).forEach(u=>u.by&&ids.add(u.by)); }
+  for(const tk of S.tasks.values()){ if(tk.createdBy) ids.add(tk.createdBy); if(tk.updatedBy) ids.add(tk.updatedBy); if(tk.ownerId) ids.add(tk.ownerId); (tk.ownerIds||[]).forEach(i=>ids.add(i)); (tk.history||[]).forEach(h=>h.by&&ids.add(h.by)); (tk.updates||[]).forEach(u=>u.by&&ids.add(u.by)); }
   for(const id of S.members.keys()) ids.add(id);
   if(S.me.id) ids.add(S.me.id);
   if(!ids.size) return;
@@ -864,7 +870,32 @@ async function setStatus(id, status){
   render();
 }
 function canWrite(){ return S.me.canWrite!==false && !!S.db; }
-function blankTask(board){ const b0={board, title:'', owner:'', ownerId:null, status:'todo', priority:'med', start:'', due:'', ref:'', group:'', notes:'', updates:[], history:[], focus:'', decision:'', sitting:''}; if(isAch(board)) Object.assign(b0,{status:'done',titleEn:'',dept:'',impact:'',impactEn:''}); return b0; }
+function blankTask(board){ const b0={board, title:'', owner:'', ownerId:null, ownerIds:[], status:'todo', priority:'med', start:'', due:'', ref:'', group:'', notes:'', updates:[], history:[], focus:'', decision:'', sitting:''}; if(isAch(board)) Object.assign(b0,{status:'done',titleEn:'',dept:'',impact:'',impactEn:''}); return b0; }
+
+
+/* ---------- owners (a task can have several) ---------- */
+function ownerList(x){
+  const names=String(x.owner||'').split(',').map(v=>v.trim()).filter(Boolean);
+  const ids=Array.isArray(x.ownerIds)&&x.ownerIds.length? x.ownerIds.slice() : (x.ownerId? [x.ownerId] : []);
+  const low=(v)=>String(v||'').trim().toLowerCase();
+  const memberByName=(n)=>{ for(const [id,m] of S.members.entries()){ if(low(m.name)===low(n)) return id; } return null; };
+  const used=new Set();
+  const out=names.map(n=>{ let id=ids.find(i=>!used.has(i) && low(nameOf(i))===low(n)) || null;
+    if(!id){ const m=memberByName(n); if(m && !used.has(m)) id=m; }
+    if(!id && names.length===1 && ids.length===1) id=ids[0];
+    if(id) used.add(id); return {id, name:n}; });
+  ids.forEach(i=>{ if(!used.has(i)){ const n=nameOf(i); if(n) out.push({id:i, name:n}); } });
+  return out;
+}
+function ownerFields(list){
+  const ids=[...new Set(list.map(o=>o.id).filter(Boolean))];
+  return { owner: list.map(o=>o.name).join(', ').slice(0,300), ownerId: ids[0]||null, ownerIds: ids };
+}
+function ownerNames(x){ return String(x.owner||'').split(',').map(v=>v.trim()).filter(Boolean); }
+function isMine(x){ const nm=(myName()||'').trim().toLowerCase(); return (S.me.id && (x.ownerId===S.me.id || (Array.isArray(x.ownerIds) && x.ownerIds.includes(S.me.id)))) || (nm && ownerNames(x).map(v=>v.toLowerCase()).includes(nm)); }
+function ochipsHTML(list, dis){
+  return list.map((o,i)=>`<span class="ochip">${esc(o.name)}${dis?'':`<button type="button" data-action="rm-owner" data-i="${i}" aria-label="${esc(t('remove'))}">×</button>`}</span>`).join('');
+}
 
 /* ---------- committee lock ---------- */
 async function doSetPassword(pw, pw2){
@@ -912,7 +943,7 @@ function applyFilters(list){
     if(f.priority && x.priority!==f.priority) return false;
     if(f.dept && x.dept!==f.dept) return false;
     if(f.focus && x.focus!==f.focus) return false;
-    if(f.owner && (x.owner||'')!==f.owner) return false;
+    if(f.owner && !ownerNames(x).includes(f.owner)) return false;
     if(q){ const hay=[x.title,x.titleEn,x.impact,x.impactEn,x.owner,x.ref,x.group,x.notes,x.decision].map(v=>(v||'').toLowerCase()).join(' '); if(!hay.includes(q)) return false; }
     return true;
   });
@@ -1015,7 +1046,7 @@ function headHTML(){
     const b=boardOf(S.board); const list=boardTasks(S.board); const open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length;
     title=b[L()]; sub=`${t('tasksCount')(list.length)} · ${t('open')} ${open}${od?` · ${t('overdue')} ${od}`:''}`;
     tabs=`<div class="tabs" role="tablist">${['table','kanban','timeline'].map(v=>`<button type="button" class="${S.boardView===v?'on':''}" data-action="bview" data-v="${v}">${esc(t(v))}</button>`).join('')}</div>`;
-    const owners=[...new Set(list.map(x=>x.owner).filter(Boolean))].sort((a,b)=>a.localeCompare(b,L()));
+    const owners=[...new Set(list.flatMap(ownerNames))].sort((a,b)=>a.localeCompare(b,L()));
     tools=`<div class="toolbar">
       <select id="flt-status" data-action="filter" data-f="status"><option value="">${esc(t('allStatuses'))}</option>${STATUSES.map(s=>`<option value="${s}" ${S.filters.status===s?'selected':''}>${esc(t('st')[s])}</option>`).join('')}</select>
       <select id="flt-priority" data-action="filter" data-f="priority"><option value="">${esc(t('allPriorities'))}</option>${PRIORITIES.map(p=>`<option value="${p}" ${S.filters.priority===p?'selected':''}>${esc(t('pr')[p])}</option>`).join('')}</select>
@@ -1154,7 +1185,7 @@ function timelineHTML(list){
 }
 function listViewHTML(kind){
   let items;
-  if(kind==='mine'){ const nm=(myName()||'').trim().toLowerCase(); items=[...S.tasks.values()].filter(x=> !x.locked && x.status!=='done' && ((S.me.id && x.ownerId===S.me.id) || (nm && (x.owner||'').split(',').map(v=>v.trim().toLowerCase()).includes(nm)))); }
+  if(kind==='mine'){ const nm=(myName()||'').trim().toLowerCase(); items=[...S.tasks.values()].filter(x=> !x.locked && x.status!=='done' && !isAch(x.board) && isMine(x)); }
   else if(kind==='search') items=[...S.tasks.values()].filter(x=>!x.locked);
   else items=[...S.tasks.values()].filter(isOverdue);
   items=applyFilters(items);
@@ -1206,8 +1237,8 @@ function lockPanelHTML(){
 }
 
 /* ---------- drawer ---------- */
-function openTask(id){ const x=S.tasks.get(id); if(!x) return; if(x.locked){ S.view='board'; S.board=x.board; S.mainKey=''; render(); return; } S.drawer={mode:'edit', id, draft:{...x}, confirm:false}; renderDrawer(); }
-function newTask(board){ S.drawer={mode:'new', id:null, draft:blankTask(board||(S.view==='board'?S.board:BOARDS[0].id)), confirm:false}; renderDrawer(); setTimeout(()=>$('#f-title')?.focus(),30); }
+function openTask(id){ const x=S.tasks.get(id); if(!x) return; if(x.locked){ S.view='board'; S.board=x.board; S.mainKey=''; render(); return; } S.drawer={mode:'edit', id, draft:{...x}, owners:ownerList(x), confirm:false}; renderDrawer(); }
+function newTask(board){ S.drawer={mode:'new', id:null, draft:blankTask(board||(S.view==='board'?S.board:BOARDS[0].id)), owners:[], confirm:false}; renderDrawer(); setTimeout(()=>$('#f-title')?.focus(),30); }
 function closeDrawer(){ S.drawer=null; renderDrawer(); }
 function field(id,label,inner){ return `<div class="field" id="w-${id}"><label for="${id}">${esc(label)}</label>${inner}</div>`; }
 function renderDrawer(){
@@ -1225,7 +1256,7 @@ function renderDrawer(){
       <div class="fgrid">
         ${isA? achFields(x,dis) : `${field('f-board',t('cBoard'),`<select id="f-board" data-f="board" ${dis}>${boardOpts}</select>`)}
         ${field('f-status',t('cStatus'),`<select id="f-status" data-f="status" class="chip lg s-${x.status}" ${dis}>${STATUSES.map(s=>`<option value="${s}" ${s===x.status?'selected':''}>${esc(t('st')[s])}</option>`).join('')}</select>`)}
-        ${field('f-owner',t('cOwner'),`<div class="owner-wrap"><input id="f-owner" data-f="owner" value="${esc(x.owner)}" autocomplete="off" maxlength="80" ${dis}><div class="sugg" id="sugg" hidden></div></div>`)}
+        ${field('f-owner',t('cOwners'),`<div class="owner-wrap"><div class="ochips" id="ochips">${ochipsHTML(d.owners||[], ro)}${ro?'':`<input id="f-owner" value="" autocomplete="off" maxlength="80" placeholder="${esc(t('addOwner'))}">`}</div><div class="sugg" id="sugg" hidden></div></div>`)}
         ${field('f-priority',t('cPriority'),`<select id="f-priority" data-f="priority" ${dis}>${PRIORITIES.map(p=>`<option value="${p}" ${p===x.priority?'selected':''}>${esc(t('pr')[p])}</option>`).join('')}</select>`)}
         ${field('f-start',t('cStart'),`<input type="date" id="f-start" data-f="start" value="${esc(x.start)}" ${dis}>`)}
         ${field('f-due',t('cDue'),`<input type="date" id="f-due" data-f="due" value="${esc(x.due)}" ${dis}>`)}
@@ -1258,7 +1289,8 @@ function ownerSuggestions(q){
   const people=[...S.members.entries()].map(([id,m])=>({id,name:m.name,pos:m.position})).filter(p=>p.name);
   for(const [id,p] of Object.entries(S.profiles)){ if(p.name && !people.some(x=>x.id===id)) people.push({id,name:p.name}); }
   const pos=POSITIONS.map(p=>p[L()]);
-  const pp=people.filter(p=>!q||p.name.toLowerCase().includes(q)).slice(0,8), ps=pos.filter(p=>!q||p.toLowerCase().includes(q)).slice(0,8);
+  const chosen=new Set(((S.drawer&&S.drawer.owners)||[]).map(o=>o.name.toLowerCase()));
+  const pp=people.filter(p=>!chosen.has(p.name.toLowerCase()) && (!q||p.name.toLowerCase().includes(q))).slice(0,8), ps=pos.filter(p=>!q||p.toLowerCase().includes(q)).slice(0,8);
   if(!pp.length && !ps.length) return '';
   let h=''; if(pp.length){ h+=`<div class="h">${esc(t('people'))}</div>`+pp.map(p=>`<button type="button" data-action="pick-owner" data-id="${esc(p.id)}" data-name="${esc(p.name)}">${esc(p.name)}${p.pos?` <span class="muted small">· ${esc(p.pos)}</span>`:''}</button>`).join(''); }
   if(ps.length){ h+=`<div class="h">${esc(t('positions'))}</div>`+ps.map(p=>`<button type="button" data-action="pick-owner" data-id="" data-name="${esc(p)}">${esc(p)}</button>`).join(''); }
@@ -1319,6 +1351,7 @@ function mapStatus(v){ const s=nrm(v); if(!s) return 'todo';
 function mapPriority(v){ const s=nrm(v); if(!s) return 'med'; if(/critical|high|urgent|عالي|حرج/.test(s)) return 'high'; if(/low|منخفض/.test(s)) return 'low'; return 'med'; }
 function mapBoard(v){ const s=nrm(v); if(!s) return ''; const b=BOARDS.find(b=>[b.id,b.en,b.ar].some(z=>nrm(z)===s)); return b? b.id : ''; }
 function mapFocus(v){ const s=nrm(v); if(!s) return ''; const f=FOCUS.find(f=>[f.id,f.en,f.ar].some(z=>nrm(z)===s)); return f? f.id : ''; }
+function findMemberOne(n){ const s=nrm(n); for(const [id,m] of S.members.entries()){ if(nrm(m.name)===s) return id; } return null; }
 function findMember(name){ const n=nrm(String(name||'').split(',')[0]); if(!n) return null; for(const [id,m] of S.members.entries()){ if(nrm(m.name)===n) return id; } return null; }
 function parseWorkbook(wb){
   const sheets=wb.SheetNames.map(n=>XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:null,raw:true,blankrows:false}));
@@ -1371,10 +1404,10 @@ async function importFile(file){
     if(p.srcId && have.has(p.srcId)){ k++; continue; }
     const notes=[p.notes, p.critical? (L()==='ar'?'الأولوية في المصدر: حرجة':'Source priority: Critical') : '', p.subs.length? ((L()==='ar'?'المهام الفرعية:':'Subitems:')+'\n'+p.subs.join('\n')) : ''].filter(Boolean).join('\n\n').slice(0,4000);
     const updates=(parsed.upd.get(p.srcId)||[]).sort((a,b)=>a.at.localeCompare(b.at)).slice(-100);
-    const tk={...blankTask(board), title:p.title, owner:p.owner, ownerId:findMember(p.owner), status:p.status, priority:p.priority, start:p.start, due:p.due, group:p.group, ref:p.ref, notes, updates};
+    const tk={...blankTask(board), title:p.title, ...ownerFields(p.owner.split(',').map(v=>v.trim()).filter(Boolean).map(n=>({name:n, id:findMemberOne(n)}))), status:p.status, priority:p.priority, start:p.start, due:p.due, group:p.group, ref:p.ref, notes, updates};
     if(p.srcId) tk.srcId=p.srcId;
     if(p.focus) tk.focus=p.focus;
-    if(isAch(board)) Object.assign(tk,{status:'done', owner:'', ownerId:null, due:'', start:'', titleEn:p.titleEn, dept:p.dept, impact:p.impact, impactEn:p.impactEn});
+    if(isAch(board)) Object.assign(tk,{status:'done', owner:'', ownerId:null, ownerIds:[], due:'', start:'', titleEn:p.titleEn, dept:p.dept, impact:p.impact, impactEn:p.impactEn});
     const id=await saveTask(tk, hist('created')); if(id){ n++; if(p.srcId) have.add(p.srcId); }
   }
   toast(t('imported')(n,k)); render();
@@ -1388,7 +1421,7 @@ let rendering=false, renderAgain=false;
 async function render(){
   if(rendering){ renderAgain=true; return; }
   rendering=true;
-  try{ await resolveProfiles(); renderChrome(); renderRail(); renderMain(); if(S.drawer && S.drawer.mode==='edit'){ const cur=S.tasks.get(S.drawer.id); if(!cur){ S.drawer=null; renderDrawer(); } else if(!document.activeElement || !$('#drawerhost')?.contains(document.activeElement)){ S.drawer.draft={...cur}; renderDrawer(); } } }
+  try{ await resolveProfiles(); renderChrome(); renderRail(); renderMain(); if(S.drawer && S.drawer.mode==='edit'){ const cur=S.tasks.get(S.drawer.id); if(!cur){ S.drawer=null; renderDrawer(); } else if(!document.activeElement || !$('#drawerhost')?.contains(document.activeElement)){ S.drawer.draft={...cur}; S.drawer.owners=ownerList(cur); renderDrawer(); } } }
   finally{ rendering=false; if(renderAgain){ renderAgain=false; render(); } }
 }
 function nav(target){
@@ -1399,6 +1432,20 @@ function nav(target){
   render(); $('#main').scrollTop=0;
 }
 
+async function setOwners(list){
+  const d=S.drawer; if(!d) return;
+  d.owners=list; Object.assign(d.draft, ownerFields(list));
+  if(d.mode==='edit'){ const cur=S.tasks.get(d.id); if(cur){ await saveTask({...cur, ...ownerFields(list)}, hist('field',{field:'owner'})); } }
+  const chips=$('#ochips'); if(chips){ chips.querySelectorAll('.ochip').forEach(c=>c.remove()); chips.insertAdjacentHTML('afterbegin', ochipsHTML(list, false)); }
+  const inp=$('#f-owner'); if(inp){ inp.value=''; inp.focus(); } const sg=$('#sugg'); if(sg) sg.hidden=true;
+  render();
+}
+async function addOwner(o){
+  const d=S.drawer; if(!d) return; const name=String(o.name||'').trim().slice(0,80); if(!name) return;
+  let id=o.id||null; if(!id){ for(const [mid,m] of S.members.entries()){ if((m.name||'').trim().toLowerCase()===name.toLowerCase()){ id=mid; break; } } }
+  const list=(d.owners||[]).slice(); if(list.some(x=>(id && x.id===id) || x.name.toLowerCase()===name.toLowerCase())){ const inp=$('#f-owner'); if(inp) inp.value=''; return; }
+  list.push({id, name}); await setOwners(list);
+}
 /* ---------- events ---------- */
 document.addEventListener('click', async (ev)=>{
   const el=ev.target.closest('[data-action]'); if(!el) return;
@@ -1430,7 +1477,8 @@ document.addEventListener('click', async (ev)=>{
   else if(a==='delete-ask'){ S.drawer.confirm=true; renderDrawer(); }
   else if(a==='delete-no'){ S.drawer.confirm=false; renderDrawer(); }
   else if(a==='delete-yes'){ const id=S.drawer.id; S.drawer=null; renderDrawer(); await deleteTask(id); render(); }
-  else if(a==='pick-owner'){ const d=S.drawer; if(!d) return; d.draft.owner=el.dataset.name; d.draft.ownerId=el.dataset.id||null; $('#f-owner').value=el.dataset.name; $('#sugg').hidden=true; if(d.mode==='edit'){ const cur=S.tasks.get(d.id); await saveTask({...cur, owner:d.draft.owner, ownerId:d.draft.ownerId}, hist('field',{field:'owner'})); render(); } }
+  else if(a==='pick-owner'){ await addOwner({id:el.dataset.id||null, name:el.dataset.name}); }
+  else if(a==='rm-owner'){ const d=S.drawer; if(!d) return; const list=(d.owners||[]).slice(); list.splice(+el.dataset.i,1); await setOwners(list); }
   else if(a==='save-name'){
     const name=($('#id-name')?.value||'').trim(), position=($('#id-pos')?.value||'').trim(); if(!name||!S.me.id) return;
     const prev=S.members.get(S.me.id)||{}; const rec={...prev, name, position, updatedAt:new Date().toISOString()};
@@ -1456,12 +1504,12 @@ document.addEventListener('change', async (ev)=>{
 document.addEventListener('input', (ev)=>{
   const el=ev.target;
   if(el.id==='q'){ S.filters.q=el.value; if(S.view==='board'||S.view==='mine'||S.view==='overdue'){ renderBody(); } else if(S.view==='search'){ if(!el.value){ S.view=S.prevView||'overview'; S.mainKey=''; render(); } else { S.mainKey=''; renderMain(); } } else if(el.value){ S.prevView=S.view; S.view='search'; S.drawer=null; renderDrawer(); S.mainKey=''; render(); } return; }
-  if(el.id==='f-owner'){ const s=$('#sugg'); const h=ownerSuggestions(el.value); s.innerHTML=h; s.hidden=!h; if(S.drawer) { S.drawer.draft.owner=el.value; S.drawer.draft.ownerId=null; } return; }
+  if(el.id==='f-owner'){ const s=$('#sugg'); const h=ownerSuggestions(el.value); s.innerHTML=h; s.hidden=!h; return; }
   if(el.closest('#drawerhost') && el.dataset.f && S.drawer){ S.drawer.draft[el.dataset.f]=el.value; }
 });
 document.addEventListener('focusin', (ev)=>{ if(ev.target.id==='f-owner'){ const s=$('#sugg'); const h=ownerSuggestions(ev.target.value); s.innerHTML=h; s.hidden=!h; } });
 document.addEventListener('focusout', (ev)=>{ if(ev.target.id==='f-owner'){ setTimeout(()=>{ const s=$('#sugg'); if(s && !s.contains(document.activeElement)) s.hidden=true; }, 150); } });
-document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape' && S.drawer){ closeDrawer(); } });
+document.addEventListener('keydown', (ev)=>{ if(ev.target && ev.target.id==='f-owner'){ if(ev.key==='Enter'){ ev.preventDefault(); const first=$('#sugg button[data-action="pick-owner"]'); const v=ev.target.value.trim(); if(v && first && !$('#sugg').hidden && first.dataset.name.toLowerCase().includes(v.toLowerCase())) addOwner({id:first.dataset.id||null, name:first.dataset.name}); else if(v) addOwner({name:v}); return; } if(ev.key==='Backspace' && !ev.target.value && S.drawer && (S.drawer.owners||[]).length){ const l=S.drawer.owners.slice(0,-1); setOwners(l); return; } } if(ev.key==='Escape' && S.drawer){ closeDrawer(); } });
 $('#langbtn').addEventListener('click', ()=> setLang(L()==='ar'?'en':'ar'));
 // drag and drop on the kanban
 document.addEventListener('dragstart', (ev)=>{ const c=ev.target.closest('.card'); if(!c||c.getAttribute('draggable')!=='true') return; ev.dataTransfer.setData('text/plain', c.dataset.id); ev.dataTransfer.effectAllowed='move'; c.classList.add('dragging'); });
