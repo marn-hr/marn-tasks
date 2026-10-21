@@ -1798,8 +1798,8 @@ function resubscribe(){
   for(const [b,tag] of want){
     if(SUBS.has(b)) continue;
     const uns=[];
-    uns.push(db.collection('tasks').where('board','==',b).onSnapshot(snap=> ingestBoard(b, snap), err=>{ console.warn('tasks', b, err); rawByBoard.set(b, new Map()); S.tasksLoaded=true; S.connecting=false; render(); }));
-    uns.push(db.collection('reports').where('board','==',b).onSnapshot(snap=> ingestReports(b, snap), err=> console.warn('reports', b, err)));
+    uns.push(db.collection('tasks').where('board','==',b).onSnapshot(snap=> ingestBoard(b, snap), err=>{ console.warn('tasks', b, err); if(!retrySub(b)){ rawByBoard.set(b, new Map()); S.tasksLoaded=true; S.connecting=false; render(); } }));
+    uns.push(db.collection('reports').where('board','==',b).onSnapshot(snap=> ingestReports(b, snap), err=>{ console.warn('reports', b, err); retrySub(b); }));
     if(tag==='m') uns.push(db.doc('settings/'+b).onSnapshot(snap=>{ S.lockSettings[b] = snap.exists? snap.data(): null; S.lockLoaded[b]=true; render(); }, err=>{ console.warn('settings', b, err); S.lockLoaded[b]=true; render(); }));
     else S.lockLoaded[b]=true;
     uns.push(db.collection('deptlogs/'+b+'/items').recent('at', 300).onSnapshot(snap=>{ S.logs.set(b, snap.docs.filter(d=>d.exists).map(d=>({id:d.id, ...d.data()}))); render(); }, err=> console.warn('log', b, err)));
@@ -1813,7 +1813,14 @@ function resubscribe(){
   if(changed){ rebuildRaw(); rebuildAll().then(()=>render()); }
   if(!want.size){ S.tasksLoaded=true; S.connecting=false; }
 }
-async function ingestBoard(b, snap){ const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawByBoard.set(b, m); rebuildRaw(); await rebuildAll(); S.tasksLoaded=true; S.connecting=false; await render(); }
+// Just after a member list changes, the rules can briefly still see the old list; retry a few times before giving up.
+const subRetries = new Map();
+function retrySub(b){
+  const n=subRetries.get(b)||0; if(n>=4) return false; subRetries.set(b, n+1);
+  const sub=SUBS.get(b); if(sub){ sub.uns.forEach(u=>{ try{ u&&u(); }catch(e){} }); SUBS.delete(b); }
+  setTimeout(()=> resubscribe(), 1500*(n+1)); return true;
+}
+async function ingestBoard(b, snap){ subRetries.delete(b); const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawByBoard.set(b, m); rebuildRaw(); await rebuildAll(); S.tasksLoaded=true; S.connecting=false; await render(); }
 function rebuildRaw(){ const out=new Map(); for(const [b,m] of rawByBoard){ if(!SUBS.has(b)) continue; for(const [id,d] of m) out.set(id, d); } rawDocs=out; }
 async function ingestReports(b, snap){ const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawRepByBoard.set(b, m); await rebuildReports(); render(); }
 async function repFromStored(id, data){ const r={id, ...data, c:{}}; if(data.enc){ const key=keyOf(data.board); if(key){ try{ r.c=await decryptObj(data.enc, key); }catch(e){ r.locked=true; } } else r.locked=true; } delete r.enc; return r; }
