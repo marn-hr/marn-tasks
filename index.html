@@ -15,7 +15,7 @@
 // Reads window.MARN_CONFIG from config.js. Loaded as a module after config.js.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, getDoc, getDocs, deleteDoc, query, where as fsWhere, orderBy as fsOrderBy, limit as fsLimit } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const C = window.MARN_CONFIG || {};
 const lang = (()=>{ try{ return localStorage.getItem('marn.lang')==='en' ? 'en' : 'ar'; }catch(e){ return 'ar'; } })();
@@ -56,6 +56,9 @@ else {
     return (C.allowedDomains||[]).map(x=>x.toLowerCase()).includes(d) || (C.allowedEmails||[]).map(x=>x.toLowerCase()).includes(e);
   };
   const isOwner = (email)=> (C.owners||[]).map(x=>x.toLowerCase()).includes((email||'').toLowerCase());
+  // Chief Executive Officer: opens every department without a password (also enforced in firestore.rules)
+  const CEO_LIST = (C.ceo||['loai@marn.com']).map(x=>String(x).toLowerCase());
+  const isCEOmail = (email)=> CEO_LIST.includes((email||'').toLowerCase());
 
   doSignIn = async function(){
     overlay('none', TX.signing);
@@ -72,8 +75,9 @@ else {
   const clean = (d)=> JSON.parse(JSON.stringify(d));
   const wrapD = (s)=> ({ id:s.id, exists: typeof s.exists==='function' ? s.exists() : !!s.exists, data:()=> s.data(), metadata: s.metadata||{} });
   const wrapQ = (s)=> ({ docs:s.docs.map(wrapD), size:s.size, empty:s.empty, docChanges:()=>[], metadata:s.metadata||{} });
+  function qWrap(q){ return { onSnapshot:(cb,err)=> onSnapshot(q, s=> cb(wrapQ(s)), err), get: async()=> wrapQ(await getDocs(q)) }; }
   function docRef(path){ const r = doc(fs, ...path.split('/')); return { id:r.id, path, set:(d)=> setDoc(r, clean(d)), update:(d)=> updateDoc(r, clean(d)), delete:()=> deleteDoc(r), get: async()=> wrapD(await getDoc(r)), onSnapshot:(cb,err)=> onSnapshot(r, s=> cb(wrapD(s)), err), collection:(sub)=> colRef(path+'/'+sub) }; }
-  function colRef(path){ const parts = path.split('/'); const c = collection(fs, ...parts); return { path, doc:(id)=> id ? docRef(path+'/'+id) : docRef(path+'/'+doc(c).id), add: async(d)=>{ const r = doc(c); await setDoc(r, clean(d)); return docRef(path+'/'+r.id); }, get: async()=> wrapQ(await getDocs(c)), onSnapshot:(cb,err)=> onSnapshot(c, s=> cb(wrapQ(s)), err), where(){ return this; }, orderBy(){ return this; }, limit(){ return this; } }; }
+  function colRef(path){ const parts = path.split('/'); const c = collection(fs, ...parts); return { path, doc:(id)=> id ? docRef(path+'/'+id) : docRef(path+'/'+doc(c).id), add: async(d)=>{ const r = doc(c); await setDoc(r, clean(d)); return docRef(path+'/'+r.id); }, get: async()=> wrapQ(await getDocs(c)), onSnapshot:(cb,err)=> onSnapshot(c, s=> cb(wrapQ(s)), err), where:(f,op,v)=> qWrap(query(c, fsWhere(f,op,v))), recent:(f,n)=> qWrap(query(c, fsOrderBy(f,'desc'), fsLimit(n))) }; }
   const db = { doc: docRef, collection: colRef };
 
   // people: names come from the members collection, written by each person at sign-in
@@ -87,7 +91,7 @@ else {
     name: async()=> me ? (me.displayName||'') : '',
     email: async()=> me ? me.email : null,
     avatarUrl: async()=> me ? (me.photoURL||null) : null,
-    me: async()=> ({ id: me?me.uid:null, name: me?(me.displayName||''):'', avatarUrl: me?(me.photoURL||''):'', color:'#1B191A', email: me?me.email:null, isOwner: !!me && isOwner(me.email), canEdit: true }),
+    me: async()=> ({ id: me?me.uid:null, name: me?(me.displayName||''):'', avatarUrl: me?(me.photoURL||''):'', color:'#1B191A', email: me?me.email:null, isOwner: !!me && isOwner(me.email), isCEO: !!me && isCEOmail(me.email), canEdit: true }),
     profiles: async(ids)=>{ const o={}; for(const id of (Array.isArray(ids)?ids:[ids])){ const m=members.get(id)||{}; o[id]={ id, name:m.name||'', avatarUrl:m.photo||'', color:'#1B191A', email:m.email||null, isMe: !!me && id===me.uid, guest:false }; } return o; },
     search: async()=> [],
   };
@@ -589,6 +593,142 @@ svg.lock{width:12px;height:12px;flex:none;color:var(--g4);vertical-align:-1px;ma
   .rail .item .ibox{width:26px;height:26px;border-radius:999px;box-shadow:none;background:transparent}
   .rail .item.on .ibox{background:transparent;box-shadow:none;color:var(--accent-ink)}
 }
+
+/* ---------- Departments edition (October 2026) ----------
+   Landing shape: three separate rooms of equal standing (a comparison of three), drawn as three doors side by side;
+   in Arabic they read right to left. The department name carries the largest type, access state is the second signal,
+   numbers are third. Charcoal ramp throughout; teal only for what is open or final (action and achievement);
+   urgency (overdue) stays charcoal. Reports read as a time-ordered stack, newest first. */
+.chev{width:16px;height:16px;flex:none}
+#app[dir="rtl"] .chev{transform:scaleX(-1)}
+.door .ibox,.acc-col .ibox,.ceo-cta .ibox,.ceo-line .ibox{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:10px;background:var(--g1);color:var(--fg);box-shadow:var(--shadow-in)}
+.door .ic,.acc-col .ic,.ceo-cta .ic,.ceo-line .ic{width:21px;height:21px}
+
+.hero{padding:6px 0 22px;max-width:720px}
+.hero .hello{margin:0 0 4px;color:var(--g5);font-size:14px}
+.hero h1{margin:0;font-size:20px;font-weight:700}
+.hero .lead{margin:6px 0 0;color:var(--g5)}
+
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.door{position:relative;display:flex;flex-direction:column;gap:6px;text-align:start;text-decoration:none;color:inherit;border:1px solid var(--g2);border-radius:calc(var(--radius) + 4px);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);padding:20px 20px 16px;min-height:300px;transition:transform .15s ease,box-shadow .15s ease}
+a.door:hover{transform:translateY(-3px);box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+a.door:hover .dgo{color:var(--accent)}
+.door .dtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.door .dstate{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--g5);border:1px solid var(--g2);border-radius:999px;padding:3px 10px;background:var(--bg);white-space:nowrap}
+.door .dstate svg.lock{width:12px;height:12px}
+.door.unl .dstate{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:var(--accent-soft)}
+.door.unl .ibox{background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 16px -8px rgba(5,109,105,.7)}
+.door h2{margin:0;font-size:26px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+#app[lang="ar"] .door h2{letter-spacing:0;line-height:1.35}
+.door .dd{margin:0;color:var(--g5);font-size:13px}
+.door .dstats{margin:auto 0 0;padding-top:14px;border-top:1px solid var(--g2);display:grid;gap:8px}
+.door .dstats div{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.door .dstats dt{color:var(--g5);font-size:12px}
+.door .dstats dd{margin:0;font-weight:700;font-size:14px;white-space:nowrap}
+.door .dstats dd small{font-weight:500;color:var(--g6)}
+.door .dstats dd.s-final{color:var(--accent)}
+.door .dstats dd.s-missing{color:var(--g5);font-weight:500}
+.door .dgo{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-weight:700;font-size:13px;transition:color .15s}
+.door.off{background:var(--g1);box-shadow:var(--shadow-in);border-color:transparent;color:var(--g5);min-height:0}
+.door.off h2{color:var(--g5);font-size:22px}
+.door.off .dstate{background:transparent;border-style:dashed}
+.door.off .ibox{color:var(--g4);background:transparent;box-shadow:none}
+.ceo-cta{margin-top:16px;width:100%;display:flex;align-items:center;gap:14px;text-align:start;border:0;border-radius:calc(var(--radius) + 4px);background:var(--fg);color:var(--bg);padding:16px 20px;box-shadow:0 16px 30px -16px rgba(var(--sh-rgb),.6);transition:transform .15s ease}
+.ceo-cta:hover{transform:translateY(-2px)}
+.ceo-cta > span{flex:1;display:flex;flex-direction:column;gap:2px}
+.ceo-cta b{font-size:16px}
+.ceo-cta > span > span{color:color-mix(in srgb,var(--bg) 72%,transparent);font-size:13px}
+.ceo-cta .ibox{background:color-mix(in srgb,var(--bg) 12%,transparent);color:var(--bg);box-shadow:none}
+.home-foot{margin:18px 0 0}
+
+.sectabs{flex-shrink:0;display:flex;gap:2px;margin:0 0 16px;border-bottom:1px solid var(--g2);overflow-x:auto;scrollbar-width:none}
+.sectabs button{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;padding:10px 12px;color:var(--g5);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500;border-radius:0}
+.sectabs button:hover{color:var(--fg)}
+.sectabs button.on{color:var(--fg);border-bottom-color:var(--accent);font-weight:700}
+.sectabs .ic{width:18px;height:18px}
+.sectabs .n{font-size:12px;color:var(--g5);background:var(--g1);border-radius:999px;padding:0 7px;line-height:18px;min-width:18px;text-align:center}
+.sectabs .n:empty{display:none}
+.sectabs button.on .n{background:var(--accent-soft);color:var(--accent)}
+
+.callout{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow-1)}
+.callout > span:not(.dot){flex:1;min-width:200px}
+.callout .dot{width:8px;height:8px;border-radius:50%;background:var(--fg);flex:none}
+.callout.quiet{box-shadow:none;background:var(--g1);border-color:transparent;color:var(--g6)}
+
+.replist{display:grid;gap:10px}
+.rep{display:grid;grid-template-columns:minmax(170px,auto) 1fr auto;grid-template-areas:"p m s" "p u u";gap:4px 18px;align-items:center;text-align:start;width:100%;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:14px 18px;box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);transition:transform .12s,box-shadow .12s}
+.rep:hover{transform:translateY(-1px);box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+.rep .rp{grid-area:p;font-size:18px;font-weight:700}
+.rep .rm{grid-area:m;color:var(--g6);font-size:13px}
+.rep .rs{grid-area:s;justify-self:end}
+.rep .ru{grid-area:u;color:var(--g4);font-size:12px}
+.rs{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;border:1px dashed var(--g4);color:var(--g5);white-space:nowrap}
+.rs.s-final{border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft)}
+.rs.s-missing{border-color:var(--g3);color:var(--g4)}
+.vhead .rs{align-self:center}
+.btn.back{display:inline-flex;align-items:center;gap:6px}
+.unsaved{font-size:12px;color:var(--g5);align-self:center}
+
+.repform{display:flex;flex-direction:column;gap:20px;max-width:1080px}
+.rgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
+.rgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.rgrid.one{grid-template-columns:1fr}
+.rsec h3{font-size:13px;margin:0 0 8px;color:var(--g5);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+#app[lang="ar"] .rsec h3{letter-spacing:0;font-size:14px}
+.rsec .note{font-size:12px;color:var(--g4);margin:8px 0 0}
+.rlist{margin:0 0 8px;padding-inline-start:22px;display:grid;gap:6px}
+.rlist li{display:flex;gap:6px;align-items:center}
+.rlist li::marker{color:var(--g4);font-variant-numeric:tabular-nums}
+.rlist input,.rtable input,.rtable select{width:100%;height:36px;border:1px solid var(--g2);border-radius:var(--radius-s);padding:0 10px;background:var(--surface);box-shadow:var(--shadow-in)}
+.rtable{flex-shrink:0;overflow-x:auto;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-1)}
+.rtable table{width:100%;border-collapse:collapse;min-width:640px}
+.rtable th{font-size:12px;color:var(--g5);font-weight:500;text-align:start;padding:8px 10px;border-bottom:1px solid var(--g2)}
+.rtable td{padding:6px 8px;border-bottom:1px solid var(--g1);vertical-align:middle}
+.rtable tr:last-child td{border-bottom:0}
+.rtable td:first-child{width:44%}
+.rtable td:last-child{width:40px}
+.rtable select.rag{min-width:140px}
+.rtable select.rag.r-on{color:var(--accent)}
+.rtable select.rag.r-off{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.rrow{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+.rrow .grow{flex:1}
+.iconbtn.sm{width:28px;height:28px;padding:0;flex:none;display:inline-grid;place-items:center;font-size:16px;line-height:1}
+.snap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.snap div{border-radius:var(--radius);background:var(--g1);box-shadow:var(--shadow-in);padding:10px 14px}
+.snap b{display:block;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.2}
+.snap span{font-size:12px;color:var(--g5)}
+.snap .done b{color:var(--accent)}
+.repform input:disabled,.repform textarea:disabled,.repform select:disabled{opacity:1;color:var(--fg);-webkit-text-fill-color:var(--fg);background:var(--g1);box-shadow:none;border-color:transparent}
+
+.loglist .em,.acc-col .em{direction:ltr;unicode-bidi:isolate}
+.loglist .em{color:var(--g4)}
+.accgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.acc-col{border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:14px;box-shadow:var(--shadow-1);display:flex;flex-direction:column;gap:10px}
+.acc-col header{display:flex;align-items:center;gap:10px}
+.acc-col h2{font-size:15px;margin:0;flex:1;line-height:1.3}
+.acc-col header .num{font-weight:700;font-size:18px}
+.acc-col ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;align-content:start;min-height:44px;flex:1}
+.acc-col li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 4px 4px 10px;border-radius:var(--radius-s);background:var(--g1);font-size:13px;min-width:0}
+#app[dir="rtl"] .acc-col li{padding:4px 10px 4px 4px}
+.acc-col li .em{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acc-col li.none{background:transparent;color:var(--g4);padding-inline:0}
+.acc-add{display:flex;gap:6px}
+.acc-add{align-items:flex-start}
+.acc-add textarea{flex:1;min-width:0;min-height:36px;max-height:160px;resize:vertical;line-height:1.4;padding-block:8px !important;border:1px solid var(--g2);border-radius:var(--radius-s);padding:0 10px;background:var(--bg);box-shadow:var(--shadow-in)}
+.ceo-line{display:flex;align-items:center;gap:12px;color:var(--g6);margin:0 0 14px}
+.tile .v small{font-size:18px;color:var(--g4);font-weight:500;text-shadow:none}
+.tile.ach .v{color:var(--accent)}
+div.tile{cursor:default}
+div.tile:hover{border-color:var(--g2)}
+
+@media (max-width:900px){
+  .doors,.accgrid,.rgrid,.rgrid.two{grid-template-columns:1fr}
+  .door{min-height:0}
+  .door h2{font-size:23px}
+  .snap{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rep{grid-template-columns:1fr auto;grid-template-areas:"p s" "m m" "u u"}
+  .vhead .unsaved{display:none}
+}
 </style>
 
 <div id="app" dir="rtl" lang="ar">
@@ -619,17 +759,9 @@ const LOCK_SVG = '<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="curr
 
 /* ---------- Marn structure (OPS-53 edition A) ---------- */
 const BOARDS = [
-  {id:'marketing',        en:'Marketing',                   ar:'التسويق'},
-  {id:'sales',            en:'Sales',                       ar:'المبيعات'},
-  {id:'commercial',       en:'Commercial and Partnerships', ar:'التجاري والشراكات'},
-  {id:'customer-success', en:'Customer Success',            ar:'نجاح العملاء'},
-  {id:'technology',       en:'Technology',                  ar:'التقنية'},
-  {id:'finance',          en:'Finance',                     ar:'المالية'},
-  {id:'human-capital',    en:'Human Capital',               ar:'رأس المال البشري', locked:true},
-  {id:'grc-legal',        en:'GRC and Legal',               ar:'الحوكمة والمخاطر والالتزام والشؤون القانونية'},
-  {id:'operations',       en:'Operations',                  ar:'العمليات'},
-  {id:'committee',        en:'Business Committee',          ar:'لجنة الأعمال', locked:true},
-  {id:'achievements',     en:'Marn Achievements',           ar:'إنجازات مرن', kind:'ach'},
+  {id:'human-capital',       en:'Human Capital',       ar:'رأس المال البشري', locked:true},
+  {id:'customer-experience', en:'Customer Experience', ar:'تجربة العملاء', locked:true},
+  {id:'grc-legal',           en:'GRC and Legal',       ar:'الحوكمة والمخاطر والالتزام والشؤون القانونية', locked:true},
 ];
 const COMMITTEE = 'committee';
 const LOCKED = BOARDS.filter(b=>b.locked).map(b=>b.id);
@@ -670,17 +802,45 @@ en:{
   product:'Tasks', overview:'Overview', mine:'My tasks', overdueV:'Overdue', activity:'Activity', boards:'Boards', views:'Views',
   table:'Table', kanban:'Kanban', timeline:'Timeline', newTask:'New task', newAch:'New achievement', achTitleAr:'Achievement (Arabic)', achTitleEn:'Achievement (English)', cDept:'Department', cPillar:'Pillar', cImpactAr:'Impact (Arabic)', cImpactEn:'Impact (English)', achHero:'achievements so far', emptyAch:'No achievements yet. Add the first one with New achievement.', allDepts:'All departments', allPillars:'All pillars', achCount:(n)=> `${n} achievements`, export:'Export to Excel', import:'Import from Excel', importing:'Importing…', imported:(n,k)=> `${n} tasks imported`+(k?` · ${k} already on the board`:''), importFail:'The file could not be read. Use an Excel export with Name, Owner, Status columns.', search:'Search tasks, owners, references',
   allStatuses:'All statuses', allOwners:'All owners', allPriorities:'All priorities', hideDone:'Hide done', tasksCount:(n)=> n===1?'1 task':`${n} tasks`, updatesCount:(n)=> n===1?'1 update':`${n} updates`,
-  cTask:'Task', cOwner:'Owner', cStatus:'Status', cPriority:'Priority', cStart:'Start', cDue:'Due', cRef:'Reference', cGroup:'Group', cUpdated:'Updated', cNotes:'Notes', cBoard:'Board', cDaysLate:'Days late', cFocus:'Focus area', cDecision:'Decision reference', cSitting:'Sitting date',
+  cTask:'Task', cOwner:'Owner', cStatus:'Status', cPriority:'Priority', cStart:'Start', cDue:'Due', cRef:'Reference', cGroup:'Group', cUpdated:'Updated', cNotes:'Notes', cBoard:'Department', cDaysLate:'Days late', cFocus:'Focus area', cDecision:'Decision reference', cSitting:'Sitting date',
   st:{todo:'Not started', doing:'Working on it', stuck:'Stuck', done:'Done'}, pr:{high:'High', med:'Medium', low:'Low'},
   emptyBoard:'No tasks on this board yet.', emptyBoardHint:'Add the first one with New task.', emptyFiltered:'No tasks match these filters.', emptyMine:'Nothing is assigned to you.', emptyMineHint:'Tasks whose owner is you appear here.', emptyOverdue:'Nothing is overdue.', emptyOverdueHint:'Open tasks past their due date appear here.', emptyActivity:'No activity yet.',
   dueToday:'due today', dueTomorrow:'due tomorrow', dueIn:(n)=>`due in ${n} days`, overdueBy:(n)=> n===1?'overdue by 1 day':`overdue by ${n} days`, late:(n)=> n===1?'1 day late':`${n} days late`,
   open:'Open', working:'Working on it', stuck:'Stuck', overdue:'Overdue', done:'Done', notStarted:'Not started', share:'Progress', recent:'Recent activity', seeAll:'See all',
   save:'Save', cancel:'Cancel', close:'Close', create:'Create task', deleteTask:'Delete task', deleteAsk:'Delete this task? This cannot be undone.', yesDelete:'Yes, delete', updates:'Updates', writeUpdate:'Write an update', post:'Post', history:'History', noUpdates:'No updates yet.',
   created:'created the task', changedStatus:(s)=>`changed status to ${s}`, changedField:(f)=>`changed ${f}`, postedUpdate:'posted an update', moved:(b)=>`moved the task to ${b}`, someone:'Someone', you:'you', viewOnly:'View only',
-  lockedTitle:'Locked board', lockedText:'This board is locked. Enter the password to open it.', password:'Password', unlock:'Open', lock:'Lock', setPwTitle:'Set the board password', setPwText:'Set a password for this board. The password also encrypts the board tasks, so keep it safe.', confirmPw:'Confirm password', setPw:'Set password', rcTitle:'Recovery code', rcText:'Save this code somewhere safe. It is the only way to open the board again if the password is lost. It is shown once.', rcSaved:'I have saved it', changePw:'Change password', currentPw:'Current password', newPw:'New password', useRc:'Use recovery code', rcLabel:'Recovery code', wrongPw:'Wrong password.', wrongRc:'That recovery code is not right.', pwShort:'Use at least 8 characters.', pwMismatch:'The two passwords do not match.', notSetOwner:'The password has not been set yet. Ask the Human Capital Business Partner Manager.', unlockedToast:'Board opened', lockedToast:'Board locked', pwChanged:'Password changed', newPwAfterRc:'Set a new password now.', committeeNote:'Tasks on this board are encrypted with this password. Status, priority and dates stay visible on the overview; titles, owners and notes do not.',
+  lockedTitle:'Locked department', lockedText:'This department is locked. Enter the department password to open it.', password:'Password', unlock:'Open', lock:'Lock', setPwTitle:'Set the department password', setPwText:'Set a password for this department. It also encrypts the department tasks and reports, so keep it safe.', confirmPw:'Confirm password', setPw:'Set password', rcTitle:'Recovery code', rcText:'Save this code somewhere safe. It is the only way to open the department again if the password is lost. It is shown once.', rcSaved:'I have saved it', changePw:'Change password', currentPw:'Current password', newPw:'New password', useRc:'Use recovery code', rcLabel:'Recovery code', wrongPw:'Wrong password.', wrongRc:'That recovery code is not right.', pwShort:'Use at least 8 characters.', pwMismatch:'The two passwords do not match.', notSetOwner:'The password has not been set yet. Ask the Human Capital Business Partner Manager.', unlockedToast:'Department opened', lockedToast:'Department locked', pwChanged:'Password changed', newPwAfterRc:'Set a new password now.', committeeNote:'Tasks and reports in this department are encrypted with this password. Status and dates stay visible to members; titles, owners, notes and report content stay encrypted.',
   nameTitle:'How should your name appear on tasks?', namePh:'Your name', posPh:'Your position (optional)', nameSave:'Save',
   signinTitle:'Sign in to open Marn Tasks', signinText:'Marn Tasks is shared by invitation. Sign in to Claude with the email that was invited. If you cannot open it, ask the Human Capital Business Partner Manager to invite your email.', connecting:'Connecting to the shared boards',
   saved:'Saved', saveFail:'Could not save. Check your access.', deleted:'Task deleted', exported:'Workbook ready', exportFail:'Export is not available here.', lockedTask:'Locked task', noOwner:'Unassigned', cOwners:'Owners', addOwner:'Add a person…', remove:'Remove', other:'Other', all:'All boards', people:'People', positions:'Positions',
+  home:'Home', ceoView:'CEO overview', accessV:'Access', depts:'Departments', sections:'Sections',
+  secWeekly:'Weekly meeting reports', secMonthly:'Monthly reports', secTasks:'Day-to-day tasks', secLog:'Activity log',
+  goodMorning:'Good morning', goodEvening:'Good evening', comma:', ',
+  homeTitle:'Choose a department', homeSub:'Each department opens only for its members, with its own password.', homeSubCEO:'As Chief Executive Officer, you can open every department without a password.',
+  restricted:'Members only', pwNeeded:'Password needed', isOpen:'Open in this session', ceoAccess:'CEO access', enter:'Open', openTasks:'Open tasks', thisWeek:"This week's meeting", monthReport:(m)=>`${m} report`,
+  ceoCta:'Open work, overdue tasks and report status for every department on one page.', manageAccess:'Manage who can open each department',
+  rs:{draft:'Draft', final:'Final', missing:'Not written yet'},
+  newWeekly:'New meeting report', newMonthly:'New monthly report', repCount:(n)=> n===1?'1 report':`${n} reports`,
+  emptyWeekly:'No weekly meeting reports yet.', emptyWeeklyHint:'Record each weekly meeting: who attended, what was decided, and who does what by when.',
+  emptyMonthly:'No monthly reports yet.', emptyMonthlyHint:"Report each month: indicators against target, achievements, issues, and next month's priorities.",
+  weekDue:'There is no meeting report for this week yet.', monthDue:(m)=>`The ${m} report has not been written yet.`, writeNow:'Write it now',
+  weeklyTitle:'Weekly meeting report', monthlyTitle:'Monthly report', back:'Back',
+  fMeetingDate:'Meeting date', fChair:'Chaired by', fAttendees:'Attendees (one per line)', fAgenda:'Agenda and discussion summary', fDecisions:'Decisions', fActions:'Actions', fAction:'Action', fRisks:'Risks and escalations', fNext:'Next meeting',
+  addDecision:'Add a decision', addAction:'Add an action', sendActions:'Send to day-to-day tasks', sentActions:(n)=> n===1?'1 action added to day-to-day tasks':`${n} actions added to day-to-day tasks`, inTasks:'In tasks', notSent:'Not sent yet',
+  fMonth:'Month', fSummary:'Executive summary', fKpis:'Key performance indicators', fKpi:'Indicator', fTarget:'Target', fActual:'Actual', fRag:'Status', rag:{on:'On track', risk:'At risk', off:'Off track'}, addKpi:'Add an indicator',
+  fAchievements:'Achievements', fIssues:'Issues and risks', fSupport:'Support needed from the CEO', fPriorities:"Next month's priorities",
+  snapTitle:'Day-to-day tasks in the month', snapCreated:'Created', snapDone:'Completed', snapOpen:'Open', snapOverdue:'Overdue', snapNote:'Counted from the department tasks, and fixed when the report is marked final.',
+  saveDraft:'Save draft', finalise:'Mark as final', reopen:'Reopen', deleteReport:'Delete draft', deleteRepAsk:'Delete this draft report?',
+  repSaved:'Report saved', repFinal:'Report marked as final', repDeleted:'Report deleted', finalNote:'This report is final. Reopen it to change anything.', unsaved:'Unsaved changes', leaveArmed:'You have unsaved changes. Select Back again to leave without saving.', needPeriod:'Enter the date first.',
+  decisionsN:(n)=> n===1?'1 decision':`${n} decisions`, actionsN:(n)=> n===1?'1 action':`${n} actions`, openN:(n)=>`${n} open`, kpisN:(n)=> n===1?'1 indicator':`${n} indicators`,
+  meetingGroup:(d)=>`Weekly meeting ${d}`, fromMeeting:(d)=>`Action from the weekly meeting on ${d}.`,
+  kindName:{weekly:'weekly meeting report', monthly:'monthly report'},
+  lg:{open:'opened the department', unlock:'opened the department with the password', lock:'locked the department', 'pw.set':'set the department password', 'pw.change':'changed the department password', 'pw.recover':'used the recovery code', 'task.create':'created a task', 'task.edit':'edited a task', 'task.status':(s)=>`moved a task to ${s}`, 'task.delete':'deleted a task', 'report.create':(k,p)=>`created the ${k} for ${p}`, 'report.save':(k,p)=>`updated the ${k} for ${p}`, 'report.final':(k,p)=>`marked the ${k} for ${p} as final`, 'report.reopen':(k,p)=>`reopened the ${k} for ${p}`, 'report.delete':(k,p)=>`deleted the draft ${k} for ${p}`, 'tasks.fromMeeting':(n)=> n===1?'sent 1 meeting action to day-to-day tasks':`sent ${n} meeting actions to day-to-day tasks`},
+  logSub:'Who opened the department and what changed. Entries cannot be edited or deleted.', emptyLog:'No activity recorded yet.',
+  ceoSub:'All three departments, live', reportsFinal:(m)=>`${m} reports final`, cWeekly:"This week's meeting", cMonthly:'Monthly report', cLastAct:'Last activity', cDoneMonth:'Done this month', overdueAll:'Overdue across departments', recentAll:'Recent activity across departments', lastOn:(d)=>`last one ${d}`,
+  ceoWaitTitle:'Waiting for the department', ceoWait:'This department opens for you automatically after one of its members opens it once with the password.',
+  noAccessTitle:'No department access', noAccessText:(e)=>`The account ${e} is not a member of Human Capital, Customer Experience, or GRC and Legal. Ask the Human Capital Business Partner Manager to add you.`,
+  accessTitle:'Department access', accessSub:'Only these emails can open each department.', ceoFixed:(e)=>`Chief Executive Officer: ${e}. Opens every department, no password needed.`, add:'Add', badEmail:'Enter a valid email address.', accSaved:'Access saved', accEmpty:'No members yet', accSeedNote:'Access is not switched on yet. Check the lists, then select Save.', accLog:'Recent changes', discard:'Discard changes', adminOnly:'Only the administrators can change department access.',
   langSwitch:'العربية', today:'Today', searchResults:'Search results', signOut:'Sign out', noDue:'No date', unlockToSee:'Open the locked board to see this task.', readonlyHint:'You can view the boards. Editing needs an invitation as editor.',
   tlEmpty:'Add start or due dates to see tasks on the timeline.', dateFmt:'en-GB',
 },
@@ -688,17 +848,45 @@ ar:{
   product:'المهام', overview:'نظرة عامة', mine:'مهامي', overdueV:'المتأخرة', activity:'السجل', boards:'اللوحات', views:'العروض',
   table:'جدول', kanban:'بطاقات', timeline:'الخط الزمني', newTask:'مهمة جديدة', newAch:'إنجاز جديد', achTitleAr:'الإنجاز (بالعربية)', achTitleEn:'الإنجاز (بالإنجليزية)', cDept:'الإدارة', cPillar:'الركيزة', cImpactAr:'الأثر (بالعربية)', cImpactEn:'الأثر (بالإنجليزية)', achHero:'إنجازًا حتى الآن', emptyAch:'لا توجد إنجازات بعد. أضف أول إنجاز من زر «إنجاز جديد».', allDepts:'كل الإدارات', allPillars:'كل الركائز', achCount:(n)=> `${n} إنجاز`, export:'تصدير إلى Excel', import:'استيراد من Excel', importing:'جارٍ الاستيراد…', imported:(n,k)=> `تم استيراد ${n} مهمة`+(k?` · ${k} موجودة مسبقًا`:''), importFail:'تعذّرت قراءة الملف. استخدم ملف Excel يحتوي على أعمدة الاسم والمسؤول والحالة.', search:'ابحث في المهام والمسؤولين والمراجع',
   allStatuses:'كل الحالات', allOwners:'كل المسؤولين', allPriorities:'كل الأولويات', hideDone:'إخفاء المنجزة', tasksCount:(n)=> n===1?'مهمة واحدة': n===2?'مهمتان': (n>=3&&n<=10)?`${n} مهام`:`${n} مهمة`, updatesCount:(n)=> n===1?'تحديث واحد': n===2?'تحديثان': (n>=3&&n<=10)?`${n} تحديثات`:`${n} تحديثًا`,
-  cTask:'المهمة', cOwner:'المسؤول', cStatus:'الحالة', cPriority:'الأولوية', cStart:'البداية', cDue:'الاستحقاق', cRef:'المرجع', cGroup:'المجموعة', cUpdated:'آخر تحديث', cNotes:'ملاحظات', cBoard:'اللوحة', cDaysLate:'أيام التأخير', cFocus:'مجال التركيز', cDecision:'مرجع القرار', cSitting:'تاريخ الجلسة',
+  cTask:'المهمة', cOwner:'المسؤول', cStatus:'الحالة', cPriority:'الأولوية', cStart:'البداية', cDue:'الاستحقاق', cRef:'المرجع', cGroup:'المجموعة', cUpdated:'آخر تحديث', cNotes:'ملاحظات', cBoard:'الإدارة', cDaysLate:'أيام التأخير', cFocus:'مجال التركيز', cDecision:'مرجع القرار', cSitting:'تاريخ الجلسة',
   st:{todo:'لم تبدأ', doing:'قيد العمل', stuck:'متعثرة', done:'منجزة'}, pr:{high:'عالية', med:'متوسطة', low:'منخفضة'},
   emptyBoard:'لا توجد مهام في هذه اللوحة بعد.', emptyBoardHint:'أضف المهمة الأولى من زر «مهمة جديدة».', emptyFiltered:'لا توجد مهام تطابق هذه التصفية.', emptyMine:'لا توجد مهام مسندة إليك.', emptyMineHint:'تظهر هنا المهام التي أنت المسؤول عنها.', emptyOverdue:'لا توجد مهام متأخرة.', emptyOverdueHint:'تظهر هنا المهام المفتوحة التي تجاوزت تاريخ استحقاقها.', emptyActivity:'لا يوجد نشاط بعد.',
   dueToday:'تستحق اليوم', dueTomorrow:'تستحق غدًا', dueIn:(n)=>`تستحق بعد ${arDays(n)}`, overdueBy:(n)=>`متأخرة ${arBy(n)}`, late:(n)=>`تأخير ${arDays(n)}`,
   open:'المفتوحة', working:'قيد العمل', stuck:'المتعثرة', overdue:'المتأخرة', done:'المنجزة', notStarted:'لم تبدأ', share:'التقدم', recent:'آخر النشاط', seeAll:'عرض الكل',
   save:'حفظ', cancel:'إلغاء', close:'إغلاق', create:'إنشاء المهمة', deleteTask:'حذف المهمة', deleteAsk:'هل تريد حذف هذه المهمة؟ لا يمكن التراجع.', yesDelete:'نعم، احذف', updates:'التحديثات', writeUpdate:'اكتب تحديثًا', post:'نشر', history:'السجل', noUpdates:'لا توجد تحديثات بعد.',
   created:'أنشأ المهمة', changedStatus:(s)=>`غيّر الحالة إلى «${s}»`, changedField:(f)=>`عدّل ${f}`, postedUpdate:'نشر تحديثًا', moved:(b)=>`نقل المهمة إلى ${b}`, someone:'أحد الأعضاء', you:'أنت', viewOnly:'عرض فقط',
-  lockedTitle:'لوحة مقفلة', lockedText:'هذه اللوحة مقفلة. أدخل كلمة المرور لفتحها.', password:'كلمة المرور', unlock:'فتح', lock:'قفل', setPwTitle:'تعيين كلمة مرور اللوحة', setPwText:'عيّن كلمة مرور لهذه اللوحة. تُشفَّر مهام اللوحة بهذه الكلمة، فاحتفظ بها في مكان آمن.', confirmPw:'تأكيد كلمة المرور', setPw:'تعيين كلمة المرور', rcTitle:'رمز الاسترداد', rcText:'احفظ هذا الرمز في مكان آمن؛ فهو الطريقة الوحيدة لفتح اللوحة إذا فُقدت كلمة المرور. يظهر مرة واحدة فقط.', rcSaved:'حفظت الرمز', changePw:'تغيير كلمة المرور', currentPw:'كلمة المرور الحالية', newPw:'كلمة المرور الجديدة', useRc:'استخدام رمز الاسترداد', rcLabel:'رمز الاسترداد', wrongPw:'كلمة المرور غير صحيحة.', wrongRc:'رمز الاسترداد غير صحيح.', pwShort:'استخدم 8 أحرف على الأقل.', pwMismatch:'كلمتا المرور غير متطابقتين.', notSetOwner:'لم تُعيَّن كلمة المرور بعد. اطلبها من مدير شركاء الأعمال لرأس المال البشري.', unlockedToast:'فُتحت اللوحة', lockedToast:'أُقفلت اللوحة', pwChanged:'تم تغيير كلمة المرور', newPwAfterRc:'عيّن كلمة مرور جديدة الآن.', committeeNote:'مهام هذه اللوحة مشفّرة بهذه الكلمة. تبقى الحالة والأولوية والتواريخ ظاهرة في النظرة العامة، أما العناوين والمسؤولون والملاحظات فلا.',
+  lockedTitle:'إدارة مقفلة', lockedText:'هذه الإدارة مقفلة. أدخل كلمة مرور الإدارة لفتحها.', password:'كلمة المرور', unlock:'فتح', lock:'قفل', setPwTitle:'تعيين كلمة مرور الإدارة', setPwText:'عيّن كلمة مرور لهذه الإدارة. تُشفَّر بها مهام الإدارة وتقاريرها، فاحتفظ بها في مكان آمن.', confirmPw:'تأكيد كلمة المرور', setPw:'تعيين كلمة المرور', rcTitle:'رمز الاسترداد', rcText:'احفظ هذا الرمز في مكان آمن؛ فهو الطريقة الوحيدة لفتح الإدارة إذا فُقدت كلمة المرور. يظهر مرة واحدة فقط.', rcSaved:'حفظت الرمز', changePw:'تغيير كلمة المرور', currentPw:'كلمة المرور الحالية', newPw:'كلمة المرور الجديدة', useRc:'استخدام رمز الاسترداد', rcLabel:'رمز الاسترداد', wrongPw:'كلمة المرور غير صحيحة.', wrongRc:'رمز الاسترداد غير صحيح.', pwShort:'استخدم 8 أحرف على الأقل.', pwMismatch:'كلمتا المرور غير متطابقتين.', notSetOwner:'لم تُعيَّن كلمة المرور بعد. اطلبها من مدير شركاء الأعمال لرأس المال البشري.', unlockedToast:'فُتحت الإدارة', lockedToast:'أُقفلت الإدارة', pwChanged:'تم تغيير كلمة المرور', newPwAfterRc:'عيّن كلمة مرور جديدة الآن.', committeeNote:'مهام هذه الإدارة وتقاريرها مشفّرة بهذه الكلمة. تبقى الحالة والتواريخ ظاهرة للأعضاء، أما العناوين والمسؤولون والملاحظات ومحتوى التقارير فتبقى مشفّرة.',
   nameTitle:'كيف يظهر اسمك على المهام؟', namePh:'اسمك', posPh:'منصبك (اختياري)', nameSave:'حفظ',
   signinTitle:'سجّل الدخول لفتح مهام مرن', signinText:'تُشارك «مهام مرن» بالدعوة. سجّل الدخول إلى Claude بالبريد الذي دُعي. إذا تعذّر عليك فتحها فاطلب من مدير شركاء الأعمال لرأس المال البشري دعوة بريدك.', connecting:'جارٍ الاتصال باللوحات المشتركة',
   saved:'تم الحفظ', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', deleted:'حُذفت المهمة', exported:'الملف جاهز', exportFail:'التصدير غير متاح هنا.', lockedTask:'مهمة مقفلة', noOwner:'غير مسندة', cOwners:'المسؤولون', addOwner:'أضف شخصًا…', remove:'إزالة', other:'أخرى', all:'كل اللوحات', people:'الأشخاص', positions:'المناصب',
+  home:'الرئيسية', ceoView:'لوحة الرئيس التنفيذي', accessV:'الصلاحيات', depts:'الإدارات', sections:'الأقسام',
+  secWeekly:'تقارير الاجتماع الأسبوعي', secMonthly:'التقارير الشهرية', secTasks:'المهام اليومية', secLog:'سجل النشاط',
+  goodMorning:'صباح الخير', goodEvening:'مساء الخير', comma:'، ',
+  homeTitle:'اختر الإدارة', homeSub:'لا تُفتح كل إدارة إلا لأعضائها، وبكلمة مرور خاصة بها.', homeSubCEO:'بصفتك الرئيس التنفيذي، يمكنك فتح جميع الإدارات دون كلمة مرور.',
+  restricted:'للأعضاء فقط', pwNeeded:'تتطلب كلمة المرور', isOpen:'مفتوحة في هذه الجلسة', ceoAccess:'صلاحية الرئيس التنفيذي', enter:'فتح', openTasks:'المهام المفتوحة', thisWeek:'اجتماع هذا الأسبوع', monthReport:(m)=>`تقرير ${m}`,
+  ceoCta:'الأعمال المفتوحة والمهام المتأخرة وحالة التقارير لجميع الإدارات في صفحة واحدة.', manageAccess:'إدارة من يحق له فتح كل إدارة',
+  rs:{draft:'مسودة', final:'معتمد', missing:'لم يُكتب بعد'},
+  newWeekly:'تقرير اجتماع جديد', newMonthly:'تقرير شهري جديد', repCount:(n)=> arN(n,'تقرير واحد','تقريران','تقارير','تقريرًا'),
+  emptyWeekly:'لا توجد تقارير اجتماعات أسبوعية بعد.', emptyWeeklyHint:'وثّق كل اجتماع أسبوعي: الحضور، وما تقرّر، ومن ينفّذ ماذا ومتى.',
+  emptyMonthly:'لا توجد تقارير شهرية بعد.', emptyMonthlyHint:'قدّم تقريرًا كل شهر: المؤشرات مقابل المستهدف، والإنجازات، والتحديات، وأولويات الشهر القادم.',
+  weekDue:'لم يُسجَّل تقرير اجتماع هذا الأسبوع بعد.', monthDue:(m)=>`لم يُكتب تقرير ${m} بعد.`, writeNow:'اكتبه الآن',
+  weeklyTitle:'تقرير الاجتماع الأسبوعي', monthlyTitle:'التقرير الشهري', back:'رجوع',
+  fMeetingDate:'تاريخ الاجتماع', fChair:'رئيس الاجتماع', fAttendees:'الحضور (اسم في كل سطر)', fAgenda:'جدول الأعمال وملخص النقاش', fDecisions:'القرارات', fActions:'الإجراءات', fAction:'الإجراء', fRisks:'المخاطر وحالات التصعيد', fNext:'الاجتماع القادم',
+  addDecision:'إضافة قرار', addAction:'إضافة إجراء', sendActions:'إرسال إلى المهام اليومية', sentActions:(n)=>`أُضيف إلى المهام اليومية: ${arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً')}`, inTasks:'في المهام', notSent:'لم يُرسل بعد',
+  fMonth:'الشهر', fSummary:'الملخص التنفيذي', fKpis:'مؤشرات الأداء الرئيسية', fKpi:'المؤشر', fTarget:'المستهدف', fActual:'الفعلي', fRag:'الحالة', rag:{on:'على المسار', risk:'معرّض للخطر', off:'خارج المسار'}, addKpi:'إضافة مؤشر',
+  fAchievements:'الإنجازات', fIssues:'التحديات والمخاطر', fSupport:'الدعم المطلوب من الرئيس التنفيذي', fPriorities:'أولويات الشهر القادم',
+  snapTitle:'المهام اليومية خلال الشهر', snapCreated:'أُنشئت', snapDone:'أُنجزت', snapOpen:'مفتوحة', snapOverdue:'متأخرة', snapNote:'محسوبة من مهام الإدارة، وتُثبَّت عند اعتماد التقرير.',
+  saveDraft:'حفظ المسودة', finalise:'اعتماد التقرير', reopen:'إعادة الفتح', deleteReport:'حذف المسودة', deleteRepAsk:'هل تريد حذف مسودة هذا التقرير؟',
+  repSaved:'حُفظ التقرير', repFinal:'اعتُمد التقرير', repDeleted:'حُذف التقرير', finalNote:'هذا التقرير معتمد. أعد فتحه لإجراء أي تعديل.', unsaved:'تغييرات غير محفوظة', leaveArmed:'لديك تغييرات غير محفوظة. اضغط «رجوع» مرة أخرى للخروج دون حفظ.', needPeriod:'أدخل التاريخ أولًا.',
+  decisionsN:(n)=> arN(n,'قرار واحد','قراران','قرارات','قرارًا'), actionsN:(n)=> arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً'), openN:(n)=>`المفتوح ${n}`, kpisN:(n)=> arN(n,'مؤشر واحد','مؤشران','مؤشرات','مؤشرًا'),
+  meetingGroup:(d)=>`الاجتماع الأسبوعي ${d}`, fromMeeting:(d)=>`إجراء من الاجتماع الأسبوعي بتاريخ ${d}.`,
+  kindName:{weekly:'تقرير الاجتماع الأسبوعي', monthly:'التقرير الشهري'},
+  lg:{open:'فتح الإدارة', unlock:'فتح الإدارة بكلمة المرور', lock:'أقفل الإدارة', 'pw.set':'عيّن كلمة مرور الإدارة', 'pw.change':'غيّر كلمة مرور الإدارة', 'pw.recover':'استخدم رمز الاسترداد', 'task.create':'أنشأ مهمة', 'task.edit':'عدّل مهمة', 'task.status':(s)=>`غيّر حالة مهمة إلى «${s}»`, 'task.delete':'حذف مهمة', 'report.create':(k,p)=>`أنشأ ${k} عن ${p}`, 'report.save':(k,p)=>`حدّث ${k} عن ${p}`, 'report.final':(k,p)=>`اعتمد ${k} عن ${p}`, 'report.reopen':(k,p)=>`أعاد فتح ${k} عن ${p}`, 'report.delete':(k,p)=>`حذف مسودة ${k} عن ${p}`, 'tasks.fromMeeting':(n)=>`أرسل من الاجتماع إلى المهام اليومية: ${arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً')}`},
+  logSub:'من فتح الإدارة وما الذي تغيّر. لا يمكن تعديل السجل أو حذفه.', emptyLog:'لم يُسجَّل أي نشاط بعد.',
+  ceoSub:'الإدارات الثلاث، محدّثة لحظيًا', reportsFinal:(m)=>`تقارير ${m} المعتمدة`, cWeekly:'اجتماع هذا الأسبوع', cMonthly:'التقرير الشهري', cLastAct:'آخر نشاط', cDoneMonth:'المنجزة هذا الشهر', overdueAll:'المهام المتأخرة في جميع الإدارات', recentAll:'آخر النشاط في جميع الإدارات', lastOn:(d)=>`آخره ${d}`,
+  ceoWaitTitle:'بانتظار الإدارة', ceoWait:'تُفتح هذه الإدارة لك تلقائيًا بعد أن يفتحها أحد أعضائها مرة واحدة بكلمة المرور.',
+  noAccessTitle:'لا توجد صلاحية لأي إدارة', noAccessText:(e)=>`الحساب ${e} ليس عضوًا في إدارة رأس المال البشري أو تجربة العملاء أو الحوكمة والمخاطر والالتزام والشؤون القانونية. اطلب من مدير شركاء الأعمال لرأس المال البشري إضافتك.`,
+  accessTitle:'صلاحيات الإدارات', accessSub:'لا يفتح كل إدارة إلا البريد المدرج فيها.', ceoFixed:(e)=>`الرئيس التنفيذي: ${e}. يفتح جميع الإدارات دون كلمة مرور.`, add:'إضافة', badEmail:'أدخل بريدًا إلكترونيًا صحيحًا.', accSaved:'حُفظت الصلاحيات', accEmpty:'لا يوجد أعضاء بعد', accSeedNote:'لم تُفعَّل الصلاحيات بعد. راجع القوائم ثم اضغط «حفظ».', accLog:'آخر التعديلات', discard:'تجاهل التغييرات', adminOnly:'لا يغيّر صلاحيات الإدارات إلا المسؤولون.',
   langSwitch:'English', today:'اليوم', searchResults:'نتائج البحث', signOut:'تسجيل الخروج', noDue:'بلا تاريخ', unlockToSee:'افتح اللوحة المقفلة لعرض هذه المهمة.', readonlyHint:'يمكنك عرض اللوحات. التعديل يحتاج دعوة بصفة محرر.',
   tlEmpty:'أضف تواريخ البداية أو الاستحقاق لعرض المهام على الخط الزمني.', dateFmt:'ar-SA-u-ca-gregory-nu-latn',
 }};
@@ -723,15 +911,19 @@ const ICONS = {
   'grc-legal': IC('<path d="M12 3v18"/><path d="M5 21h14"/><path d="M4 7h16"/><path d="M7 7l-3 7a3 3 0 0 0 6 0z"/><path d="M17 7l-3 7a3 3 0 0 0 6 0z"/>'),
   operations: IC('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'),
   committee: IC('<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M2 10l10-6 10 6z"/>'),
+  home: IC('<path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/>'),
+  ceo: IC('<path d="M3 20h18"/><path d="M6 20v-6"/><path d="M11 20V9"/><path d="M16 20v-9"/><path d="M4 10l6-5 4 3 6-5"/>'),
+  access: IC('<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+  'customer-experience': IC('<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2.5" y="14" width="4" height="6" rx="1.5"/><rect x="17.5" y="14" width="4" height="6" rx="1.5"/><path d="M19.5 20c0 1-1.5 2-4.5 2h-2"/>'),
   achievements: IC('<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>'),
 };
 const icon = (k)=> `<span class="ibox">${ICONS[k]||''}</span>`;
 
 /* ---------- state ---------- */
 const S = {
-  lang:'ar', view:'overview', board:null, boardView:'table',
+  lang:'ar', view:'home', board:null, section:'tasks', boardView:'table', access:null, accessLoaded:false, accessErr:false, reports:new Map(), logs:new Map(), report:null, accDraft:null, ceoKeyLoaded:{},
   tasks:new Map(), members:new Map(), lockSettings:{}, lockLoaded:{}, keys:{},
-  me:{id:null,name:'',avatarUrl:'',isOwner:false,canEdit:false,canWrite:null},
+  me:{id:null,name:'',email:'',avatarUrl:'',isOwner:false,isCEO:false,canEdit:false,canWrite:null},
   profiles:{}, db:null, user:null, downloads:null, connecting:true, dbMissing:false,
   filters:{q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}, sort:{by:'due',dir:'asc'},
   drawer:null, lockUI:{mode:'enter',err:'',rc:null}, mainKey:'', tasksLoaded:false, hasPwdInvite:false,
@@ -823,7 +1015,7 @@ async function fromStored(id, data){
 let rawDocs = new Map();
 async function ingestTasks(snap){
   rawDocs = new Map(); snap.docs.forEach(d=>{ if(d.exists) rawDocs.set(d.id, d.data()); });
-  await rebuildTasks();
+  await rebuildAll();
   S.tasksLoaded=true; S.connecting=false;
   await render();
 }
@@ -833,10 +1025,9 @@ async function rebuildTasks(){
   S.tasks=out;
 }
 function subscribeAll(){
-  const db=S.db;
-  db.collection('tasks').onSnapshot(snap=>{ ingestTasks(snap); }, err=>{ console.warn('tasks', err); S.connecting=false; S.dbMissing = err && err.code==='not_granted'; render(); });
-  for(const b of LOCKED) db.doc('settings/'+b).onSnapshot(snap=>{ S.lockSettings[b] = snap.exists? snap.data(): null; S.lockLoaded[b]=true; render(); }, err=>console.warn('settings', err));
-  db.collection('members').onSnapshot(snap=>{ S.members=new Map(); snap.docs.forEach(d=>{ if(d.exists) S.members.set(d.id, d.data()); }); render(); }, err=>console.warn('members', err));
+  // Access list first: it decides which departments this person may subscribe to (the rules enforce the same).
+  S.db.doc('access/departments').onSnapshot(snap=>{ S.access = snap.exists? snap.data(): null; S.accessLoaded=true; S.accessErr=false; resubscribe(); render(); },
+    err=>{ console.warn('access', err); S.access=null; S.accessLoaded=true; S.accessErr=true; resubscribe(); render(); });
 }
 
 /* ---------- writes ---------- */
@@ -856,10 +1047,12 @@ async function saveTask(task, histEntry, toastKey){
   try{
     await queued(id, ()=> S.db.collection('tasks').doc(id).set(stored));
     if(toastKey) toast(t(toastKey));
+    logTaskChange(tk, histEntry);
   }catch(e){ console.warn(e); toast(t('saveFail'), true); markReadonlyIfRefused(e); }
   return id;
 }
 async function deleteTask(id){
+  const was=S.tasks.get(id); if(was) logEvent(was.board,'task.delete',{ref:id});
   S.tasks.delete(id); rawDocs.delete(id);
   try{ await queued(id, ()=> S.db.collection('tasks').doc(id).delete()); toast(t('deleted')); }catch(e){ toast(t('saveFail'), true); markReadonlyIfRefused(e); }
 }
@@ -908,18 +1101,21 @@ async function doSetPassword(pw, pw2){
   const b=S.board; if(!isLocked(b)) return;
   try{ await S.db.doc('settings/'+b).set(doc); }catch(e){ S.lockUI.err=t('saveFail'); return renderMain(true); }
   S.lockSettings[b]=doc; S.keys[b]=dataKey; await rememberKey(b); S.lockUI={mode:'rc', err:'', rc};
-  await rebuildTasks(); renderMain(true);
+  syncCeoKey(b); sealPlain(b); logEvent(b,'pw.set');
+  await rebuildAll(); renderMain(true);
 }
 async function doUnlock(pw){
   const b=S.board, st=S.lockSettings[b];
   if(!st){ S.lockUI.err=t('notSetOwner'); return renderMain(true); }
   try{ S.keys[b] = await unwrapWith(pw, st.pw); }catch(e){ delete S.keys[b]; S.lockUI.err=t('wrongPw'); return renderMain(true); }
-  await rememberKey(b); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildTasks(); toast(t('unlockedToast')); render();
+  await rememberKey(b); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildAll(); toast(t('unlockedToast')); render();
+  syncCeoKey(b); sealPlain(b); logEvent(b,'unlock'); logGate.set(b+'|open', Date.now());
 }
 async function doRecover(code){
   const b=S.board, st=S.lockSettings[b]; if(!st) return;
   try{ S.keys[b] = await unwrapWith(code.trim().toUpperCase(), st.rc); }catch(e){ delete S.keys[b]; S.lockUI.err=t('wrongRc'); return renderMain(true); }
-  await rememberKey(b); S.lockUI={mode:'change', err:'', rc:null, afterRc:true}; await rebuildTasks(); renderMain(true);
+  await rememberKey(b); S.lockUI={mode:'change', err:'', rc:null, afterRc:true}; await rebuildAll(); renderMain(true);
+  syncCeoKey(b); logEvent(b,'pw.recover');
 }
 async function doChangePassword(cur, nw, nw2){
   if(nw.length<8){ S.lockUI.err=t('pwShort'); return renderMain(true); }
@@ -930,8 +1126,9 @@ async function doChangePassword(cur, nw, nw2){
   const doc={...st, pw:wp, changedAt:new Date().toISOString(), changedBy:S.me.id||null};
   try{ await S.db.doc('settings/'+b).set(doc); }catch(e){ S.lockUI.err=t('saveFail'); return renderMain(true); }
   S.lockSettings[b]=doc; S.lockUI={mode:'enter',err:'',rc:null}; toast(t('pwChanged')); render();
+  logEvent(b,'pw.change');
 }
-async function doLock(){ const b=S.board; delete S.keys[b]; forgetKey(b); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildTasks(); toast(t('lockedToast')); if(S.drawer && S.tasks.get(S.drawer.id)?.locked) S.drawer=null; render(); }
+async function doLock(){ const b=S.board; logEvent(b,'lock'); delete S.keys[b]; forgetKey(b); S.lockUI={mode:'enter',err:'',rc:null}; await rebuildAll(); toast(t('lockedToast')); if(S.drawer && S.tasks.get(S.drawer.id)?.locked) S.drawer=null; render(); }
 
 /* ---------- filtering and sorting ---------- */
 function boardTasks(boardId){ return [...S.tasks.values()].filter(x=>x.board===boardId); }
@@ -990,16 +1187,19 @@ function renderChrome(){
 function renderRail(){
   const open=(b)=> boardTasks(b.id).filter(x=>x.status!=='done'), stuck=(b)=> boardTasks(b.id).filter(x=>x.status==='stuck'||isOverdue(x));
   const item=(id,label,on,extra)=> `<button class="item ${on?'on':''}" data-action="nav" data-nav="${id}" type="button" title="${esc(label)}">${icon(id)}<span class="lbl">${esc(label)}</span>${extra||''}</button>`;
-  let h = `<h4>${esc(t('views'))}</h4>`;
-  h += item('overview', t('overview'), S.view==='overview');
-  h += item('mine', t('mine'), S.view==='mine');
-  h += item('overdue', t('overdueV'), S.view==='overdue');
-  h += item('activity', t('activity'), S.view==='activity');
-  h += `<span class="rsep"></span><h4>${esc(t('boards'))}</h4>`;
-  for(const b of BOARDS){
-    if(isAch(b.id)){ h += `<span class="rsep"></span><button class="item ach ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span><span class="cnt">${boardTasks(b.id).length}</span></button>`; continue; }
-    const o=open(b).length, s=stuck(b).length;
-    h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span>${b.locked?LOCK_SVG:''}<span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`;
+  let h = '';
+  if(S.accessLoaded && (hasAnyAccess() || isAdmin())){
+    h += `<h4>${esc(t('views'))}</h4>`;
+    h += item('home', t('home'), S.view==='home');
+    if(isCEO()) h += item('ceo', t('ceoView'), S.view==='ceo');
+    if(hasAnyAccess()){ h += item('mine', t('mine'), S.view==='mine'); h += item('overdue', t('overdueV'), S.view==='overdue'); }
+    if(isAdmin()) h += item('access', t('accessV'), S.view==='access');
+    const mb=myBoards();
+    if(mb.length){
+      h += `<span class="rsep"></span><h4>${esc(t('depts'))}</h4>`;
+      for(const b of mb){ const o=open(b).length, s=stuck(b).length;
+        h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span>${keyOf(b.id)?'':LOCK_SVG}<span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`; }
+    }
   }
   const me=S.me;
   if(me.id){
@@ -1020,21 +1220,32 @@ const achImpact = (x)=> (L()==='en' && x.impactEn) ? x.impactEn : (x.impact || x
 const titleOf = (task)=> task.locked ? t('lockedTask') : ((isAch(task.board) ? achTitle(task) : task.title) || '…');
 
 function renderMain(force){
-  const showLock = S.view==='board' && isLocked(S.board) && (!keyOf(S.board) || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
-  const key = [S.view,S.board,S.boardView,S.lang,keyOf(S.board)?1:0,S.lockLoaded[S.board]?1:0,S.connecting?1:0,S.dbMissing?1:0,S.me.canWrite,showLock?S.lockUI.mode:''].join('|');
   const main=$('#main');
   if(S.dbMissing || (!S.db && !S.connecting)){
-    main.innerHTML = `<div class="notice"><h2>${esc(t('signinTitle'))}</h2><p>${esc(t('signinText'))}</p></div>`; S.mainKey=key; return;
+    main.innerHTML = `<div class="notice"><h2>${esc(t('signinTitle'))}</h2><p>${esc(t('signinText'))}</p></div>`; S.mainKey=''; return;
   }
-  if(S.connecting && !S.tasksLoaded){ main.innerHTML = `<div class="notice"><h2>${esc(t('connecting'))}…</h2></div>`; S.mainKey=key; return; }
+  if(!S.accessLoaded){ main.innerHTML = `<div class="notice"><h2>${esc(t('connecting'))}…</h2></div>`; S.mainKey=''; return; }
+  if(!hasAnyAccess() && !isAdmin()){ main.innerHTML = noAccessHTML(); S.mainKey=''; return; }
+  if(S.view==='board' && !canSee(S.board)){ S.view='home'; S.board=null; S.report=null; }
+  if(S.view==='ceo' && !isCEO()) S.view='home';
+  if(S.view==='access' && !isAdmin()) S.view='home';
+  if(!['home','ceo','access','board','mine','overdue','activity','search'].includes(S.view)) S.view='home';
+  const showLock = S.view==='board' && isLocked(S.board) && (!keyOf(S.board) || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
+  const key = [S.view,S.board,S.section,S.boardView,S.lang,keyOf(S.board)?1:0,S.lockLoaded[S.board]?1:0,S.me.canWrite,showLock?S.lockUI.mode:'',S.report?S.report.key:''].join('|');
+  if(S.view==='home'){ S.mainKey=key; main.innerHTML = homeHTML(); return; }
+  if(S.view==='ceo'){ S.mainKey=key; main.innerHTML = ceoHTML(); return; }
+  if(S.view==='access'){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = accessHTML(); } return; }
   if(showLock){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = lockPanelHTML(); } return; }
+  if(S.view==='board' && S.report){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = reportEditorHTML(); } return; }
+  if(S.view==='board' && S.section!=='tasks'){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = deptHeadHTML() + `<div id="body"></div>`; } renderDeptBody(); refreshSecCounts(); return; }
+  if(S.connecting && !S.tasksLoaded){ main.innerHTML = `<div class="notice"><h2>${esc(t('connecting'))}…</h2></div>`; S.mainKey=''; return; }
   if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = headHTML() + `<div id="body"></div>`; }
-  renderBody();
+  renderBody(); refreshSecCounts();
 }
 function headHTML(){
   let title, sub='', tabs='', tools='';
   const ro = !canWrite();
-  const newBtn = ro? '' : `<button class="btn primary" data-action="new" type="button">+ ${esc(S.view==='board'&&isAch(S.board)?t('newAch'):t('newTask'))}</button>`;
+  const newBtn = (ro || S.view!=='board')? '' : `<button class="btn primary" data-action="new" type="button">+ ${esc(S.view==='board'&&isAch(S.board)?t('newAch'):t('newTask'))}</button>`;
   const exportBtn = S.downloads? `<button class="btn" data-action="export" type="button">${esc(t('export'))}</button>` : '';
   const importBtn = (!ro && S.view==='board' && S.me.isOwner && (!isLocked(S.board) || keyOf(S.board)))? `<button class="btn" data-action="import" type="button">${esc(t('import'))}</button><input type="file" id="importfile" accept=".xlsx,.xls,.csv" hidden>` : '';
   if(S.view==='board' && isAch(S.board)){
@@ -1053,14 +1264,14 @@ function headHTML(){
       <select id="flt-owner" data-action="filter" data-f="owner"><option value="">${esc(t('allOwners'))}</option>${owners.map(o=>`<option value="${esc(o)}" ${S.filters.owner===o?'selected':''}>${esc(o)}</option>`).join('')}</select>
       <label class="toggle"><input type="checkbox" id="flt-hidedone" data-action="filter" data-f="hideDone" ${S.filters.hideDone?'checked':''}>${esc(t('hideDone'))}</label>
       <span class="spacer"></span><span class="count" id="count"></span>
-      ${isLocked(S.board) && keyOf(S.board)? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>${S.me.isOwner?`<button class="btn" data-action="changepw" type="button">${esc(t('changePw'))}</button>`:''}`:''}
+      ${isLocked(S.board) && keyOf(S.board)? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>${memberOf(S.board)?`<button class="btn" data-action="changepw" type="button">${esc(t('changePw'))}</button>`:''}`:''}
     </div>`;
   } else if(S.view==='mine'){ title=t('mine'); }
   else if(S.view==='overdue'){ title=t('overdueV'); }
   else if(S.view==='activity'){ title=t('activity'); }
   else if(S.view==='search'){ title=t('searchResults'); sub=S.filters.q; }
   else { title=t('overview'); const all=[...S.tasks.values()].filter(x=>!isAch(x.board)); sub=`${t('tasksCount')(all.length)} · ${t('open')} ${all.filter(x=>x.status!=='done').length}`; }
-  return `<div class="vhead"><h1>${esc(title)}</h1>${sub?`<span class="sub num">${esc(sub)}</span>`:''}<div class="actions">${tabs}${importBtn}${exportBtn}${newBtn}</div></div>${tools}`;
+  return `<div class="vhead"><h1>${esc(title)}</h1>${sub?`<span class="sub num">${esc(sub)}</span>`:''}<div class="actions">${tabs}${importBtn}${exportBtn}${newBtn}</div></div>${S.view==='board'&&!isAch(S.board)?secTabsHTML():''}${tools}`;
 }
 function renderBody(){
   const body=$('#body'); if(!body) return;
@@ -1222,8 +1433,9 @@ function lockPanelHTML(){
   if(!S.lockLoaded[b]){ inner=`<p>${esc(t('connecting'))}…</p>`; }
   else if(u.mode==='rc'){
     inner=`<h2>${esc(t('rcTitle'))}</h2><p>${esc(t('rcText'))}</p><div class="rc">${esc(u.rc)}</div><div class="f"><button class="btn primary" data-action="rc-done" type="button">${esc(t('rcSaved'))}</button></div>`;
+  } else if(!memberOf(b)){ inner=`<h2>${LOCK_SVG} ${esc(t('ceoWaitTitle'))}</h2><p>${esc(t('ceoWait'))}</p>`;
   } else if(!st){
-    inner = S.me.isOwner
+    inner = memberOf(b)
       ? `<h2>${LOCK_SVG} ${esc(t('setPwTitle'))}</h2><p>${esc(t('setPwText'))}</p><form data-action="setpw"><div class="f"><input type="password" id="pw1" placeholder="${esc(t('password'))}" autocomplete="new-password" required><input type="password" id="pw2" placeholder="${esc(t('confirmPw'))}" autocomplete="new-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('setPw'))}</button></div></form><p class="small">${esc(t('committeeNote'))}</p>`
       : `<h2>${LOCK_SVG} ${esc(boardName(b))}</h2><p>${esc(t('notSetOwner'))}</p>`;
   } else if(u.mode==='change'){
@@ -1231,14 +1443,14 @@ function lockPanelHTML(){
   } else if(u.mode==='recover'){
     inner=`<h2>${esc(t('useRc'))}</h2><form data-action="recover"><div class="f"><input id="rcin" placeholder="MRN-XXXX-XXXX-XXXX-XXXX" style="direction:ltr" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('unlock'))}</button><button class="btn" type="button" data-action="lock-cancel">${esc(t('cancel'))}</button></div></form>`;
   } else {
-    inner=`<h2>${LOCK_SVG} ${esc(boardName(b))}</h2><p>${esc(t('lockedText'))}</p><form data-action="unlock"><div class="f"><input type="password" id="pwin" placeholder="${esc(t('password'))}" autocomplete="current-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('unlock'))}</button>${S.me.isOwner?`<button class="linkbtn" type="button" data-action="lock-recover">${esc(t('useRc'))}</button>`:''}</div></form>`;
+    inner=`<h2>${LOCK_SVG} ${esc(boardName(b))}</h2><p>${esc(t('lockedText'))}</p><form data-action="unlock"><div class="f"><input type="password" id="pwin" placeholder="${esc(t('password'))}" autocomplete="current-password" required></div>${err}<div class="f"><button class="btn primary" type="submit">${esc(t('unlock'))}</button>${memberOf(b)?`<button class="linkbtn" type="button" data-action="lock-recover">${esc(t('useRc'))}</button>`:''}</div></form>`;
   }
   return `<div class="vhead"><h1>${esc(boardName(b))}</h1></div><div class="lockpanel">${inner}</div>`;
 }
 
 /* ---------- drawer ---------- */
 function openTask(id){ const x=S.tasks.get(id); if(!x) return; if(x.locked){ S.view='board'; S.board=x.board; S.mainKey=''; render(); return; } S.drawer={mode:'edit', id, draft:{...x}, owners:ownerList(x), confirm:false}; renderDrawer(); }
-function newTask(board){ S.drawer={mode:'new', id:null, draft:blankTask(board||(S.view==='board'?S.board:BOARDS[0].id)), owners:[], confirm:false}; renderDrawer(); setTimeout(()=>$('#f-title')?.focus(),30); }
+function newTask(board){ S.drawer={mode:'new', id:null, draft:blankTask(board||defaultBoard()), owners:[], confirm:false}; renderDrawer(); setTimeout(()=>$('#f-title')?.focus(),30); }
 function closeDrawer(){ S.drawer=null; renderDrawer(); }
 function field(id,label,inner){ return `<div class="field" id="w-${id}"><label for="${id}">${esc(label)}</label>${inner}</div>`; }
 function renderDrawer(){
@@ -1246,7 +1458,7 @@ function renderDrawer(){
   if(!d){ host.innerHTML=''; return; }
   const x=d.draft, ro=!canWrite(), dis=ro?'disabled':'';
   const isC = x.board===COMMITTEE, isA = isAch(x.board);
-  const boardOpts = BOARDS.filter(b=> !b.locked || keyOf(b.id)).map(b=>`<option value="${b.id}" ${b.id===x.board?'selected':''}>${esc(b[L()])}</option>`).join('');
+  const boardOpts = BOARDS.filter(b=> canSee(b.id) && (!b.locked || keyOf(b.id))).map(b=>`<option value="${b.id}" ${b.id===x.board?'selected':''}>${esc(b[L()])}</option>`).join('');
   const people=[...new Map([...S.members.entries()].map(([id,m])=>[id,m.name]).filter(([id,n])=>n)).entries()];
   const groups=[...new Set(boardTasks(x.board).map(q=>q.group).filter(Boolean))];
   let h=`<div class="scrim" data-action="close"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="${esc(t('cTask'))}">
@@ -1425,11 +1637,14 @@ async function render(){
   finally{ rendering=false; if(renderAgain){ renderAgain=false; render(); } }
 }
 function nav(target){
-  S.drawer=null; renderDrawer();
-  if(target.startsWith('board:')){ S.view='board'; S.board=target.slice(6); S.filters={q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}; $('#q').value=''; }
+  S.drawer=null; renderDrawer(); S.report=null; if(target!=='access') S.accDraft=null;
+  if(target.startsWith('board:')){
+    const b=target.slice(6); S.view='board'; S.board=b; if(!SECTIONS.includes(S.section)) S.section='tasks';
+    S.filters={q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}; $('#q').value='';
+    if(keyOf(b)) logEvent(b,'open',null,'open');
+  }
   else { S.view=target; S.board=null; }
-  try{ history.replaceState(null,'', '#'+(S.view==='board'?S.board:S.view)); }catch(e){}
-  render(); $('#main').scrollTop=0;
+  setHash(); S.mainKey=''; render(); $('#main').scrollTop=0;
 }
 
 async function setOwners(list){
@@ -1518,19 +1733,427 @@ document.addEventListener('dragover', (ev)=>{ const col=ev.target.closest('.col'
 document.addEventListener('dragleave', (ev)=>{ const col=ev.target.closest('.col'); if(col && !col.contains(ev.relatedTarget)) col.classList.remove('over'); });
 document.addEventListener('drop', async (ev)=>{ const col=ev.target.closest('.col'); if(!col) return; ev.preventDefault(); col.classList.remove('over'); const id=ev.dataTransfer.getData('text/plain'); if(id) await setStatus(id, col.dataset.status); });
 
+/* ---------- departments: access, reports, CEO view, activity log (October 2026) ----------
+   Access is decided by the member lists in access/departments and enforced by firestore.rules.
+   Each department keeps its own password, which encrypts its tasks and reports.
+   The Chief Executive Officer opens every department without a password: when a member opens a
+   department, its key is deposited in ceokeys/{department}, which only the CEO can read. */
+function arN(n, one, two, few, many){ if(n===1) return one; if(n===2) return two; if(n>=3&&n<=10) return `${n} ${few}`; return `${n} ${many}`; }
+const DEPT_IDS = BOARDS.map(b=>b.id);
+const SECTIONS = ['weekly','monthly','tasks','log'];
+const DEPT_DESC = {
+  'human-capital':      {en:'People, organisation, policies and compliance', ar:'الأفراد والتنظيم والسياسات والالتزام'},
+  'customer-experience':{en:'Customer support, success and quality', ar:'دعم العملاء ونجاحهم والجودة'},
+  'grc-legal':          {en:'Policies, risk, contracts and regulatory compliance', ar:'السياسات والمخاطر والعقود والالتزام التنظيمي'},
+};
+const CHEV_SVG = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+const BACK_SVG = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
+const SICON = {
+  weekly: IC('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7 14.5h10"/>'),
+  monthly: IC('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9.5 17v-3M12.5 17v-6M15.5 17v-2"/>'),
+  tasks: IC('<path d="M10 6h10M10 12h10M10 18h10"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/>'),
+  log: IC('<path d="M3 12h4l3-8 4 16 3-8h4"/>'),
+};
+const lc = (s)=> String(s||'').trim().toLowerCase();
+const isCEO = ()=> !!S.me.isCEO;
+const isAdmin = ()=> !!S.me.isOwner;
+function memberOf(b){ const l = S.access && Array.isArray(S.access[b]) ? S.access[b] : []; return !!S.me.email && l.map(lc).includes(lc(S.me.email)); }
+function canSee(b){ return DEPT_IDS.includes(b) && (isCEO() || memberOf(b)); }
+function myBoards(){ return BOARDS.filter(b=>canSee(b.id)); }
+function hasAnyAccess(){ return isCEO() || myBoards().length>0; }
+function defaultBoard(){ if(S.view==='board' && canSee(S.board)) return S.board; const mb=myBoards(); return (mb.find(b=>keyOf(b.id))||mb[0]||BOARDS[0]).id; }
+function setHash(){ try{ history.replaceState(null,'', '#'+(S.view==='board'? S.board+'/'+S.section : S.view)); }catch(e){} }
+
+/* periods: the Saudi working week starts on Sunday; the monthly report covers the month just ended */
+function weekStart(iso){ const d=parseISO(iso)||new Date(); return toISO(addDays(d, -d.getDay())); }
+function reportingMonth(){ const d=new Date(); d.setDate(1); d.setMonth(d.getMonth()-1); return toISO(d).slice(0,7); }
+function periodLabel(kind, p){
+  if(!p) return '';
+  if(kind==='monthly'){ const [y,m]=String(p).split('-').map(Number); if(!y||!m) return p; try{ return new Intl.DateTimeFormat(t('dateFmt'),{month:'long',year:'numeric'}).format(new Date(y,m-1,1)); }catch(e){ return p; } }
+  return fmtDate(p);
+}
+function reportsOf(b, kind){ return [...S.reports.values()].filter(r=>r.board===b && r.kind===kind).sort((x,y)=> String(y.period||'').localeCompare(String(x.period||'')) || String(y.createdAt||'').localeCompare(String(x.createdAt||''))); }
+function weeklyThisWeek(b){ const ws=weekStart(todayISO()); return reportsOf(b,'weekly').find(r=> r.period && weekStart(r.period)===ws) || null; }
+function monthlyFor(b, ym){ return reportsOf(b,'monthly').find(r=> r.period===ym) || null; }
+function doneInMonth(x, ym){ return x.status==='done' && (x.history||[]).some(h=>h.what==='status' && h.to==='done' && String(h.at||'').slice(0,7)===ym); }
+function monthSnapshot(b, ym){
+  const l=boardTasks(b).filter(x=>!x.locked);
+  return { created:l.filter(x=>String(x.createdAt||'').slice(0,7)===ym).length, done:l.filter(x=>doneInMonth(x,ym)).length, open:l.filter(x=>x.status!=='done').length, overdue:l.filter(isOverdue).length };
+}
+
+/* ---------- subscriptions per department ---------- */
+const SUBS = new Map(); const rawByBoard = new Map(); const rawRepByBoard = new Map(); let membersSub = null;
+function resubscribe(){
+  const db=S.db; if(!db) return;
+  if(!membersSub && (hasAnyAccess() || isAdmin())){
+    membersSub = db.collection('members').onSnapshot(snap=>{ S.members=new Map(); snap.docs.forEach(d=>{ if(d.exists) S.members.set(d.id, d.data()); }); render(); }, err=>{ console.warn('members', err); membersSub=null; });
+  }
+  const want = new Map(myBoards().map(b=>[b.id, memberOf(b.id)?'m':'c']));
+  let changed=false;
+  for(const [b,sub] of [...SUBS]){
+    if(want.get(b)===sub.tag) continue;
+    sub.uns.forEach(u=>{ try{ u&&u(); }catch(e){} }); SUBS.delete(b); changed=true;
+    if(!want.has(b)){ rawByBoard.delete(b); rawRepByBoard.delete(b); S.logs.delete(b); delete S.keys[b]; forgetKey(b); }
+  }
+  for(const [b,tag] of want){
+    if(SUBS.has(b)) continue;
+    const uns=[];
+    uns.push(db.collection('tasks').where('board','==',b).onSnapshot(snap=> ingestBoard(b, snap), err=>{ console.warn('tasks', b, err); rawByBoard.set(b, new Map()); S.tasksLoaded=true; S.connecting=false; render(); }));
+    uns.push(db.collection('reports').where('board','==',b).onSnapshot(snap=> ingestReports(b, snap), err=> console.warn('reports', b, err)));
+    if(tag==='m') uns.push(db.doc('settings/'+b).onSnapshot(snap=>{ S.lockSettings[b] = snap.exists? snap.data(): null; S.lockLoaded[b]=true; render(); }, err=>{ console.warn('settings', b, err); S.lockLoaded[b]=true; render(); }));
+    else S.lockLoaded[b]=true;
+    uns.push(db.collection('deptlogs/'+b+'/items').recent('at', 300).onSnapshot(snap=>{ S.logs.set(b, snap.docs.filter(d=>d.exists).map(d=>({id:d.id, ...d.data()}))); render(); }, err=> console.warn('log', b, err)));
+    if(isCEO() && tag==='c') uns.push(db.doc('ceokeys/'+b).onSnapshot(async snap=>{
+      const d = snap.exists? snap.data(): null;
+      if(d && d.k){ try{ S.keys[b] = await crypto.subtle.importKey('raw', unb64(d.k), {name:'AES-GCM', length:256}, true, ['encrypt','decrypt']); await rebuildAll(); }catch(e){ console.warn('ceokey', e); } }
+      S.ceoKeyLoaded[b]=true; S.mainKey=''; render();
+    }, err=>{ console.warn('ceokey', b, err); S.ceoKeyLoaded[b]=true; render(); }));
+    SUBS.set(b, {tag, uns}); changed=true;
+  }
+  if(changed){ rebuildRaw(); rebuildAll().then(()=>render()); }
+  if(!want.size){ S.tasksLoaded=true; S.connecting=false; }
+}
+async function ingestBoard(b, snap){ const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawByBoard.set(b, m); rebuildRaw(); await rebuildAll(); S.tasksLoaded=true; S.connecting=false; await render(); }
+function rebuildRaw(){ const out=new Map(); for(const [b,m] of rawByBoard){ if(!SUBS.has(b)) continue; for(const [id,d] of m) out.set(id, d); } rawDocs=out; }
+async function ingestReports(b, snap){ const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawRepByBoard.set(b, m); await rebuildReports(); render(); }
+async function repFromStored(id, data){ const r={id, ...data, c:{}}; if(data.enc){ const key=keyOf(data.board); if(key){ try{ r.c=await decryptObj(data.enc, key); }catch(e){ r.locked=true; } } else r.locked=true; } delete r.enc; return r; }
+async function rebuildReports(){ const out=new Map(); for(const [b,m] of rawRepByBoard){ if(!SUBS.has(b)) continue; for(const [id,d] of m) out.set(id, await repFromStored(id, d)); } S.reports=out; }
+async function rebuildAll(){ await rebuildTasks(); await rebuildReports(); }
+
+/* ---------- keys ---------- */
+async function syncCeoKey(b){
+  if(!memberOf(b) || !S.keys[b]) return;
+  try{ const raw=await crypto.subtle.exportKey('raw', S.keys[b]); await S.db.doc('ceokeys/'+b).set({k:b64(raw), board:b, setAt:new Date().toISOString(), setBy:lc(S.me.email)}); }catch(e){ console.warn('ceokey', e); }
+}
+// tasks written before the department had a password are encrypted the first time a member opens it
+async function sealPlain(b){
+  if(!keyOf(b)) return;
+  for(const [id,d] of [...rawDocs.entries()]){
+    if(d.board!==b || d.enc) continue; const tk=S.tasks.get(id); if(!tk || tk.locked) continue;
+    try{ const stored=await toStored(tk); rawDocs.set(id, stored); await queued(id, ()=> S.db.collection('tasks').doc(id).set(stored)); }catch(e){ console.warn('seal', e); }
+  }
+}
+
+/* ---------- activity log (append only) ---------- */
+const logGate = new Map();
+async function logEvent(b, action, extra, gateKey){
+  if(!S.db || !DEPT_IDS.includes(b) || !S.me.email || !canSee(b)) return;
+  if(gateKey){ const k=b+'|'+gateKey, last=logGate.get(k)||0; if(Date.now()-last < 10*60*1000) return; logGate.set(k, Date.now()); }
+  const rec={board:b, at:new Date().toISOString(), by:S.me.id||null, email:lc(S.me.email), name:myName()||'', action, ...(extra||{})};
+  try{ await S.db.collection('deptlogs/'+b+'/items').add(rec); }catch(e){ console.warn('log', e); }
+}
+function logTaskChange(tk, h){
+  const w=h&&h.what; if(!w) return;
+  if(w==='created') logEvent(tk.board,'task.create',{ref:tk.id});
+  else if(w==='status') logEvent(tk.board,'task.status',{ref:tk.id, to:h.to});
+  else logEvent(tk.board,'task.edit',{ref:tk.id},'edit:'+tk.id);
+}
+function logText(e){
+  const g=t('lg'), f=g[e.action];
+  if(typeof f!=='function') return f || e.action || '';
+  if(e.action==='task.status') return f(t('st')[e.to]||e.to||'');
+  if(e.action==='tasks.fromMeeting') return f(e.n||0);
+  return f((t('kindName')||{})[e.kind]||'', periodLabel(e.kind, e.period));
+}
+function logListHTML(items, showDept){
+  if(!items.length) return `<div class="empty"><b>${esc(t('emptyLog'))}</b></div>`;
+  let h=`<div class="list loglist">`;
+  for(const e of items){
+    const mine = e.email && lc(e.email)===lc(S.me.email);
+    const who = mine ? t('you') : (e.name || e.email || t('someone'));
+    const act = e.ref && S.tasks.has(e.ref) ? ` data-action="open" data-id="${esc(e.ref)}"` : (e.rep && S.reports.has(e.rep) ? ` data-action="rep-open" data-id="${esc(e.rep)}"` : '');
+    h+=`<div class="li"${act}><span class="when" title="${esc(fmtDateTime(e.at))}">${esc(fmtRel(e.at))}</span><div class="what"><div class="t">${esc(who)}</div><div class="d">${esc(logText(e))}${e.email && !mine?` · <span class="em">${esc(e.email)}</span>`:''}</div></div>${showDept?`<span class="where">${esc(boardName(e.board))}</span>`:''}</div>`;
+  }
+  return h+`</div>`;
+}
+
+/* ---------- department page: sections ---------- */
+function secTabsHTML(){
+  const b=S.board, lab={weekly:t('secWeekly'), monthly:t('secMonthly'), tasks:t('secTasks'), log:t('secLog')};
+  return `<nav class="sectabs" role="tablist" aria-label="${esc(t('sections'))}">${SECTIONS.map(s=>`<button type="button" role="tab" aria-selected="${S.section===s}" class="${S.section===s?'on':''}" data-action="sec" data-sec="${s}">${SICON[s]}<span>${esc(lab[s])}</span>${s==='log'?'':`<span class="n num" data-cnt="${s}"></span>`}</button>`).join('')}</nav>`;
+}
+function refreshSecCounts(){
+  const b=S.board; if(S.view!=='board' || !b) return;
+  const n={weekly:reportsOf(b,'weekly').length, monthly:reportsOf(b,'monthly').length, tasks:boardTasks(b).filter(x=>x.status!=='done').length};
+  document.querySelectorAll('.sectabs [data-cnt]').forEach(el=>{ el.textContent = n[el.dataset.cnt] ?? ''; });
+}
+function deptHeadHTML(){
+  const b=S.board, ro=!canWrite(); let sub='', btn='';
+  if(S.section==='weekly'){ sub=t('repCount')(reportsOf(b,'weekly').length); if(!ro) btn=`<button class="btn primary" data-action="rep-new" data-kind="weekly" type="button">+ ${esc(t('newWeekly'))}</button>`; }
+  else if(S.section==='monthly'){ sub=t('repCount')(reportsOf(b,'monthly').length); if(!ro) btn=`<button class="btn primary" data-action="rep-new" data-kind="monthly" type="button">+ ${esc(t('newMonthly'))}</button>`; }
+  else sub=t('logSub');
+  const lockBtn = keyOf(b) && memberOf(b) ? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>` : '';
+  return `<div class="vhead"><h1>${esc(boardName(b))}</h1>${sub?`<span class="sub num">${esc(sub)}</span>`:''}<div class="actions">${lockBtn}${btn}</div></div>${secTabsHTML()}`;
+}
+function renderDeptBody(){
+  const body=$('#body'); if(!body) return; const b=S.board;
+  if(S.section==='log') body.innerHTML = logListHTML(S.logs.get(b)||[], false);
+  else body.innerHTML = reportListHTML(b, S.section);
+}
+function rsChip(r){ const st=r? (r.status==='final'?'final':'draft') : 'missing'; return `<span class="rs s-${st}">${esc(t('rs')[st])}</span>`; }
+function reportListHTML(b, kind){
+  const list=reportsOf(b, kind), ro=!canWrite(); let h='';
+  const due = kind==='weekly' ? !weeklyThisWeek(b) : !monthlyFor(b, reportingMonth());
+  if(due && !ro) h+=`<div class="callout"><span class="dot"></span><span>${esc(kind==='weekly'? t('weekDue') : t('monthDue')(periodLabel('monthly', reportingMonth())))}</span><button class="btn primary" data-action="rep-new" data-kind="${kind}" type="button">${esc(t('writeNow'))}</button></div>`;
+  if(!list.length) return h+`<div class="empty"><b>${esc(kind==='weekly'?t('emptyWeekly'):t('emptyMonthly'))}</b>${esc(kind==='weekly'?t('emptyWeeklyHint'):t('emptyMonthlyHint'))}</div>`;
+  h+=`<div class="replist">`;
+  for(const r of list){
+    const c=r.c||{}; let meta=[];
+    if(r.locked) meta=[t('lockedTask')];
+    else if(kind==='weekly'){
+      const dn=(c.decisions||[]).filter(x=>String(x||'').trim()).length;
+      const acts=(c.actions||[]).filter(a=>a && String(a.text||'').trim());
+      const open=acts.filter(a=>{ const tk=a.taskId && S.tasks.get(a.taskId); return !tk || tk.status!=='done'; }).length;
+      if(c.chair) meta.push(`${t('fChair')}: ${c.chair}`);
+      meta.push(t('decisionsN')(dn)); meta.push(t('actionsN')(acts.length) + (acts.length? ` (${t('openN')(open)})` : ''));
+    } else {
+      const k=(c.kpis||[]).filter(x=>x && String(x.name||'').trim()); const cnt={on:0,risk:0,off:0}; k.forEach(x=>{ cnt[x.rag||'on']=(cnt[x.rag||'on']||0)+1; });
+      meta.push(t('kpisN')(k.length)); if(k.length) meta.push(`${t('rag').on} ${cnt.on} · ${t('rag').risk} ${cnt.risk} · ${t('rag').off} ${cnt.off}`);
+    }
+    const who = nameOf(r.updatedBy) || r.createdName || '';
+    h+=`<button type="button" class="rep" data-action="rep-open" data-id="${esc(r.id)}"><span class="rp num">${esc(periodLabel(kind, r.period))}</span><span class="rm">${esc(meta.join(' · '))}</span>${rsChip(r)}<span class="ru">${esc(who)}${who?' · ':''}${esc(fmtRel(r.updatedAt))}</span></button>`;
+  }
+  return h+`</div>`;
+}
+
+/* ---------- report editor ---------- */
+function newReport(kind){
+  const b=S.board; if(!keyOf(b) || !canWrite()) return;
+  const c = kind==='weekly'
+    ? {chair:myName()||'', attendees:'', agenda:'', decisions:[''], actions:[{text:'',owner:'',due:''}], risks:'', next:toISO(addDays(new Date(),7))}
+    : {summary:'', kpis:[{name:'',target:'',actual:'',rag:'on'}], achievements:'', issues:'', support:'', priorities:''};
+  S.section=kind; S.report={key:'new'+Date.now(), id:null, board:b, kind, period: kind==='weekly'? todayISO() : reportingMonth(), status:'draft', c, dirty:true, confirm:false, leave:false};
+  setHash(); renderMain(true); $('#main').scrollTop=0;
+}
+function openReport(id){
+  const r=S.reports.get(id); if(!r) return;
+  if(r.locked || !keyOf(r.board)){ nav('board:'+r.board); return; }
+  S.view='board'; S.board=r.board; S.section=r.kind; S.drawer=null; renderDrawer();
+  S.report={key:id+'|'+Date.now(), id, board:r.board, kind:r.kind, period:r.period, status:r.status||'draft', c:JSON.parse(JSON.stringify(r.c||{})), dirty:false, confirm:false, leave:false};
+  setHash(); S.mainKey=''; render(); $('#main').scrollTop=0;
+}
+function reportEditorHTML(){
+  const R=S.report, c=R.c, fin=R.status==='final', ro=!canWrite()||fin, dis=ro?'disabled':'';
+  const ta=(k,label,rows)=> field('r-'+k, label, `<textarea id="r-${k}" data-r="${k}" rows="${rows||3}" maxlength="6000" ${dis}>${esc(c[k]||'')}</textarea>`);
+  let h=`<div class="vhead"><button class="btn back" data-action="rep-back" type="button">${BACK_SVG}<span>${esc(t('back'))}</span></button><h1>${esc(R.kind==='weekly'?t('weeklyTitle'):t('monthlyTitle'))}</h1>${rsChip({status:R.status})}<span class="unsaved" id="r-unsaved" ${R.dirty&&!fin?'':'hidden'}>${esc(t('unsaved'))}</span><div class="actions">`;
+  if(canWrite()){
+    if(fin) h+=`<button class="btn" data-action="rep-reopen" type="button">${esc(t('reopen'))}</button>`;
+    else {
+      if(R.id) h+= R.confirm
+        ? `<span class="confirm"><span>${esc(t('deleteRepAsk'))}</span><button class="btn danger" data-action="rep-del-yes" type="button">${esc(t('yesDelete'))}</button><button class="btn" data-action="rep-del-no" type="button">${esc(t('cancel'))}</button></span>`
+        : `<button class="btn" data-action="rep-del" type="button">${esc(t('deleteReport'))}</button>`;
+      h+=`<button class="btn" data-action="rep-save" type="button">${esc(t('saveDraft'))}</button><button class="btn primary" data-action="rep-final" type="button">${esc(t('finalise'))}</button>`;
+    }
+  }
+  h+=`</div></div>${secTabsHTML()}`;
+  if(fin) h+=`<div class="callout quiet"><span>${esc(t('finalNote'))}</span></div>`;
+  h+=`<div class="repform">`;
+  if(R.kind==='weekly'){
+    h+=`<div class="rgrid">${field('r-period',t('fMeetingDate'),`<input type="date" id="r-period" data-rp="period" value="${esc(R.period)}" ${dis}>`)}${field('r-chair',t('fChair'),`<input id="r-chair" data-r="chair" value="${esc(c.chair||'')}" maxlength="120" ${dis}>`)}${field('r-next',t('fNext'),`<input type="date" id="r-next" data-r="next" value="${esc(c.next||'')}" ${dis}>`)}</div>`;
+    h+=`<div class="rgrid two">${ta('attendees',t('fAttendees'),5)}${ta('agenda',t('fAgenda'),5)}</div>`;
+    h+=`<section class="rsec"><h3>${esc(t('fDecisions'))}</h3><ol class="rlist">${(c.decisions||[]).map((d,i)=>`<li><input data-rl="decisions" data-i="${i}" value="${esc(d)}" maxlength="500" aria-label="${esc(t('fDecisions'))} ${i+1}" ${dis}>${ro?'':`<button class="iconbtn sm" data-action="rep-rm" data-list="decisions" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button>`}</li>`).join('')}</ol>${ro?'':`<button class="linkbtn" data-action="rep-add" data-list="decisions" type="button">+ ${esc(t('addDecision'))}</button>`}</section>`;
+    h+=`<section class="rsec"><h3>${esc(t('fActions'))}</h3><div class="rtable"><table><thead><tr><th>${esc(t('fAction'))}</th><th>${esc(t('cOwner'))}</th><th>${esc(t('cDue'))}</th><th>${esc(t('cStatus'))}</th><th></th></tr></thead><tbody>`;
+    (c.actions||[]).forEach((a,i)=>{
+      const tk=a.taskId && S.tasks.get(a.taskId), sent=!!a.taskId, d2=(ro||sent)?'disabled':'';
+      h+=`<tr><td><input data-rr="actions" data-i="${i}" data-k="text" value="${esc(a.text||'')}" maxlength="300" aria-label="${esc(t('fAction'))}" ${d2}></td><td><input data-rr="actions" data-i="${i}" data-k="owner" value="${esc(a.owner||'')}" list="peoplelist" maxlength="120" aria-label="${esc(t('cOwner'))}" ${d2}></td><td><input type="date" data-rr="actions" data-i="${i}" data-k="due" value="${esc(a.due||'')}" aria-label="${esc(t('cDue'))}" ${d2}></td><td>${tk? `<button class="linkbtn" data-action="open" data-id="${esc(tk.id)}" type="button">${esc(t('st')[tk.status])}</button>` : `<span class="muted small">${esc(sent? t('inTasks') : t('notSent'))}</span>`}</td><td>${(ro||sent)?'':`<button class="iconbtn sm" data-action="rep-rm" data-list="actions" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button>`}</td></tr>`;
+    });
+    h+=`</tbody></table></div><datalist id="peoplelist">${[...new Set([...S.members.values()].map(m=>m.name).filter(Boolean))].map(n=>`<option value="${esc(n)}">`).join('')}</datalist>`;
+    const pending=(c.actions||[]).filter(a=>a && !a.taskId && String(a.text||'').trim()).length;
+    if(!ro) h+=`<div class="rrow"><button class="linkbtn" data-action="rep-add" data-list="actions" type="button">+ ${esc(t('addAction'))}</button><span class="grow"></span>${pending?`<button class="btn" data-action="rep-send" type="button">${esc(t('sendActions'))}</button>`:''}</div>`;
+    h+=`</section><div class="rgrid one">${ta('risks',t('fRisks'),3)}</div>`;
+  } else {
+    h+=`<div class="rgrid">${field('r-period',t('fMonth'),`<input type="month" id="r-period" data-rp="period" value="${esc(R.period)}" ${dis}>`)}</div>`;
+    h+=`<div class="rgrid one">${ta('summary',t('fSummary'),4)}</div>`;
+    h+=`<section class="rsec"><h3>${esc(t('fKpis'))}</h3><div class="rtable"><table><thead><tr><th>${esc(t('fKpi'))}</th><th>${esc(t('fTarget'))}</th><th>${esc(t('fActual'))}</th><th>${esc(t('fRag'))}</th><th></th></tr></thead><tbody>`;
+    (c.kpis||[]).forEach((k,i)=>{
+      h+=`<tr><td><input data-rr="kpis" data-i="${i}" data-k="name" value="${esc(k.name||'')}" maxlength="200" aria-label="${esc(t('fKpi'))}" ${dis}></td><td><input data-rr="kpis" data-i="${i}" data-k="target" value="${esc(k.target||'')}" maxlength="60" aria-label="${esc(t('fTarget'))}" ${dis}></td><td><input data-rr="kpis" data-i="${i}" data-k="actual" value="${esc(k.actual||'')}" maxlength="60" aria-label="${esc(t('fActual'))}" ${dis}></td><td><select data-rr="kpis" data-i="${i}" data-k="rag" class="rag r-${esc(k.rag||'on')}" aria-label="${esc(t('fRag'))}" ${dis}>${['on','risk','off'].map(v=>`<option value="${v}" ${v===(k.rag||'on')?'selected':''}>${esc(t('rag')[v])}</option>`).join('')}</select></td><td>${ro?'':`<button class="iconbtn sm" data-action="rep-rm" data-list="kpis" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button>`}</td></tr>`;
+    });
+    h+=`</tbody></table></div>${ro?'':`<div class="rrow"><button class="linkbtn" data-action="rep-add" data-list="kpis" type="button">+ ${esc(t('addKpi'))}</button></div>`}</section>`;
+    const sn = (fin && c.snapshot) ? c.snapshot : monthSnapshot(R.board, R.period);
+    h+=`<section class="rsec"><h3>${esc(t('snapTitle'))}</h3><div class="snap"><div><b>${sn.created}</b><span>${esc(t('snapCreated'))}</span></div><div class="done"><b>${sn.done}</b><span>${esc(t('snapDone'))}</span></div><div><b>${sn.open}</b><span>${esc(t('snapOpen'))}</span></div><div class="od"><b>${sn.overdue}</b><span>${esc(t('snapOverdue'))}</span></div></div><p class="note">${esc(t('snapNote'))}</p></section>`;
+    h+=`<div class="rgrid two">${ta('achievements',t('fAchievements'),4)}${ta('issues',t('fIssues'),4)}${ta('support',t('fSupport'),4)}${ta('priorities',t('fPriorities'),4)}</div>`;
+  }
+  return h+`</div>`;
+}
+async function saveReport(R){
+  const key=keyOf(R.board); if(!key){ toast(t('saveFail'), true); return null; }
+  const now=new Date().toISOString(), id=R.id || S.db.collection('reports').doc().id, prev=S.reports.get(id)||{};
+  const stored={ board:R.board, kind:R.kind, period:R.period||'', status:R.status==='final'?'final':'draft',
+    createdAt:prev.createdAt||now, createdBy:prev.createdBy||S.me.id||null, createdName:prev.createdName||myName()||'',
+    updatedAt:now, updatedBy:S.me.id||null, finalAt: R.status==='final' ? (prev.finalAt||now) : null,
+    enc: await encryptObj(R.c||{}, key) };
+  try{ await S.db.collection('reports').doc(id).set(stored); }catch(e){ console.warn(e); toast(t('saveFail'), true); return null; }
+  const {enc, ...plain}=stored; S.reports.set(id, {id, ...plain, c:JSON.parse(JSON.stringify(R.c||{}))});
+  return id;
+}
+async function commitReport(status, reopen){
+  const R=S.report; if(!R) return;
+  if(!R.period){ toast(t('needPeriod'), true); $('#r-period')?.focus(); return; }
+  const wasNew=!R.id, prev=R.status;
+  if(status==='final'){
+    if(R.kind==='monthly') R.c.snapshot = monthSnapshot(R.board, R.period);
+    if(R.c.decisions) R.c.decisions=R.c.decisions.filter(x=>String(x||'').trim());
+    if(R.c.actions) R.c.actions=R.c.actions.filter(a=>a && (String(a.text||'').trim() || a.taskId));
+    if(R.c.kpis) R.c.kpis=R.c.kpis.filter(k=>k && String(k.name||'').trim());
+  }
+  if(reopen) delete R.c.snapshot;
+  R.status=status;
+  const id=await saveReport(R); if(!id){ R.status=prev; return; }
+  R.id=id; R.dirty=false; R.confirm=false; R.leave=false; R.key=id+'|'+Date.now();
+  logEvent(R.board, reopen? 'report.reopen' : status==='final' ? 'report.final' : wasNew ? 'report.create' : 'report.save', {kind:R.kind, period:R.period, rep:id});
+  toast(t(status==='final'?'repFinal':'repSaved'));
+  renderMain(true); renderRail();
+}
+async function sendActions(){
+  const R=S.report; if(!R || R.status==='final') return; const b=R.board; let n=0; const date=fmtDate(R.period);
+  for(const a of (R.c.actions||[])){
+    if(!a || a.taskId || !String(a.text||'').trim()) continue;
+    const owners=String(a.owner||'').split(',').map(s=>s.trim()).filter(Boolean).map(nm=>({id:findMemberOne(nm), name:nm}));
+    const task={...blankTask(b), title:String(a.text).trim().slice(0,200), due:a.due||'', group:t('meetingGroup')(date), ref:'WM-'+R.period, notes:t('fromMeeting')(date), ...ownerFields(owners)};
+    const id=await saveTask(task, hist('created')); if(id){ a.taskId=id; n++; }
+  }
+  if(!n) return;
+  await commitReport('draft');
+  logEvent(b,'tasks.fromMeeting',{n, rep:R.id, kind:'weekly', period:R.period});
+  toast(t('sentActions')(n));
+}
+async function removeReport(){
+  const R=S.report; if(!R || !R.id) return;
+  try{ await S.db.collection('reports').doc(R.id).delete(); }catch(e){ toast(t('saveFail'), true); return; }
+  logEvent(R.board,'report.delete',{kind:R.kind, period:R.period});
+  S.reports.delete(R.id); S.report=null; S.mainKey=''; toast(t('repDeleted')); render();
+}
+
+/* ---------- landing page ---------- */
+function doorHTML(b){
+  const id=b.id, name=b[L()], desc=DEPT_DESC[id][L()];
+  if(!canSee(id)) return `<div class="door off" aria-disabled="true"><div class="dtop">${icon(id)}<span class="dstate">${LOCK_SVG}${esc(t('restricted'))}</span></div><h2>${esc(name)}</h2><p class="dd">${esc(desc)}</p></div>`;
+  const list=boardTasks(id), open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length;
+  const wk=weeklyThisWeek(id), ym=reportingMonth(), mo=monthlyFor(id, ym), unl=!!keyOf(id);
+  const state = (isCEO() && !memberOf(id)) ? (unl? t('ceoAccess') : t('ceoWaitTitle')) : unl ? t('isOpen') : t('pwNeeded');
+  const st=(r)=> r? (r.status==='final'?'final':'draft') : 'missing';
+  return `<a href="#${id}/${S.section||'tasks'}" class="door ${unl?'unl':''}" data-action="nav" data-nav="board:${id}"><div class="dtop">${icon(id)}<span class="dstate">${unl?'':LOCK_SVG}${esc(state)}</span></div><h2>${esc(name)}</h2><p class="dd">${esc(desc)}</p>
+    <dl class="dstats"><div><dt>${esc(t('openTasks'))}</dt><dd class="num">${open}${od?`<small> · ${esc(t('overdue'))} ${od}</small>`:''}</dd></div><div><dt>${esc(t('thisWeek'))}</dt><dd class="s-${st(wk)}">${esc(t('rs')[st(wk)])}</dd></div><div><dt>${esc(t('monthReport')(periodLabel('monthly', ym)))}</dt><dd class="s-${st(mo)}">${esc(t('rs')[st(mo)])}</dd></div></dl>
+    <span class="dgo">${esc(t('enter'))}${CHEV_SVG}</span></a>`;
+}
+function homeHTML(){
+  const nm=(myName()||'').trim().split(/\s+/)[0]||'', hr=new Date().getHours();
+  let h=`<section class="hero"><p class="hello">${esc(hr<12?t('goodMorning'):t('goodEvening'))}${nm?esc(t('comma')+nm):''}</p><h1>${esc(t('homeTitle'))}</h1><p class="lead">${esc(isCEO()?t('homeSubCEO'):t('homeSub'))}</p></section>`;
+  h+=`<div class="doors">${BOARDS.map(doorHTML).join('')}</div>`;
+  if(isCEO()) h+=`<button class="ceo-cta" data-action="nav" data-nav="ceo" type="button">${icon('ceo')}<span><b>${esc(t('ceoView'))}</b><span>${esc(t('ceoCta'))}</span></span>${CHEV_SVG}</button>`;
+  if(isAdmin()) h+=`<p class="home-foot"><button class="linkbtn" data-action="nav" data-nav="access" type="button">${esc(t('manageAccess'))}</button></p>`;
+  return h;
+}
+function noAccessHTML(){ return `<div class="notice"><h2>${esc(t('noAccessTitle'))}</h2><p>${esc(t('noAccessText')(S.me.email||''))}</p><p><button class="btn" data-action="signout" type="button">${esc(t('signOut'))}</button></p></div>`; }
+
+/* ---------- CEO overview ---------- */
+function ceoHTML(){
+  const all=[...S.tasks.values()].filter(x=>DEPT_IDS.includes(x.board));
+  const open=all.filter(x=>x.status!=='done').length, stuck=all.filter(x=>x.status==='stuck').length, od=all.filter(isOverdue).length;
+  const ym=reportingMonth(), cur=todayISO().slice(0,7), finals=BOARDS.filter(b=>{ const r=monthlyFor(b.id, ym); return r && r.status==='final'; }).length;
+  let h=`<div class="vhead"><h1>${esc(t('ceoView'))}</h1><span class="sub">${esc(t('ceoSub'))}</span></div>`;
+  h+=`<div class="tiles"><div class="tile"><div class="k">${esc(t('open'))}</div><div class="v">${open}</div></div><div class="tile stuck"><div class="k">${esc(t('stuck'))}</div><div class="v">${stuck}</div></div><div class="tile overdue"><div class="k">${esc(t('overdue'))}</div><div class="v">${od}</div></div><div class="tile ach"><div class="k">${esc(t('reportsFinal')(periodLabel('monthly', ym)))}</div><div class="v">${finals}<small>/${BOARDS.length}</small></div></div></div>`;
+  h+=`<div class="section" style="margin-top:0"><div style="overflow-x:auto"><table class="matrix"><thead><tr><th>${esc(t('cBoard'))}</th><th class="c">${esc(t('open'))}</th><th class="c">${esc(t('stuck'))}</th><th class="c">${esc(t('overdue'))}</th><th class="c">${esc(t('cDoneMonth'))}</th><th>${esc(t('cWeekly'))}</th><th>${esc(t('monthReport')(periodLabel('monthly', ym)))}</th><th>${esc(t('cLastAct'))}</th></tr></thead><tbody>`;
+  for(const b of BOARDS){
+    const l=boardTasks(b.id), o=l.filter(x=>x.status!=='done').length, s=l.filter(x=>x.status==='stuck').length, d=l.filter(isOverdue).length, dm=l.filter(x=>doneInMonth(x,cur)).length;
+    const wk=weeklyThisWeek(b.id), lastW=reportsOf(b.id,'weekly')[0], mo=monthlyFor(b.id, ym), lastLog=(S.logs.get(b.id)||[])[0];
+    const z=(n,bold)=> n? (bold?`<b>${n}</b>`:n) : '<span class="muted">0</span>';
+    h+=`<tr class="row" data-action="nav" data-nav="board:${b.id}"><td class="name">${keyOf(b.id)?'':LOCK_SVG+' '}${esc(b[L()])}</td><td class="n">${z(o)}</td><td class="n">${z(s,1)}</td><td class="n">${z(d,1)}</td><td class="n">${z(dm)}</td><td>${rsChip(wk)}${!wk&&lastW?` <span class="muted small">${esc(t('lastOn')(fmtDate(lastW.period)))}</span>`:''}</td><td>${rsChip(mo)}</td><td class="muted small">${lastLog? esc(fmtRel(lastLog.at)) : ''}</td></tr>`;
+  }
+  h+=`</tbody></table></div></div>`;
+  h+=`<div class="section"><h2>${esc(t('overdueAll'))}</h2>${listViewHTML('overdue')}</div>`;
+  const merged=[...S.logs.values()].flat().sort((a,b)=> String(b.at||'').localeCompare(String(a.at||''))).slice(0,20);
+  h+=`<div class="section"><h2>${esc(t('recentAll'))}</h2>${logListHTML(merged, true)}</div>`;
+  return h;
+}
+
+/* ---------- department access (administrators) ---------- */
+function accLists(src){ const d={}; for(const id of DEPT_IDS) d[id] = (src && Array.isArray(src[id])) ? [...new Set(src[id].map(lc).filter(Boolean))] : []; return d; }
+function accSeed(){ const d=accLists(S.access); if(!S.access){ const owners=((window.MARN_CONFIG||{}).owners)||[]; d['human-capital']=[...new Set([...d['human-capital'], ...owners.map(lc)])]; } return d; }
+function accessHTML(){
+  if(!isAdmin()) return `<div class="notice"><h2>${esc(t('accessTitle'))}</h2><p>${esc(t('adminOnly'))}</p></div>`;
+  if(!S.accDraft) S.accDraft=accSeed();
+  const D=S.accDraft, dirty = !S.access || JSON.stringify(D)!==JSON.stringify(accLists(S.access));
+  const ceo=((window.MARN_CONFIG||{}).ceo||['loai@marn.com']).join(', ');
+  let h=`<div class="vhead"><h1>${esc(t('accessTitle'))}</h1><span class="sub">${esc(t('accessSub'))}</span><div class="actions">${dirty&&S.access?`<button class="btn" data-action="acc-reset" type="button">${esc(t('discard'))}</button>`:''}<button class="btn primary" data-action="acc-save" type="button" ${dirty?'':'disabled'}>${esc(t('save'))}</button></div></div>`;
+  if(!S.access) h+=`<div class="callout"><span class="dot"></span><span>${esc(t('accSeedNote'))}</span></div>`;
+  h+=`<p class="ceo-line">${icon('ceo')}<span>${esc(t('ceoFixed')(ceo))}</span></p><div class="accgrid">`;
+  for(const b of BOARDS){
+    const l=D[b.id]||[];
+    h+=`<section class="acc-col"><header>${icon(b.id)}<h2>${esc(b[L()])}</h2><span class="num">${l.length}</span></header><ul>${l.length? l.map((e,i)=>`<li><span class="em" dir="ltr">${esc(e)}</span><button class="iconbtn sm" data-action="acc-rm" data-b="${b.id}" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button></li>`).join('') : `<li class="none">${esc(t('accEmpty'))}</li>`}</ul><form class="acc-add" data-acc="${b.id}"><textarea id="acc-in-${b.id}" rows="1" placeholder="name@marn.com" dir="ltr" autocomplete="off" aria-label="${esc(b[L()])}"></textarea><button class="btn" type="submit">${esc(t('add'))}</button></form></section>`;
+  }
+  h+=`</div>`;
+  const log=(S.access && Array.isArray(S.access.log))? S.access.log : [];
+  if(log.length){
+    h+=`<div class="section"><h2>${esc(t('accLog'))}</h2><div class="list">${[...log].reverse().slice(0,20).map(e=>`<div class="li"><span class="when">${esc(fmtRel(e.at))}</span><div class="what"><div class="t em" dir="ltr">${esc(e.by||'')}</div><div class="d">${esc((e.changes||[]).map(c=>`${boardName(c.b)}: ${[(c.added||[]).length?'+ '+c.added.join(', '):'', (c.removed||[]).length?'− '+c.removed.join(', '):''].filter(Boolean).join('  ')}`).join(' · '))}</div></div></div>`).join('')}</div></div>`;
+  }
+  return h;
+}
+function accAdd(b){
+  const inp=$('#acc-in-'+b); if(!inp) return;
+  // one email or a pasted list (separated by spaces, commas, semicolons or new lines)
+  const list=String(inp.value||'').split(/[\s,;]+/).map(lc).filter(Boolean);
+  const bad=list.filter(v=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+  if(!list.length || bad.length){ toast(t('badEmail')+(bad.length?' '+bad.join(', '):''), true); inp.focus(); return; }
+  for(const v of list) if(!S.accDraft[b].includes(v)) S.accDraft[b].push(v);
+  renderMain(true); $('#acc-in-'+b)?.focus();
+}
+function accRm(b, i){ S.accDraft[b].splice(i,1); renderMain(true); }
+async function accSave(){
+  const before=accLists(S.access), D=S.accDraft, now=new Date().toISOString(), by=lc(S.me.email);
+  const changes=DEPT_IDS.map(b=>({b, added:D[b].filter(e=>!before[b].includes(e)), removed:before[b].filter(e=>!D[b].includes(e))})).filter(c=>c.added.length||c.removed.length);
+  const doc={...D, updatedAt:now, updatedBy:by, log:[...((S.access&&S.access.log)||[]), {at:now, by, changes}].slice(-50)};
+  try{ await S.db.doc('access/departments').set(doc); }catch(e){ console.warn(e); toast(t('saveFail'), true); return; }
+  S.access=doc; S.accDraft=null; S.mainKey=''; toast(t('accSaved')); resubscribe(); render();
+}
+
+/* ---------- events for the department features ---------- */
+document.addEventListener('click', async (ev)=>{
+  const el=ev.target.closest('[data-action]'); if(!el) return; const a=el.dataset.action; const R=S.report;
+  if(a==='nav' && el.tagName==='A') ev.preventDefault();
+  if(a==='sec'){ S.section=el.dataset.sec; S.report=null; setHash(); S.mainKey=''; render(); $('#main').scrollTop=0; }
+  else if(a==='rep-new'){ newReport(el.dataset.kind); }
+  else if(a==='rep-open'){ ev.stopPropagation(); openReport(el.dataset.id); }
+  else if(a==='rep-back'){ if(R && R.dirty && !R.leave && R.status!=='final'){ R.leave=true; toast(t('leaveArmed')); return; } S.report=null; S.mainKey=''; render(); }
+  else if(a==='rep-add' && R){ const l=el.dataset.list; R.c[l]=R.c[l]||[]; R.c[l].push(l==='decisions'? '' : l==='actions'? {text:'',owner:'',due:''} : {name:'',target:'',actual:'',rag:'on'}); R.dirty=true; renderMain(true); const inputs=document.querySelectorAll(`[data-rl="${l}"],[data-rr="${l}"][data-k="text"],[data-rr="${l}"][data-k="name"]`); inputs[inputs.length-1]?.focus(); }
+  else if(a==='rep-rm' && R){ R.c[el.dataset.list].splice(+el.dataset.i,1); R.dirty=true; renderMain(true); }
+  else if(a==='rep-save'){ await commitReport('draft'); }
+  else if(a==='rep-final'){ await commitReport('final'); }
+  else if(a==='rep-reopen'){ await commitReport('draft', true); }
+  else if(a==='rep-send'){ el.disabled=true; await sendActions(); }
+  else if(a==='rep-del' && R){ R.confirm=true; renderMain(true); }
+  else if(a==='rep-del-no' && R){ R.confirm=false; renderMain(true); }
+  else if(a==='rep-del-yes'){ await removeReport(); }
+  else if(a==='acc-rm'){ accRm(el.dataset.b, +el.dataset.i); }
+  else if(a==='acc-save'){ el.disabled=true; await accSave(); }
+  else if(a==='acc-reset'){ S.accDraft=null; S.mainKey=''; render(); }
+});
+document.addEventListener('submit', (ev)=>{ const f=ev.target.closest('form[data-acc]'); if(!f) return; ev.preventDefault(); accAdd(f.dataset.acc); });
+document.addEventListener('input', (ev)=>{
+  const el=ev.target, R=S.report; if(!R || !el.closest('#main')) return;
+  if(el.dataset.r) R.c[el.dataset.r]=el.value;
+  else if(el.dataset.rp) R.period=el.value;
+  else if(el.dataset.rl){ (R.c[el.dataset.rl]||[])[+el.dataset.i]=el.value; }
+  else if(el.dataset.rr){ const row=(R.c[el.dataset.rr]||[])[+el.dataset.i]; if(row) row[el.dataset.k]=el.value; if(el.dataset.k==='rag') el.className='rag r-'+el.value; }
+  else return;
+  R.dirty=true; R.leave=false; const u=$('#r-unsaved'); if(u) u.hidden=false;
+});
+window.addEventListener('beforeunload', (ev)=>{ if(S.report && S.report.dirty && S.report.status!=='final'){ ev.preventDefault(); ev.returnValue=''; } });
+
 /* ---------- boot ---------- */
 async function boot(){
   try{ const l=localStorage.getItem('marn.lang'); if(l==='en'||l==='ar') S.lang=l; }catch(e){}
   try{ const v=localStorage.getItem('marn.bview'); if(['table','kanban','timeline'].includes(v)) S.boardView=v; }catch(e){}
   const hash=(location.hash||'').replace('#','');
-  if(['overview','mine','overdue','activity'].includes(hash)) S.view=hash; else if(BOARDS.some(b=>b.id===hash)){ S.view='board'; S.board=hash; }
+  const [h1,h2]=hash.split('/');
+  if(['home','ceo','access','mine','overdue','activity'].includes(h1)) S.view=h1; else if(BOARDS.some(b=>b.id===h1)){ S.view='board'; S.board=h1; if(SECTIONS.includes(h2)) S.section=h2; }
   setLang(S.lang);
   await restoreKey();
   const caps = window.__marnCapsPromise ? await window.__marnCapsPromise : (window.__marnCaps || null);
   const use = (name)=> caps? Promise.resolve(caps[name]||null) : (window.claude && window.claude.use ? window.claude.use(name) : Promise.resolve(null));
   const [db, user, downloads] = await Promise.all([use('db'), use('user'), use('downloads')]);
   S.db=db; S.user=user; S.downloads=downloads;
-  if(user){ try{ const me=await user.me(); S.me={id:me.id, name:me.name||'', avatarUrl:me.avatarUrl||'', isOwner:!!me.isOwner, canEdit:!!me.canEdit, canWrite: await user.can('data.write')}; }catch(e){} }
+  if(user){ try{ const me=await user.me(); S.me={id:me.id, name:me.name||'', email:me.email||'', isCEO:!!me.isCEO, avatarUrl:me.avatarUrl||'', isOwner:!!me.isOwner, canEdit:!!me.canEdit, canWrite: await user.can('data.write')}; }catch(e){} }
   if(!db){ S.connecting=false; render(); return; }
   subscribeAll();
   setTimeout(()=>{ if(!S.tasksLoaded){ S.connecting=false; render(); } }, 12000);
