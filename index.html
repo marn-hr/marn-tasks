@@ -642,7 +642,7 @@ a.door:hover .dgo{color:var(--accent)}
 .home-foot{margin:18px 0 0}
 
 .sectabs{flex-shrink:0;display:flex;gap:2px;margin:0 0 16px;border-bottom:1px solid var(--g2);overflow-x:auto;scrollbar-width:none}
-.sectabs button{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;padding:10px 12px;color:var(--g5);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500;border-radius:0}
+.sectabs button{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;padding:10px 10px;color:var(--g5);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500;border-radius:0}
 .sectabs button:hover{color:var(--fg)}
 .sectabs button.on{color:var(--fg);border-bottom-color:var(--accent);font-weight:700}
 .sectabs .ic{width:18px;height:18px}
@@ -728,6 +728,218 @@ div.tile:hover{border-color:var(--g2)}
   .snap{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rep{grid-template-columns:1fr auto;grid-template-areas:"p s" "m m" "u u"}
   .vhead .unsaved{display:none}
+}
+
+/* ---------- Knowledge and issues (October 2026) ----------
+   FAQs are a list of questions, so an accordion grouped by category, the answer the largest text once open.
+   The process centre is a library (cards) that opens on a path (a swimlane chart, right to left in Arabic).
+   The issue log is a matrix (tiles and a table); an issue opens on a cause and effect analysis (the fishbone),
+   with its head on the reading end: the left in Arabic, the right in English.
+   Charcoal ramp throughout; teal only for action and achievement (published, resolved, closed); urgency stays charcoal. */
+.kbtools{gap:10px}
+.kbsearch{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--g2);border-radius:var(--radius-s);background:var(--surface);box-shadow:var(--shadow-in);flex:1;min-width:220px;max-width:520px;color:var(--g5)}
+.kbsearch input{flex:1;min-width:0;border:0;background:transparent;outline:0;height:100%}
+.kbtools select{height:36px;border:1px solid var(--g2);border-radius:var(--radius-s);background:var(--surface);padding:0 8px;box-shadow:var(--shadow-1);max-width:230px}
+
+.kbqueue{border:1px solid color-mix(in srgb,var(--accent) 35%,var(--g2));border-radius:var(--radius);background:var(--accent-soft);padding:12px 14px;margin-bottom:16px;display:grid;gap:8px}
+.kbqueue header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kbqueue h3{margin:0;font-size:14px;flex:1;color:var(--fg)}
+.qitem{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border-radius:var(--radius-s);padding:10px 12px;box-shadow:var(--shadow-1)}
+.qmain{flex:1;min-width:220px;display:flex;flex-direction:column;gap:2px}
+.qmain span{font-size:12px;color:var(--g5)}
+.qmain .qnote{color:var(--g6);font-style:italic}
+.qacts{display:flex;gap:6px}
+
+.faqs{display:grid;gap:22px}
+.faqcat h3{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-size:15px}
+.faqcat h3 .n{font-size:12px;color:var(--g5);background:var(--g1);border-radius:999px;padding:0 8px;line-height:20px}
+.faqcat h3::after{content:"";flex:1;height:1px;background:var(--g2)}
+details.faq{border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);margin-bottom:8px;overflow:hidden}
+details.faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 16px;font-weight:700}
+details.faq summary::-webkit-details-marker{display:none}
+details.faq summary::before{content:"+";flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--g1);color:var(--g6);font-weight:700;line-height:1}
+details.faq[open] summary::before{content:"\2212";background:var(--fg);color:var(--bg)}
+details.faq summary .q{flex:1}
+details.faq[open]{box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+.fbody{padding:0 16px 14px;display:grid;gap:10px}
+.ans{border-radius:var(--radius-s);background:var(--g1);padding:12px 14px;display:grid;gap:8px}
+.ans .atext{white-space:pre-wrap;font-size:15px;line-height:1.6}
+.ans[lang="ar"] .atext{font-family:var(--font-arabic)}
+.ans[lang="en"] .atext{font-family:var(--font-latin)}
+.copyb{justify-self:start;height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--accent);background:var(--surface);color:var(--accent);font-size:12px;font-weight:700}
+.copyb:hover{background:var(--accent);color:var(--accent-ink)}
+.fmeta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--g5)}
+.fmeta .grow{flex:1}
+.rdue{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;border:1px dashed var(--fg);font-size:11.5px;font-weight:700;color:var(--fg);white-space:nowrap}
+.kbcurrent{border:1px dashed var(--g3);border-radius:var(--radius);padding:10px 14px;margin-bottom:14px;background:var(--surface)}
+.kbcurrent summary{cursor:pointer;color:var(--g5);font-size:13px}
+.kbcurrent .cur{display:grid;gap:6px;margin-top:8px}
+.kbcurrent .atext{white-space:pre-wrap;color:var(--g6)}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.pcard2{display:flex;flex-direction:column;gap:8px;text-align:start;border:1px solid var(--g2);border-radius:calc(var(--radius) + 2px);background:var(--surface);padding:16px 18px;box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);transition:transform .15s,box-shadow .15s;min-height:190px}
+.pcard2:hover{transform:translateY(-2px);box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+.pcard2 .ptop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pcode{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;background:var(--fg);color:var(--bg);font-size:11.5px;font-weight:700;letter-spacing:.02em;direction:ltr;unicode-bidi:isolate;vertical-align:middle}
+.vhead h1 .pcode{font-size:13px;height:26px;margin-inline-end:4px}
+.pcard2 .pname{font-size:17px;font-weight:700;line-height:1.35}
+.pcard2 .ppurpose{color:var(--g5);font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pcard2 .pmeta{margin-top:auto;display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--g6);padding-top:10px;border-top:1px solid var(--g2)}
+.pinfo{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 22px;margin:0 0 16px;padding:14px 18px;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-1)}
+.pinfo dt{font-size:12px;color:var(--g5)}
+.pinfo dd{margin:2px 0 0;font-size:13.5px;line-height:1.5}
+.pviewbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.plegend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--g5)}
+.plegend span{display:inline-flex;align-items:center;gap:6px}
+.plegend i{display:inline-block;width:18px;height:12px;border:1.4px solid var(--g4);background:var(--surface);border-radius:3px}
+.plegend .lg-start i{border-radius:7px;border-color:var(--fg)}
+.plegend .lg-end i{border-radius:7px;background:var(--fg);border-color:var(--fg)}
+.plegend .lg-decision i{transform:rotate(45deg);width:11px;height:11px;background:var(--g1);border-color:var(--fg)}
+.plegend .lg-subprocess i{box-shadow:inset 3px 0 0 var(--g4),inset -3px 0 0 var(--g4)}
+.plegend .lg-document i{border-radius:3px 3px 8px 2px}
+.pchart{overflow:auto;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-in);padding:8px;max-height:78vh}
+.pchart svg{display:block;margin-inline:auto}
+svg.proc .lane{fill:transparent}
+svg.proc .lane.alt{fill:var(--g1);opacity:.7}
+svg.proc .lanehead{fill:var(--surface);stroke:var(--g2)}
+svg.proc .phband{fill:var(--g1);stroke:var(--g2)}
+svg.proc .phsep{stroke:var(--g3);stroke-dasharray:4 5}
+svg.proc .nd{fill:var(--surface);stroke:var(--g4);stroke-width:1.3}
+svg.proc .nd.dec{fill:var(--g1);stroke:var(--fg);stroke-width:1.5}
+svg.proc .nd.start{stroke:var(--fg);stroke-width:1.8}
+svg.proc .nd.end{fill:var(--fg);stroke:var(--fg)}
+svg.proc .nd.doc{fill:var(--surface)}
+svg.proc .ndl{stroke:var(--g4);stroke-width:1.2}
+svg.proc .edge{fill:none;stroke:var(--g5);stroke-width:1.5;stroke-linejoin:round}
+svg.proc .ahd{fill:var(--g5)}
+.fo{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.fo .lh{font-weight:700;font-size:12.5px;line-height:1.3;color:var(--fg)}
+.fo .ph{font-weight:700;font-size:12px;line-height:1.35;color:var(--g6);max-width:100%;overflow-wrap:anywhere}
+.fo .nt{font-size:12.5px;line-height:16px;color:var(--fg);display:-webkit-box;-webkit-line-clamp:16;-webkit-box-orient:vertical;overflow:hidden}
+.fo .nt b{font-variant-numeric:tabular-nums;color:var(--g5);margin-inline-end:2px}
+.s-end .fo .nt,.s-end .fo .nt b{color:var(--bg)}
+.s-decision .fo .nt{font-weight:700}
+.fo .el{display:flex;width:100%;height:100%;align-items:center}
+.fo .el.tl{justify-content:flex-start}
+.fo .el.tr{justify-content:flex-end}
+.fo .el span{font-size:11px;font-weight:700;line-height:14px;padding:1px 8px;border-radius:9px;background:var(--bg);color:var(--fg);border:1px solid var(--g3);max-width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:start}
+.psteps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pstep{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:12px 14px;box-shadow:var(--shadow-1)}
+.pstep .pnum{flex:none;min-width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--g1);font-weight:700}
+.pstep.s-decision .pnum{background:var(--fg);color:var(--bg)}
+.pstep.s-start .pnum,.pstep.s-end .pnum{border-radius:999px}
+.pstep.s-end .pnum{background:var(--fg);color:var(--bg)}
+.pstep .pbody{flex:1;min-width:0;display:grid;gap:6px}
+.pstep .ptext{line-height:1.55}
+.ptags{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.ptags span{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--g1);color:var(--g6)}
+.ptags .pshape{background:transparent;border:1px solid var(--g3)}
+.ptags .pfunc{background:var(--fg);color:var(--bg);font-weight:700}
+.ptags .pgo{background:transparent;border:1px dashed var(--g4)}
+.ptags .pend{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.stepcards{display:grid;gap:10px}
+.stepcard{border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:10px 12px;display:grid;gap:8px;box-shadow:var(--shadow-1);border-inline-start:3px solid var(--g3)}
+.stepcard.s-decision{border-inline-start-color:var(--fg)}
+.stepcard.s-start,.stepcard.s-end{border-inline-start-color:var(--accent)}
+.stepcard input,.stepcard select,.stepcard textarea{height:34px;border:1px solid var(--g2);border-radius:var(--radius-s);padding:0 8px;background:var(--bg);box-shadow:var(--shadow-in);min-width:0}
+.stepcard textarea{height:auto;padding:6px 8px;resize:vertical;line-height:1.45;width:100%}
+.sc-top{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sc-top .sid{width:58px;text-align:center;font-weight:700}
+.sc-top select{width:130px}
+.sc-top input:not(.sid){flex:1;min-width:140px}
+.sc-top .grow{flex:0 0 4px}
+.sc-bot{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.sc-bot label{display:grid;gap:3px;font-size:11.5px;color:var(--g5)}
+
+.tiles.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.sev,.ist{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid var(--g3);color:var(--g6);vertical-align:middle}
+.sev-critical{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.sev-high{border:1.5px solid var(--fg);color:var(--fg)}
+.sev-medium{background:var(--g2);border-color:var(--g2);color:var(--fg);font-weight:500}
+.sev-low{border-style:dashed;color:var(--g5);font-weight:500}
+.ist-open{color:var(--fg)}
+.ist-progress{background:var(--g2);border-color:var(--g2);color:var(--fg)}
+.ist-waiting{border:1.5px dashed var(--fg);color:var(--fg)}
+.ist-resolved,.ist-closed{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.vhead .sev,.vhead .ist{align-self:center}
+.isstable td.title .sub2{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--g5);margin-top:3px}
+.isstable .tagr{font-weight:700;color:var(--fg)}
+.isstable tr.od td:first-child{box-shadow:inset 3px 0 0 var(--fg)}
+#app[dir="rtl"] .isstable tr.od td:first-child{box-shadow:inset -3px 0 0 var(--fg)}
+.isstable .due.over{font-weight:700;color:var(--fg)}
+.isstable .due.over::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--fg);margin-inline-start:6px;vertical-align:1px}
+.issform .rsec{border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:14px 16px 16px;box-shadow:var(--shadow-1)}
+.issform .rsec > h3{margin-bottom:12px}
+.sevnote{margin:-2px 0 10px}
+.typerow{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.ck{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--g2);border-radius:var(--radius-s);padding:10px 12px;background:var(--bg);cursor:pointer;flex:1;min-width:240px}
+.ck input{margin-top:3px;accent-color:var(--fg);width:16px;height:16px}
+.ck span{display:grid;gap:2px}
+.ck small{color:var(--g5);font-size:12px}
+.route{min-height:36px;display:flex;align-items:center;padding:6px 10px;border-radius:var(--radius-s);background:var(--g1);font-size:12.5px;color:var(--g6);line-height:1.45}
+.escrow{gap:14px;font-size:13px;color:var(--g6)}
+.escrow .late{font-weight:700;color:var(--fg)}
+.escrow .ok{color:var(--accent);font-weight:700}
+.occlist{display:grid;gap:6px}
+.occ{display:flex;gap:6px;align-items:center}
+.occ input{height:34px;border:1px solid var(--g2);border-radius:var(--radius-s);padding:0 8px;background:var(--bg);box-shadow:var(--shadow-in)}
+.occ input[type="date"]{width:160px}
+.occ input:not([type]){flex:1;min-width:0}
+.fishwrap{overflow-x:auto;border-radius:var(--radius);background:var(--bg);box-shadow:var(--shadow-in);padding:6px;margin:4px 0 12px}
+svg.fish{display:block;width:100%;min-width:760px;height:auto}
+svg.fish .spine{stroke:var(--fg);stroke-width:3.5;stroke-linecap:round}
+svg.fish .tail{fill:none;stroke:var(--fg);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+svg.fish .fhead{fill:var(--fg)}
+svg.fish .bone{stroke:var(--g5);stroke-width:2.2;stroke-linecap:round}
+svg.fish .bonelab{fill:var(--surface);stroke:var(--g3)}
+svg.fish .rib{stroke:var(--g4);stroke-width:1.2}
+svg.fish .rib.root{stroke:var(--fg);stroke-width:2.2}
+svg.fish .more{fill:var(--g5);font-size:12px;font-weight:700}
+.fo .fh{color:var(--bg);font-weight:700;font-size:14px;line-height:1.4}
+.fo .fh .ph2{opacity:.65;font-weight:500}
+.fo .bl{font-weight:700;font-size:12.5px;line-height:1.25;color:var(--fg)}
+.fo .cz{display:flex;align-items:flex-end;gap:5px;width:100%;height:100%;font-size:11.5px;line-height:1.3;color:var(--g6);text-align:start}
+.fo .cz span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fo .cz.root{color:var(--fg);font-weight:700}
+.fo .cz i{flex:none;width:8px;height:8px;background:var(--fg);margin-bottom:3px}
+.bones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bonecard > *{min-width:0}
+.bonecard{min-width:0;border:1px solid var(--g2);border-radius:var(--radius-s);background:var(--bg);padding:10px 12px;display:grid;gap:6px;align-content:start}
+.bonecard header{display:grid;gap:1px}
+.bonecard h4{margin:0;font-size:13.5px}
+.bonecard header span{font-size:11.5px;color:var(--g5)}
+.cause{display:flex;gap:6px;align-items:center;min-width:0}
+.cause input:not([type="checkbox"]){flex:1;min-width:0;width:100%;height:32px;border:1px solid var(--g2);border-radius:var(--radius-s);padding:0 8px;background:var(--surface);box-shadow:var(--shadow-in)}
+.rootck{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--g6);white-space:nowrap;cursor:pointer}
+.rootck input{accent-color:var(--fg)}
+.solbox tr.first td{border-top:1px solid var(--g2)}
+.solbox td.bn{font-weight:700;font-size:12.5px;white-space:nowrap;vertical-align:top;padding-top:12px}
+.solbox td.czc{font-size:13px;line-height:1.4}
+.solbox tr.isroot td.czc{font-weight:700}
+.rootmark{display:inline-flex;align-items:center;height:18px;padding:0 7px;border-radius:999px;background:var(--fg);color:var(--bg);font-size:10.5px;font-weight:700;margin-inline-end:6px;vertical-align:1px}
+.solbox table{min-width:820px}
+.solbox td:first-child{width:auto}
+.solbox td:nth-child(2){width:22%}
+.solbox td:nth-child(3){width:28%}
+.solbox td:nth-child(4){width:16%}
+.solbox td:nth-child(5){width:150px}
+.solbox td:last-child{white-space:nowrap;width:1%}
+.solbox input{width:100%}
+.cellsub{margin-top:2px;white-space:nowrap}
+
+@media (max-width:900px){
+  .tiles.five{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bones{grid-template-columns:1fr}
+  .sc-bot{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pgrid{grid-template-columns:1fr}
+  .kbsearch{max-width:none}
+}
+@media print{
+  .topbar,.rail,#idbar,.vhead .actions,.vhead .back,.sectabs,.pviewbar .tabs,.toasts,#drawerhost{display:none!important}
+  #app,.shell,.main{display:block!important;height:auto!important;overflow:visible!important;padding:0!important}
+  body{background:#fff}
+  .pchart{max-height:none;overflow:visible;box-shadow:none;border:0}
+  .pchart svg{width:100%;height:auto}
 }
 </style>
 
@@ -835,12 +1047,74 @@ en:{
   decisionsN:(n)=> n===1?'1 decision':`${n} decisions`, actionsN:(n)=> n===1?'1 action':`${n} actions`, openN:(n)=>`${n} open`, kpisN:(n)=> n===1?'1 indicator':`${n} indicators`,
   meetingGroup:(d)=>`Weekly meeting ${d}`, fromMeeting:(d)=>`Action from the weekly meeting on ${d}.`,
   kindName:{weekly:'weekly meeting report', monthly:'monthly report'},
-  lg:{open:'opened the department', unlock:'opened the department with the password', lock:'locked the department', 'pw.set':'set the department password', 'pw.change':'changed the department password', 'pw.recover':'used the recovery code', 'task.create':'created a task', 'task.edit':'edited a task', 'task.status':(s)=>`moved a task to ${s}`, 'task.delete':'deleted a task', 'report.create':(k,p)=>`created the ${k} for ${p}`, 'report.save':(k,p)=>`updated the ${k} for ${p}`, 'report.final':(k,p)=>`marked the ${k} for ${p} as final`, 'report.reopen':(k,p)=>`reopened the ${k} for ${p}`, 'report.delete':(k,p)=>`deleted the draft ${k} for ${p}`, 'tasks.fromMeeting':(n)=> n===1?'sent 1 meeting action to day-to-day tasks':`sent ${n} meeting actions to day-to-day tasks`},
+  lg:{'faq.suggest':(l)=>`suggested an FAQ answer${l?` (${l})`:''}`, 'faq.publish':(l)=>`published an FAQ answer${l?` (${l})`:''}`, 'faq.edit':(l)=>`edited an FAQ answer${l?` (${l})`:''}`, 'faq.review':(l)=>`reviewed an FAQ answer${l?` (${l})`:''}`, 'faq.archive':(l)=>`archived an FAQ answer${l?` (${l})`:''}`, 'faq.reject':(l)=>`rejected an FAQ suggestion${l?` (${l})`:''}`, 'faq.delete':(l)=>`deleted an FAQ item${l?` (${l})`:''}`,
+'process.suggest':(l)=>`suggested process ${l}`, 'process.publish':(l)=>`published process ${l}`, 'process.edit':(l)=>`edited process ${l}`, 'process.review':(l)=>`reviewed process ${l}`, 'process.archive':(l)=>`archived process ${l}`, 'process.reject':(l)=>`rejected a suggestion for process ${l}`, 'process.delete':(l)=>`deleted process ${l}`,
+'issue.create':(l)=>`logged issue ${l}`, 'issue.edit':(l)=>`updated issue ${l}`, 'issue.status':(l,e)=>`moved issue ${l} to ${(t('ist')||{})[e&&e.to]||''}`, 'issue.close':(l)=>`closed issue ${l}`, 'issue.reopen':(l)=>`reopened issue ${l}`, 'issue.tasks':(l,e)=>`sent ${e&&e.n||0} solutions of issue ${l} to tasks`, 'issue.delete':(l)=>`deleted issue ${l}`, 'kb.import':(l)=>`imported ${l} items for review`, open:'opened the department', unlock:'opened the department with the password', lock:'locked the department', 'pw.set':'set the department password', 'pw.change':'changed the department password', 'pw.recover':'used the recovery code', 'task.create':'created a task', 'task.edit':'edited a task', 'task.status':(s)=>`moved a task to ${s}`, 'task.delete':'deleted a task', 'report.create':(k,p)=>`created the ${k} for ${p}`, 'report.save':(k,p)=>`updated the ${k} for ${p}`, 'report.final':(k,p)=>`marked the ${k} for ${p} as final`, 'report.reopen':(k,p)=>`reopened the ${k} for ${p}`, 'report.delete':(k,p)=>`deleted the draft ${k} for ${p}`, 'tasks.fromMeeting':(n)=> n===1?'sent 1 meeting action to day-to-day tasks':`sent ${n} meeting actions to day-to-day tasks`},
   logSub:'Who opened the department and what changed. Entries cannot be edited or deleted.', emptyLog:'No activity recorded yet.',
   ceoSub:'All three departments, live', reportsFinal:(m)=>`${m} reports final`, cWeekly:"This week's meeting", cMonthly:'Monthly report', cLastAct:'Last activity', cDoneMonth:'Done this month', overdueAll:'Overdue across departments', recentAll:'Recent activity across departments', lastOn:(d)=>`last one ${d}`,
   ceoWaitTitle:'Waiting for the department', ceoWait:'This department opens for you automatically after one of its members opens it once with the password.',
   noAccessTitle:'No department access', noAccessText:(e)=>`The account ${e} is not a member of Human Capital, Customer Experience, or GRC and Legal. Ask the Human Capital Business Partner Manager to add you.`,
   accessTitle:'Department access', accessSub:'Only these emails can open each department.', ceoFixed:(e)=>`Chief Executive Officer: ${e}. Opens every department, no password needed.`, add:'Add', badEmail:'Enter a valid email address.', accSaved:'Access saved', accEmpty:'No members yet', accSeedNote:'Access is not switched on yet. Check the lists, then select Save.', accLog:'Recent changes', discard:'Discard changes', adminOnly:'Only the administrators can change department access.',
+  secFaq:'FAQs', secProcess:'Process centre', secIssue:'Issue log',
+  issActiveCol:'Active issues', issCritHigh:'critical or high', issCritHighLong:'Critical or high',
+  leadTag:'Lead', leadHint:'Leads publish FAQs and process charts', leadNote:'Mark each department\'s leads: they review and publish FAQs and process charts. Everyone else suggests.',
+  kbQueueTitle:(n)=> n===1?'1 suggestion awaiting your review':`${n} suggestions awaiting your review`,
+  kbMineTitle:(n)=> n===1?'Your suggestion awaiting review':`Your ${n} suggestions awaiting review`,
+  kbPublishAll:(n)=>`Publish all ${n}`, kbChangeTo:(x)=>`Change to: ${x}`, kbNewItem:'New', kbReview:'Review', kbPublish:'Publish', kbEdit:'Edit',
+  kbRejectAsk:'Reject this suggestion?', kbWithdrawAsk:'Withdraw your suggestion?', kbDeleteAsk:'Delete this permanently?',
+  kbReject:'Reject', kbDelete:'Delete', kbSaveChanges:'Save changes', kbWithdraw:'Withdraw', kbSendSuggestion:'Send for review',
+  kbSuggestedBy:(n,w)=>`Suggested by ${n}, ${w}`,
+  faqNew:'New answer', procNew:'New process', faqSuggest:'Suggest an answer', procSuggest:'Suggest a process',
+  kbSuggestChange:'Suggest a change', kbReviewTitle:'Review the suggestion', kbYourSuggestion:'Your suggestion',
+  faqNeedQA:'Write the question and the answer in at least one language.',
+  kbPublished:'Published', kbSuggestionSent:'Sent to the leads for review', kbImport:'Import from Excel',
+  faqCount:(n)=> n===1?'1 answer':`${n} answers`, awaitingN:(n)=>`${n} awaiting review`,
+  faqSearchPh:'Search questions and answers', kbCategory:'Category', kbAllCats:'All categories',
+  faqEmpty:'No answers published yet.', faqEmptyHint:'Suggest the first one, or a lead imports the starter set from Excel.',
+  kbNoMatch:'Nothing matches this search.', copyAr:'Copy Arabic', copyEn:'Copy English', copied:'Copied',
+  kbMarkReviewed:'Mark reviewed', kbArchive:'Archive', kbReviewDue:'Review due', kbSource:'Source', kbReviewedOn:'Reviewed',
+  kbCurrentVersion:'Current published version', kbCatAr:'Category (Arabic)', kbCatEn:'Category (English)',
+  faqQAr:'Question (Arabic)', faqQEn:'Question (English)', faqAAr:'Answer (Arabic)', faqAEn:'Answer (English)',
+  kbSourceRef:'Source document', kbNoteForLeads:'Note for the leads',
+  procCount:(n)=> n===1?'1 process':`${n} processes`, procSearchPh:'Search processes and steps',
+  procEmpty:'No process charts published yet.', procEmptyHint:'Suggest the first one, or a lead imports them from Excel in the OPS-33 format.',
+  procStepsLanes:(s,l)=>`${s} steps · ${l} roles`, kbPrint:'Print',
+  procPurpose:'Purpose', procOwner:'Owner', procTrigger:'Starts when', procOutput:'Output', procTarget:'Target time',
+  procChart:'Chart', procSteps:'Steps', procEnds:'End of the process', procGoTo:'go to step',
+  shape:{Start:'Start', Process:'Step', Decision:'Decision', Subprocess:'Sub-process', Document:'Document', End:'End'},
+  procErrName:'Give the process a name.', procErrSteps:'Add at least two steps.', procErrId:'Every step needs an ID.', procErrDup:(id)=>`Step ID ${id} is used twice.`, procErrStart:'Add a Start step.', procErrEnd:'Add an End step.', procErrNext:(id,n)=>`Step ${id} points to step ${n}, which does not exist.`, procErrDecision:(id)=>`Decision ${id} needs two or more next steps.`, procErrLabels:(id)=>`Decision ${id} needs a label for each branch, such as Yes, No.`,
+  procCode:'Process code', procNameAr:'Name (Arabic)', procNameEn:'Name (English)', procPurposeAr:'Purpose (Arabic)', procPurposeEn:'Purpose (English)', procOwnerAr:'Owner by position (Arabic)', procOwnerEn:'Owner by position (English)', procTriggerAr:'Starts when (Arabic)', procTriggerEn:'Starts when (English)', procOutputAr:'Output (Arabic)', procOutputEn:'Output (English)', procTargetAr:'Target time (Arabic)', procTargetEn:'Target time (English)',
+  procStepsTitle:'Steps', procStepsNote:'One card per step, as in the Marn Process Workflow Template OPS-33: what happens, who does it, the phase and the next step. A decision lists two or more next steps with a label for each.',
+  procAddStep:'Add a step', procPreview:'Preview', procStepId:'Step ID', procShape:'Shape', procFuncAr:'Role (Arabic)', procFuncEn:'Role (English)', procUp:'Move up', procDown:'Move down', procTextAr:'What happens (Arabic)', procTextEn:'What happens (English)', procNext:'Next step', procLabelsAr:'Labels (Arabic)', procLabelsEn:'Labels (English)', procPhaseAr:'Phase (Arabic)', procPhaseEn:'Phase (English)', procNoSteps:'No steps yet.', procNoFunction:'No role set',
+  sev:{critical:'Critical', high:'High', medium:'Medium', low:'Low'},
+  sevDef:{critical:'Critical: the merchant cannot sell (platform down or payment failing). Respond within 15 minutes at any hour, resolve within 4 hours (OPS-63 section 6).', high:'High: a main function is broken and a workaround exists. Respond within 1 hour, resolve within 24 hours.', medium:'Medium: an irritation or an error that does not stop trade. Respond within 1 hour, resolve within 24 hours for a general issue; a merchant-specific fix comes with its release.', low:'Low: a question or an improvement request. Answered at first contact; an improvement is logged for Product, so no due time is set.'},
+  ist:{open:'Open', progress:'In progress', waiting:'Waiting on another team', resolved:'Resolved', closed:'Closed'},
+  icat:{technical:'Technical issue', sync:'Synchronization', integration:'Integration and delivery platforms', payments:'Payments and Marn Pay', devices:'Devices and printers', zatca:'ZATCA integration', billing:'Billing, refunds and collection', onboarding:'Onboarding and activation', account:'Account information and data', complaint:'Complaint', ministry:'Complaint through a ministry', outage:'Outage or security incident', other:'Other'},
+  party:{technology:'Product and Technology', finance:'Finance', sales:'Sales', commercial:'Commercial and Partnerships', marketing:'Marketing', humancapital:'Human Capital', grc:'GRC and Legal', jahez:'Jahez Group', integration:'Integration partners (Jahez, Deliverect, Grubtech, FeedUs)', marnpay:'Payment provider (Marn Pay)', courier:'Courier (Salasa)', suppliers:'Device suppliers', other:'Other'},
+  partyHint:{technology:'Technology Manager, through a HubSpot ticket with the steps to reproduce; from 12 AM to 9 AM, Critical and High go to the on-call engineer.', finance:'Collection inbox for outstanding payments; the Acting Finance Manager processes refunds decided by the Customer Success Manager or the Chief Executive Officer.', sales:'Sales Manager for new clients and new services; the Renewal and Retention inbox for renewals.', commercial:'Business Development Manager (price book, partner and Jahez Group bundles).', marketing:'Marketing Manager for offers, campaigns and merchant message templates; the offer brief goes in at least ten working days ahead.', humancapital:'People issues start with the line manager, then Human Capital.', grc:'Legal and Compliance Specialist for ministry complaints, disputed device cases and terminations; the Governance and Risk Specialist issues incident numbers INC-YY-NN.', jahez:'Jahez Finance, Offers or Partners mailboxes; the ticket stays open on the merchant record.', integration:'Integration Support sub team on Slack #integration-support, with the HubSpot ticket number.', marnpay:'Marn Pay inbox for activation and changes; a live payment failure is Critical and goes to the Integration Support sub team.', courier:'Customer Operations, through the Shipping and Maintenance inbox, with the tracking number on the ticket.', suppliers:'Customer Operations Lead with the Acting Finance Manager; the warranty claim goes in within ten working days of receipt.', other:'Name the department or party, and the contact, in the field beside.'},
+  issNew:'Log an issue', issChoose:'Choose', issCount:(n)=> n===1?'1 issue':`${n} issues`, issActiveCount:(n)=> !n?'No active issues': n===1?'1 active issue':`${n} active issues`, issSearchPh:'Search code, issue, merchant, owner', issActiveOnly:'Active', issAllSev:'All severities', issWithDept:'With another department', issRecurring:'Recurring', issAllTypes:'All types', issAllParties:'All departments and parties', issWaiting:'Waiting on another team',
+  issEmpty:'No issues logged yet.', issEmptyHint:'Log the issues that need another department or keep coming back; single tickets stay in HubSpot.',
+  issCode:'Code', issTitle:'Issue', issSeverity:'Severity', issWith:'With', issOccShort:'Times', issRecurringN:(n)=>`Recurring · ${n} times`, issAge:(d)=> d===0?'opened today': d===1?'open 1 day':`open ${d} days`,
+  issDeleteAsk:'Delete this issue permanently?', issSecDetails:'The issue', issCategory:'Category', issMerchant:'Merchant', issMerchantPh:'Name and account ID only', issOpenedOn:(d)=>`Opened ${d}`, issOverdueNow:'Overdue', issClockNote:'The due time follows the severity clock of OPS-63 section 6.', issDesc:'What happened', issIncident:'Incident number', issWithDeptHint:'Another department or an outside party has to act', issRecurringHint:'The same problem keeps coming back',
+  issSecDept:'The other department', issParty:'Department or party', issPartyContact:'Contact person', issRoute:'Route', issPickParty:'Choose the department or party to see the route.',
+  issEscRule:'Escalate on time, not on frustration, one level at a time, in three sentences. The receiving level answers within 1 working day (OPS-63).',
+  issEscIssue:'1. The issue', issEscTried:'2. What was tried', issEscDecision:'3. The decision needed',
+  issEscalatedOn:(d)=>`Escalated ${d}`, issRespDue:(d)=>`Answer due ${d}`, issRespondedOn:(d)=>`Answered ${d}`, issRespReceived:'Answer received', issEscNow:'Mark as escalated now',
+  issSecOcc:'Occurrences', issThirdRule:'Third occurrence on the same merchant or function: send it to Technology as a product problem (OPS-63).', issOccNotePh:'Merchant, ticket or what happened', issOccAdd:'Log another occurrence',
+  fbTitle:'Fishbone analysis', fbNote:'Write the problem at the head, list the possible causes under each of the six bones, and tick the root causes. The solution box below follows the same bones.', fbProblem:'Problem (the head of the fish)', fbProblemPh:'State the problem in one sentence',
+  bone:{people:'People', process:'Process and policy', systems:'Systems and apps', devices:'Devices and equipment', data:'Data', partners:'Other departments and partners'},
+  boneHint:{people:'Skills, training, workload, handover', process:'Steps, clocks, approvals, scope rules', systems:'HubSpot, Marn POS and apps, integrations, bugs', devices:'Payment devices, printers, network', data:'Merchant data, entry errors, missing records', partners:'Other departments, couriers, suppliers, payment providers'},
+  fbCausePh:'Possible cause', fbRoot:'Root cause', fbRootShort:'Root', fbAddCause:'Add a cause',
+  solTitle:'Solution box', solNote:'One solution per cause, bone by bone. Root causes come first: each needs an owner and a date. Send the solutions to day-to-day tasks to track them.',
+  solEmpty:'Add causes in the fishbone first; each one appears here for its solution.', solBone:'Bone', solCause:'Cause', solSolution:'Solution', solPh:'What removes this cause', solSend:'Send solutions to day-to-day tasks', solNone:'Write a solution first.',
+  issSecClose:'Check and close', issVerifyDate:'Check on', issVerifyResult:'Result of the check', verify:{norecur:'Did not recur', recurred:'Recurred'}, issResolution:'Closure reason',
+  reso:{fixed:'Cause fixed', workaround:'Workaround in place', product:'Sent to Product as a product problem', partner:'Fixed by the other party', nofault:'No fault found', duplicate:'Duplicate of another issue'},
+  issCloseNote:'Closing note', issCloseRule:'Every issue closes with a reason (OPS-63). Where root causes are ticked, at least one needs a solution before closing.', issReopen:'Reopen', issClose:'Close the issue',
+  issNeedTitle:'Write the issue title.', issSaved:'Issue saved', issNeedResolution:'Choose the closure reason.', issNeedSolution:'Write a solution for the root cause before closing.',
+  issTaskGroup:(c)=>`Issue ${c}`, issTaskNote:(c,b,cause)=>`Solution from issue ${c}, ${b}: ${cause}`,
+  repIssuesTitle:'Issues to discuss', repIssuesNote:'Active critical, high, overdue and waiting issues, live from the issue log; fixed when the report is marked final.', repIssuesFrozen:'As they stood when the report was marked final.', repIssuesNone:'No critical, high, overdue or waiting issues.',
+  repIssMonth:'Issue log in the month', repIssOpened:'Opened', repIssClosed:'Closed', repIssAvg:'Average days to close', repIssTop:'Bones with the most root causes',
+  kbImportedNote:'Imported from the Marn documents for review', kbImported:(f,p)=>`Imported for review: ${f} answers, ${p} processes`, kbPublishedN:(n)=>`${n} published`, kbRejected:'Suggestion rejected', kbDeleted:'Deleted', kbReviewedToast:'Marked as reviewed', kbArchived:'Archived',
   langSwitch:'العربية', today:'Today', searchResults:'Search results', signOut:'Sign out', noDue:'No date', unlockToSee:'Open the locked board to see this task.', readonlyHint:'You can view the boards. Editing needs an invitation as editor.',
   tlEmpty:'Add start or due dates to see tasks on the timeline.', dateFmt:'en-GB',
 },
@@ -881,12 +1155,74 @@ ar:{
   decisionsN:(n)=> arN(n,'قرار واحد','قراران','قرارات','قرارًا'), actionsN:(n)=> arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً'), openN:(n)=>`المفتوح ${n}`, kpisN:(n)=> arN(n,'مؤشر واحد','مؤشران','مؤشرات','مؤشرًا'),
   meetingGroup:(d)=>`الاجتماع الأسبوعي ${d}`, fromMeeting:(d)=>`إجراء من الاجتماع الأسبوعي بتاريخ ${d}.`,
   kindName:{weekly:'تقرير الاجتماع الأسبوعي', monthly:'التقرير الشهري'},
-  lg:{open:'فتح الإدارة', unlock:'فتح الإدارة بكلمة المرور', lock:'أقفل الإدارة', 'pw.set':'عيّن كلمة مرور الإدارة', 'pw.change':'غيّر كلمة مرور الإدارة', 'pw.recover':'استخدم رمز الاسترداد', 'task.create':'أنشأ مهمة', 'task.edit':'عدّل مهمة', 'task.status':(s)=>`غيّر حالة مهمة إلى «${s}»`, 'task.delete':'حذف مهمة', 'report.create':(k,p)=>`أنشأ ${k} عن ${p}`, 'report.save':(k,p)=>`حدّث ${k} عن ${p}`, 'report.final':(k,p)=>`اعتمد ${k} عن ${p}`, 'report.reopen':(k,p)=>`أعاد فتح ${k} عن ${p}`, 'report.delete':(k,p)=>`حذف مسودة ${k} عن ${p}`, 'tasks.fromMeeting':(n)=>`أرسل من الاجتماع إلى المهام اليومية: ${arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً')}`},
+  lg:{'faq.suggest':(l)=>`اقترح إجابة في الأسئلة الشائعة${l?` (${l})`:''}`, 'faq.publish':(l)=>`نشر إجابة في الأسئلة الشائعة${l?` (${l})`:''}`, 'faq.edit':(l)=>`عدّل إجابة في الأسئلة الشائعة${l?` (${l})`:''}`, 'faq.review':(l)=>`راجع إجابة في الأسئلة الشائعة${l?` (${l})`:''}`, 'faq.archive':(l)=>`أرشف إجابة في الأسئلة الشائعة${l?` (${l})`:''}`, 'faq.reject':(l)=>`رفض اقتراحًا في الأسئلة الشائعة${l?` (${l})`:''}`, 'faq.delete':(l)=>`حذف عنصرًا من الأسئلة الشائعة${l?` (${l})`:''}`,
+'process.suggest':(l)=>`اقترح الإجراء ${l}`, 'process.publish':(l)=>`نشر الإجراء ${l}`, 'process.edit':(l)=>`عدّل الإجراء ${l}`, 'process.review':(l)=>`راجع الإجراء ${l}`, 'process.archive':(l)=>`أرشف الإجراء ${l}`, 'process.reject':(l)=>`رفض اقتراحًا للإجراء ${l}`, 'process.delete':(l)=>`حذف الإجراء ${l}`,
+'issue.create':(l)=>`سجّل المشكلة ${l}`, 'issue.edit':(l)=>`حدّث المشكلة ${l}`, 'issue.status':(l,e)=>`غيّر حالة المشكلة ${l} إلى «${(t('ist')||{})[e&&e.to]||''}»`, 'issue.close':(l)=>`أغلق المشكلة ${l}`, 'issue.reopen':(l)=>`أعاد فتح المشكلة ${l}`, 'issue.tasks':(l,e)=>`أرسل حلول المشكلة ${l} إلى المهام (${e&&e.n||0})`, 'issue.delete':(l)=>`حذف المشكلة ${l}`, 'kb.import':(l)=>`استورد ${l} عنصرًا للمراجعة`, open:'فتح الإدارة', unlock:'فتح الإدارة بكلمة المرور', lock:'أقفل الإدارة', 'pw.set':'عيّن كلمة مرور الإدارة', 'pw.change':'غيّر كلمة مرور الإدارة', 'pw.recover':'استخدم رمز الاسترداد', 'task.create':'أنشأ مهمة', 'task.edit':'عدّل مهمة', 'task.status':(s)=>`غيّر حالة مهمة إلى «${s}»`, 'task.delete':'حذف مهمة', 'report.create':(k,p)=>`أنشأ ${k} عن ${p}`, 'report.save':(k,p)=>`حدّث ${k} عن ${p}`, 'report.final':(k,p)=>`اعتمد ${k} عن ${p}`, 'report.reopen':(k,p)=>`أعاد فتح ${k} عن ${p}`, 'report.delete':(k,p)=>`حذف مسودة ${k} عن ${p}`, 'tasks.fromMeeting':(n)=>`أرسل من الاجتماع إلى المهام اليومية: ${arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً')}`},
   logSub:'من فتح الإدارة وما الذي تغيّر. لا يمكن تعديل السجل أو حذفه.', emptyLog:'لم يُسجَّل أي نشاط بعد.',
   ceoSub:'الإدارات الثلاث، محدّثة لحظيًا', reportsFinal:(m)=>`تقارير ${m} المعتمدة`, cWeekly:'اجتماع هذا الأسبوع', cMonthly:'التقرير الشهري', cLastAct:'آخر نشاط', cDoneMonth:'المنجزة هذا الشهر', overdueAll:'المهام المتأخرة في جميع الإدارات', recentAll:'آخر النشاط في جميع الإدارات', lastOn:(d)=>`آخره ${d}`,
   ceoWaitTitle:'بانتظار الإدارة', ceoWait:'تُفتح هذه الإدارة لك تلقائيًا بعد أن يفتحها أحد أعضائها مرة واحدة بكلمة المرور.',
   noAccessTitle:'لا توجد صلاحية لأي إدارة', noAccessText:(e)=>`الحساب ${e} ليس عضوًا في إدارة رأس المال البشري أو تجربة العملاء أو الحوكمة والمخاطر والالتزام والشؤون القانونية. اطلب من مدير شركاء الأعمال لرأس المال البشري إضافتك.`,
   accessTitle:'صلاحيات الإدارات', accessSub:'لا يفتح كل إدارة إلا البريد المدرج فيها.', ceoFixed:(e)=>`الرئيس التنفيذي: ${e}. يفتح جميع الإدارات دون كلمة مرور.`, add:'إضافة', badEmail:'أدخل بريدًا إلكترونيًا صحيحًا.', accSaved:'حُفظت الصلاحيات', accEmpty:'لا يوجد أعضاء بعد', accSeedNote:'لم تُفعَّل الصلاحيات بعد. راجع القوائم ثم اضغط «حفظ».', accLog:'آخر التعديلات', discard:'تجاهل التغييرات', adminOnly:'لا يغيّر صلاحيات الإدارات إلا المسؤولون.',
+  secFaq:'الأسئلة الشائعة', secProcess:'مركز الإجراءات', secIssue:'سجل المشكلات',
+  issActiveCol:'المشكلات القائمة', issCritHigh:'حرجة أو عالية', issCritHighLong:'حرجة أو عالية',
+  leadTag:'قائد', leadHint:'ينشر القادة الأسئلة الشائعة وخرائط الإجراءات', leadNote:'حدِّد قادة كل إدارة: يراجعون الأسئلة الشائعة وخرائط الإجراءات وينشرونها، ويقترح بقية الأعضاء.',
+  kbQueueTitle:(n)=> n===1?'اقتراح واحد بانتظار مراجعتك':`${arN(n,'اقتراح واحد','اقتراحان','اقتراحات','اقتراحًا')} بانتظار مراجعتك`,
+  kbMineTitle:(n)=> n===1?'اقتراحك بانتظار المراجعة':`اقتراحاتك (${n}) بانتظار المراجعة`,
+  kbPublishAll:(n)=>`نشر الكل (${n})`, kbChangeTo:(x)=>`تعديل على: ${x}`, kbNewItem:'جديد', kbReview:'مراجعة', kbPublish:'نشر', kbEdit:'تعديل',
+  kbRejectAsk:'هل ترفض هذا الاقتراح؟', kbWithdrawAsk:'هل تسحب اقتراحك؟', kbDeleteAsk:'هل تحذف هذا نهائيًا؟',
+  kbReject:'رفض', kbDelete:'حذف', kbSaveChanges:'حفظ التعديلات', kbWithdraw:'سحب الاقتراح', kbSendSuggestion:'إرسال للمراجعة',
+  kbSuggestedBy:(n,w)=>`اقترحه ${n}، ${w}`,
+  faqNew:'إجابة جديدة', procNew:'إجراء جديد', faqSuggest:'اقتراح إجابة', procSuggest:'اقتراح إجراء',
+  kbSuggestChange:'اقتراح تعديل', kbReviewTitle:'مراجعة الاقتراح', kbYourSuggestion:'اقتراحك',
+  faqNeedQA:'اكتب السؤال والإجابة بلغة واحدة على الأقل.',
+  kbPublished:'نُشر', kbSuggestionSent:'أُرسل إلى القادة للمراجعة', kbImport:'استيراد من Excel',
+  faqCount:(n)=> arN(n,'إجابة واحدة','إجابتان','إجابات','إجابة'), awaitingN:(n)=>`${n} بانتظار المراجعة`,
+  faqSearchPh:'ابحث في الأسئلة والإجابات', kbCategory:'الفئة', kbAllCats:'كل الفئات',
+  faqEmpty:'لم تُنشر أي إجابة بعد.', faqEmptyHint:'اقترح أول إجابة، أو يستورد أحد القادة المجموعة الأولى من Excel.',
+  kbNoMatch:'لا توجد نتائج مطابقة لهذا البحث.', copyAr:'نسخ العربية', copyEn:'نسخ الإنجليزية', copied:'نُسخ',
+  kbMarkReviewed:'تأكيد المراجعة', kbArchive:'أرشفة', kbReviewDue:'تستحق المراجعة', kbSource:'المصدر', kbReviewedOn:'آخر مراجعة',
+  kbCurrentVersion:'النسخة المنشورة الحالية', kbCatAr:'الفئة (بالعربية)', kbCatEn:'الفئة (بالإنجليزية)',
+  faqQAr:'السؤال (بالعربية)', faqQEn:'السؤال (بالإنجليزية)', faqAAr:'الإجابة (بالعربية)', faqAEn:'الإجابة (بالإنجليزية)',
+  kbSourceRef:'الوثيقة المرجعية', kbNoteForLeads:'ملاحظة للقادة',
+  procCount:(n)=> arN(n,'إجراء واحد','إجراءان','إجراءات','إجراءً'), procSearchPh:'ابحث في الإجراءات وخطواتها',
+  procEmpty:'لم تُنشر أي خريطة إجراء بعد.', procEmptyHint:'اقترح أول إجراء، أو يستورد أحد القادة الإجراءات من Excel بصيغة OPS-33.',
+  procStepsLanes:(s,l)=>`${arN(s,'خطوة واحدة','خطوتان','خطوات','خطوة')} · ${arN(l,'دور واحد','دوران','أدوار','دورًا')}`, kbPrint:'طباعة',
+  procPurpose:'الغرض', procOwner:'المالك', procTrigger:'يبدأ عندما', procOutput:'المخرج', procTarget:'المهلة المستهدفة',
+  procChart:'الخريطة', procSteps:'الخطوات', procEnds:'نهاية الإجراء', procGoTo:'انتقل إلى الخطوة',
+  shape:{Start:'بداية', Process:'خطوة', Decision:'قرار', Subprocess:'إجراء فرعي', Document:'مستند', End:'نهاية'},
+  procErrName:'سمِّ الإجراء.', procErrSteps:'أضف خطوتين على الأقل.', procErrId:'كل خطوة تحتاج رقمًا.', procErrDup:(id)=>`رقم الخطوة ${id} مكرر.`, procErrStart:'أضف خطوة بداية.', procErrEnd:'أضف خطوة نهاية.', procErrNext:(id,n)=>`الخطوة ${id} تشير إلى الخطوة ${n}، وهي غير موجودة.`, procErrDecision:(id)=>`القرار ${id} يحتاج خطوتين تاليتين أو أكثر.`, procErrLabels:(id)=>`القرار ${id} يحتاج تسمية لكل فرع، مثل: نعم، لا.`,
+  procCode:'رمز الإجراء', procNameAr:'الاسم (بالعربية)', procNameEn:'الاسم (بالإنجليزية)', procPurposeAr:'الغرض (بالعربية)', procPurposeEn:'الغرض (بالإنجليزية)', procOwnerAr:'المالك بالمنصب (بالعربية)', procOwnerEn:'المالك بالمنصب (بالإنجليزية)', procTriggerAr:'يبدأ عندما (بالعربية)', procTriggerEn:'يبدأ عندما (بالإنجليزية)', procOutputAr:'المخرج (بالعربية)', procOutputEn:'المخرج (بالإنجليزية)', procTargetAr:'المهلة المستهدفة (بالعربية)', procTargetEn:'المهلة المستهدفة (بالإنجليزية)',
+  procStepsTitle:'الخطوات', procStepsNote:'بطاقة لكل خطوة كما في نموذج سير الإجراءات OPS-33: ماذا يحدث، ومن ينفّذه، والمرحلة، والخطوة التالية. ويذكر القرار خطوتين تاليتين أو أكثر مع تسمية لكل فرع.',
+  procAddStep:'إضافة خطوة', procPreview:'معاينة', procStepId:'رقم الخطوة', procShape:'الشكل', procFuncAr:'الدور (بالعربية)', procFuncEn:'الدور (بالإنجليزية)', procUp:'تحريك للأعلى', procDown:'تحريك للأسفل', procTextAr:'ماذا يحدث (بالعربية)', procTextEn:'ماذا يحدث (بالإنجليزية)', procNext:'الخطوة التالية', procLabelsAr:'التسميات (بالعربية)', procLabelsEn:'التسميات (بالإنجليزية)', procPhaseAr:'المرحلة (بالعربية)', procPhaseEn:'المرحلة (بالإنجليزية)', procNoSteps:'لا توجد خطوات بعد.', procNoFunction:'دور غير محدد',
+  sev:{critical:'حرجة', high:'عالية', medium:'متوسطة', low:'منخفضة'},
+  sevDef:{critical:'حرجة: التاجر لا يستطيع البيع (توقف المنصة أو تعطل الدفع). الاستجابة خلال 15 دقيقة في أي وقت، والحل خلال 4 ساعات (القسم 6 من OPS-63).', high:'عالية: وظيفة رئيسية معطلة مع وجود بديل. الاستجابة خلال ساعة، والحل خلال 24 ساعة.', medium:'متوسطة: إزعاج أو خطأ لا يوقف البيع. الاستجابة خلال ساعة، والحل خلال 24 ساعة للمشكلة العامة؛ أما الإصلاح الخاص بتاجر فيأتي مع إصداره.', low:'منخفضة: استفسار أو طلب تحسين. يُجاب عنه في أول تواصل، ويُسجَّل التحسين للمنتج، فلا يُحدَّد موعد استحقاق.'},
+  ist:{open:'مفتوحة', progress:'قيد المعالجة', waiting:'بانتظار جهة أخرى', resolved:'محلولة', closed:'مغلقة'},
+  icat:{technical:'مشكلة تقنية', sync:'المزامنة', integration:'التكامل ومنصات التوصيل', payments:'المدفوعات وMarn Pay', devices:'الأجهزة والطابعات', zatca:'ربط ZATCA', billing:'الفوترة والاسترداد والتحصيل', onboarding:'التهيئة والتفعيل', account:'بيانات الحساب', complaint:'شكوى', ministry:'شكوى واردة عبر وزارة', outage:'انقطاع أو حادثة أمنية', other:'أخرى'},
+  party:{technology:'المنتج والتقنية', finance:'المالية', sales:'المبيعات', commercial:'التجارية والشراكات', marketing:'التسويق', humancapital:'رأس المال البشري', grc:'الحوكمة والمخاطر والالتزام والشؤون القانونية', jahez:'مجموعة جاهز', integration:'شركاء التكامل (جاهز، Deliverect، Grubtech، FeedUs)', marnpay:'مزود الدفع (Marn Pay)', courier:'شركة الشحن (سلاسة)', suppliers:'موردو الأجهزة', other:'أخرى'},
+  partyHint:{technology:'مدير التقنية عبر تذكرة HubSpot مع خطوات تكرار المشكلة؛ ومن 12 منتصف الليل إلى 9 صباحًا تذهب الحالات الحرجة والعالية إلى مهندس المناوبة.', finance:'صندوق التحصيل للمبالغ المستحقة؛ وينفّذ مدير المالية بالتكليف الاسترداد الذي يقرره مدير نجاح العملاء أو الرئيس التنفيذي.', sales:'مدير المبيعات للعملاء الجدد والخدمات الجديدة؛ وصندوق التجديد والاحتفاظ للتجديدات.', commercial:'مدير تطوير الأعمال (كتاب الأسعار وباقات الشركاء ومجموعة جاهز).', marketing:'مدير التسويق للعروض والحملات وقوالب رسائل التجار؛ ويُقدَّم ملخص العرض قبل عشرة أيام عمل على الأقل.', humancapital:'تبدأ مسائل الموظفين مع المدير المباشر، ثم رأس المال البشري.', grc:'أخصائي الشؤون القانونية والالتزام لشكاوى الوزارات وحالات الأجهزة المتنازع عليها وإنهاء العلاقة؛ ويُصدر أخصائي الحوكمة والمخاطر رقم الحادثة INC-YY-NN.', jahez:'صناديق المالية أو العروض أو الشركاء في جاهز؛ وتبقى التذكرة مفتوحة على سجل التاجر.', integration:'فريق دعم التكامل الفرعي على Slack في قناة ‎#integration-support، مع رقم تذكرة HubSpot.', marnpay:'صندوق Marn Pay للتفعيل والتغيير؛ وتعطل الدفع أثناء التشغيل حالة حرجة تذهب إلى فريق دعم التكامل الفرعي.', courier:'عمليات العملاء عبر صندوق الشحن والصيانة، مع رقم التتبع على التذكرة.', suppliers:'قائد عمليات العملاء مع مدير المالية بالتكليف؛ وتُرفع مطالبة الضمان خلال عشرة أيام عمل من الاستلام.', other:'سمِّ الإدارة أو الجهة، وجهة التواصل، في الحقل المجاور.'},
+  issNew:'تسجيل مشكلة', issChoose:'اختر', issCount:(n)=> arN(n,'مشكلة واحدة','مشكلتان','مشكلات','مشكلة'), issActiveCount:(n)=> !n?'لا توجد مشكلات نشطة': arN(n,'مشكلة نشطة واحدة','مشكلتان نشطتان','مشكلات نشطة','مشكلة نشطة'), issSearchPh:'ابحث بالرمز أو المشكلة أو التاجر أو المسؤول', issActiveOnly:'القائمة', issAllSev:'كل درجات الخطورة', issWithDept:'مع إدارة أخرى', issRecurring:'متكررة', issAllTypes:'كل الأنواع', issAllParties:'كل الإدارات والجهات', issWaiting:'بانتظار جهة أخرى',
+  issEmpty:'لم تُسجَّل أي مشكلة بعد.', issEmptyHint:'سجِّل المشكلات التي تحتاج إدارة أخرى أو تتكرر؛ أما التذكرة المنفردة فتبقى في HubSpot.',
+  issCode:'الرمز', issTitle:'المشكلة', issSeverity:'الخطورة', issWith:'مع', issOccShort:'المرات', issRecurringN:(n)=>`متكررة · ${arN(n,'مرة واحدة','مرتان','مرات','مرة')}`, issAge:(d)=> d===0?'فُتحت اليوم':`مفتوحة منذ ${arDays(d)}`,
+  issDeleteAsk:'هل تحذف هذه المشكلة نهائيًا؟', issSecDetails:'المشكلة', issCategory:'الفئة', issMerchant:'التاجر', issMerchantPh:'الاسم ورقم الحساب فقط', issOpenedOn:(d)=>`فُتحت في ${d}`, issOverdueNow:'متأخرة', issClockNote:'يتبع موعد الاستحقاق مهلة الخطورة في القسم 6 من OPS-63.', issDesc:'ماذا حدث', issIncident:'رقم الحادثة', issWithDeptHint:'تحتاج إدارة أخرى أو جهة خارجية إلى التصرف', issRecurringHint:'المشكلة نفسها تتكرر',
+  issSecDept:'الإدارة الأخرى', issParty:'الإدارة أو الجهة', issPartyContact:'جهة التواصل', issRoute:'المسار', issPickParty:'اختر الإدارة أو الجهة لعرض المسار.',
+  issEscRule:'يكون التصعيد في وقته لا بدافع الانزعاج، مستوى واحدًا في كل مرة، وبثلاث جمل. ويرد المستوى المستلِم خلال يوم عمل واحد (OPS-63).',
+  issEscIssue:'1. المشكلة', issEscTried:'2. ما الذي جُرِّب', issEscDecision:'3. القرار المطلوب',
+  issEscalatedOn:(d)=>`صُعِّدت في ${d}`, issRespDue:(d)=>`الرد مستحق في ${d}`, issRespondedOn:(d)=>`ورد الرد في ${d}`, issRespReceived:'ورد الرد', issEscNow:'تسجيل التصعيد الآن',
+  issSecOcc:'مرات التكرار', issThirdRule:'التكرار الثالث على التاجر نفسه أو الوظيفة نفسها: تُحال إلى التقنية بوصفها مشكلة منتج (OPS-63).', issOccNotePh:'التاجر أو التذكرة أو ما حدث', issOccAdd:'تسجيل تكرار جديد',
+  fbTitle:'تحليل عظم السمكة', fbNote:'اكتب المشكلة في رأس السمكة، ودوِّن الأسباب المحتملة تحت كل عظمة من العظام الست، وحدِّد الأسباب الجذرية. ويتبع صندوق الحلول أدناه العظام نفسها.', fbProblem:'المشكلة (رأس السمكة)', fbProblemPh:'اكتب المشكلة في جملة واحدة',
+  bone:{people:'الأفراد', process:'الإجراءات والسياسات', systems:'الأنظمة والتطبيقات', devices:'الأجهزة والمعدات', data:'البيانات', partners:'الإدارات الأخرى والشركاء'},
+  boneHint:{people:'المهارات والتدريب وضغط العمل والتسليم', process:'الخطوات والمهل والموافقات وقواعد النطاق', systems:'HubSpot وMarn POS والتطبيقات والتكامل والأعطال', devices:'أجهزة الدفع والطابعات والشبكة', data:'بيانات التاجر وأخطاء الإدخال والسجلات الناقصة', partners:'الإدارات الأخرى وشركات الشحن والموردون ومزودو الدفع'},
+  fbCausePh:'سبب محتمل', fbRoot:'سبب جذري', fbRootShort:'جذري', fbAddCause:'إضافة سبب',
+  solTitle:'صندوق الحلول', solNote:'حل لكل سبب، عظمةً عظمة. والأسباب الجذرية أولًا: لكل منها مسؤول وتاريخ. أرسل الحلول إلى المهام اليومية لمتابعتها.',
+  solEmpty:'أضف الأسباب في عظم السمكة أولًا؛ ويظهر كل سبب هنا ليُكتب حله.', solBone:'العظمة', solCause:'السبب', solSolution:'الحل', solPh:'ما الذي يزيل هذا السبب', solSend:'إرسال الحلول إلى المهام اليومية', solNone:'اكتب حلًا أولًا.',
+  issSecClose:'التحقق والإغلاق', issVerifyDate:'تاريخ التحقق', issVerifyResult:'نتيجة التحقق', verify:{norecur:'لم تتكرر', recurred:'تكررت'}, issResolution:'سبب الإغلاق',
+  reso:{fixed:'أُصلح السبب', workaround:'حل بديل قائم', product:'أُحيلت إلى المنتج بوصفها مشكلة منتج', partner:'أصلحها الطرف الآخر', nofault:'لا يوجد خلل', duplicate:'مكررة لمشكلة أخرى'},
+  issCloseNote:'ملاحظة الإغلاق', issCloseRule:'تُغلق كل مشكلة بسبب إغلاق (OPS-63). وإذا حُدِّدت أسباب جذرية فيلزم حل لواحد منها على الأقل قبل الإغلاق.', issReopen:'إعادة الفتح', issClose:'إغلاق المشكلة',
+  issNeedTitle:'اكتب عنوان المشكلة.', issSaved:'حُفظت المشكلة', issNeedResolution:'اختر سبب الإغلاق.', issNeedSolution:'اكتب حلًا للسبب الجذري قبل الإغلاق.',
+  issTaskGroup:(c)=>`المشكلة ${c}`, issTaskNote:(c,b,cause)=>`حل من المشكلة ${c}، ${b}: ${cause}`,
+  repIssuesTitle:'المشكلات للنقاش', repIssuesNote:'المشكلات القائمة الحرجة والعالية والمتأخرة والمنتظرة، مباشرة من سجل المشكلات؛ وتُثبَّت عند اعتماد التقرير.', repIssuesFrozen:'كما كانت عند اعتماد التقرير.', repIssuesNone:'لا توجد مشكلات حرجة أو عالية أو متأخرة أو منتظرة.',
+  repIssMonth:'سجل المشكلات خلال الشهر', repIssOpened:'فُتحت', repIssClosed:'أُغلقت', repIssAvg:'متوسط أيام الإغلاق', repIssTop:'أكثر العظام أسبابًا جذرية',
+  kbImportedNote:'مستورد من وثائق مرن للمراجعة', kbImported:(f,p)=>`استُورد للمراجعة: ${arN(f,'إجابة واحدة','إجابتان','إجابات','إجابة')} و${arN(p,'إجراء واحد','إجراءان','إجراءات','إجراءً')}`, kbPublishedN:(n)=>`نُشر ${n}`, kbRejected:'رُفض الاقتراح', kbDeleted:'حُذف', kbReviewedToast:'سُجلت المراجعة', kbArchived:'أُرشف',
   langSwitch:'English', today:'اليوم', searchResults:'نتائج البحث', signOut:'تسجيل الخروج', noDue:'بلا تاريخ', unlockToSee:'افتح اللوحة المقفلة لعرض هذه المهمة.', readonlyHint:'يمكنك عرض اللوحات. التعديل يحتاج دعوة بصفة محرر.',
   tlEmpty:'أضف تواريخ البداية أو الاستحقاق لعرض المهام على الخط الزمني.', dateFmt:'ar-SA-u-ca-gregory-nu-latn',
 }};
@@ -921,7 +1257,7 @@ const icon = (k)=> `<span class="ibox">${ICONS[k]||''}</span>`;
 
 /* ---------- state ---------- */
 const S = {
-  lang:'ar', view:'home', board:null, section:'tasks', boardView:'table', access:null, accessLoaded:false, accessErr:false, reports:new Map(), logs:new Map(), report:null, accDraft:null, ceoKeyLoaded:{},
+  lang:'ar', view:'home', board:null, section:'tasks', boardView:'table', access:null, accessLoaded:false, accessErr:false, reports:new Map(), logs:new Map(), report:null, accDraft:null, ceoKeyLoaded:{}, items:new Map(), edit:null, myLeads:[], kbq:'', kbcat:'', pq:'', issq:'', issf:{st:'active'}, kbOpen:new Set(),
   tasks:new Map(), members:new Map(), lockSettings:{}, lockLoaded:{}, keys:{},
   me:{id:null,name:'',email:'',avatarUrl:'',isOwner:false,isCEO:false,canEdit:false,canWrite:null},
   profiles:{}, db:null, user:null, downloads:null, connecting:true, dbMissing:false,
@@ -1225,17 +1561,19 @@ function renderMain(force){
   }
   if(!S.accessLoaded){ main.innerHTML = `<div class="notice"><h2>${esc(t('connecting'))}…</h2></div>`; S.mainKey=''; return; }
   if(!hasAnyAccess() && !isAdmin()){ main.innerHTML = noAccessHTML(); S.mainKey=''; return; }
-  if(S.view==='board' && !canSee(S.board)){ S.view='home'; S.board=null; S.report=null; }
+  if(S.view==='board' && !canSee(S.board)){ S.view='home'; S.board=null; S.report=null; S.edit=null; }
+  if(S.view==='board' && !sectionsFor(S.board).includes(S.section)){ S.section='tasks'; S.edit=null; }
   if(S.view==='ceo' && !isCEO()) S.view='home';
   if(S.view==='access' && !isAdmin()) S.view='home';
   if(!['home','ceo','access','board','mine','overdue','activity','search'].includes(S.view)) S.view='home';
   const showLock = S.view==='board' && isLocked(S.board) && (!keyOf(S.board) || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
-  const key = [S.view,S.board,S.section,S.boardView,S.lang,keyOf(S.board)?1:0,S.lockLoaded[S.board]?1:0,S.me.canWrite,showLock?S.lockUI.mode:'',S.report?S.report.key:''].join('|');
+  const key = [S.view,S.board,S.section,S.boardView,S.lang,keyOf(S.board)?1:0,S.lockLoaded[S.board]?1:0,S.me.canWrite,showLock?S.lockUI.mode:'',S.report?S.report.key:'',S.edit?S.edit.key:''].join('|');
   if(S.view==='home'){ S.mainKey=key; main.innerHTML = homeHTML(); return; }
   if(S.view==='ceo'){ S.mainKey=key; main.innerHTML = ceoHTML(); return; }
   if(S.view==='access'){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = accessHTML(); } return; }
   if(showLock){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = lockPanelHTML(); } return; }
   if(S.view==='board' && S.report){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = reportEditorHTML(); } return; }
+  if(S.view==='board' && S.edit){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = kbEditorRouter(); } return; }
   if(S.view==='board' && S.section!=='tasks'){ if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = deptHeadHTML() + `<div id="body"></div>`; } renderDeptBody(); refreshSecCounts(); return; }
   if(S.connecting && !S.tasksLoaded){ main.innerHTML = `<div class="notice"><h2>${esc(t('connecting'))}…</h2></div>`; S.mainKey=''; return; }
   if(key!==S.mainKey || force){ S.mainKey=key; main.innerHTML = headHTML() + `<div id="body"></div>`; }
@@ -1636,9 +1974,9 @@ async function render(){
   finally{ rendering=false; if(renderAgain){ renderAgain=false; render(); } }
 }
 function nav(target){
-  S.drawer=null; renderDrawer(); S.report=null; if(target!=='access') S.accDraft=null;
+  S.drawer=null; renderDrawer(); S.report=null; S.edit=null; if(target!=='access'){ S.accDraft=null; S.accLeadsDraft=null; }
   if(target.startsWith('board:')){
-    const b=target.slice(6); S.view='board'; S.board=b; if(!SECTIONS.includes(S.section)) S.section='tasks';
+    const b=target.slice(6); S.view='board'; S.board=b; if(!sectionsFor(b).includes(S.section)) S.section='tasks';
     S.filters={q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}; $('#q').value='';
     if(keyOf(b)) logEvent(b,'open',null,'open');
   }
@@ -1739,7 +2077,7 @@ document.addEventListener('drop', async (ev)=>{ const col=ev.target.closest('.co
    department, its key is deposited in ceokeys/{department}, which only the CEO can read. */
 function arN(n, one, two, few, many){ if(n===1) return one; if(n===2) return two; if(n>=3&&n<=10) return `${n} ${few}`; return `${n} ${many}`; }
 const DEPT_IDS = BOARDS.map(b=>b.id);
-const SECTIONS = ['weekly','monthly','tasks','log'];
+const SECTIONS = ['weekly','monthly','tasks','faq','process','issue','log'];
 const DEPT_DESC = {
   'human-capital':      {en:'People, organisation, policies and compliance', ar:'الأفراد والتنظيم والسياسات والالتزام'},
   'customer-experience':{en:'Customer support, success and quality', ar:'دعم العملاء ونجاحهم والجودة'},
@@ -1752,6 +2090,9 @@ const SICON = {
   monthly: IC('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9.5 17v-3M12.5 17v-6M15.5 17v-2"/>'),
   tasks: IC('<path d="M10 6h10M10 12h10M10 18h10"/><path d="M3.5 6l1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/>'),
   log: IC('<path d="M3 12h4l3-8 4 16 3-8h4"/>'),
+  faq: IC('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.9"/><path d="M12 17h.01"/>'),
+  process: IC('<rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="16.5" width="6" height="5" rx="1"/><rect x="15.5" y="16.5" width="6" height="5" rx="1"/><path d="M12 7.5v4.5M5.5 16.5V12h13v4.5"/>'),
+  issue: IC('<path d="M10.3 3.9L2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17h.01"/>'),
 };
 const lc = (s)=> String(s||'').trim().toLowerCase();
 const isCEO = ()=> !!S.me.isCEO;
@@ -1762,8 +2103,8 @@ function memberOf(b){ return !!S.me.email && Array.isArray(S.mine) && S.mine.inc
 function startAccess(){
   const db=S.db, email=lc(S.me.email);
   if(!email){ S.mine=[]; S.accessLoaded=true; render(); return; }
-  db.doc('memberships/'+email).onSnapshot(snap=>{ const d=snap.exists? snap.data(): null; S.mine = d && Array.isArray(d.depts) ? d.depts : []; S.accessLoaded=true; resubscribe(); render(); },
-    err=>{ console.warn('membership', err); S.mine=[]; S.accessLoaded=true; resubscribe(); render(); });
+  db.doc('memberships/'+email).onSnapshot(snap=>{ const d=snap.exists? snap.data(): null; S.mine = d && Array.isArray(d.depts) ? d.depts : []; S.myLeads = d && Array.isArray(d.leads) ? d.leads : []; S.accessLoaded=true; resubscribe(); render(); },
+    err=>{ console.warn('membership', err); S.mine=[]; S.myLeads=[]; S.accessLoaded=true; resubscribe(); render(); });
   if(isAdmin()) db.doc('access/departments').onSnapshot(snap=>{ S.access = snap.exists? snap.data(): null; if(S.access && !S.access.mirrored) mirrorAccess(S.access, accLists(null)); render(); },
     err=> console.warn('access', err));
 }
@@ -1777,7 +2118,8 @@ async function mirrorRun(lists, before){
   const now=new Date().toISOString(), by=lc(S.me.email), emails=new Set();
   for(const id of DEPT_IDS){ (lists[id]||[]).forEach(e=>emails.add(lc(e))); (before[id]||[]).forEach(e=>emails.add(lc(e))); }
   let ok=true;
-  for(const e of emails){ const depts=DEPT_IDS.filter(id=>(lists[id]||[]).map(lc).includes(e)); try{ await S.db.doc('memberships/'+e).set({email:e, depts, updatedAt:now, updatedBy:by}); }catch(err){ ok=false; console.warn('mirror', e, err); } }
+  const leads=(lists && lists.leads) || {};
+  for(const e of emails){ const depts=DEPT_IDS.filter(id=>(lists[id]||[]).map(lc).includes(e)); const ld=depts.filter(id=>(leads[id]||[]).map(lc).includes(e)); try{ await S.db.doc('memberships/'+e).set({email:e, depts, leads:ld, updatedAt:now, updatedBy:by}); }catch(err){ ok=false; console.warn('mirror', e, err); } }
   if(ok){ try{ await S.db.doc('access/departments').update({mirrored:true}); }catch(err){ console.warn('mirror flag', err); } }
   return ok;
 }
@@ -1816,13 +2158,14 @@ function resubscribe(){
   for(const [b,sub] of [...SUBS]){
     if(want.get(b)===sub.tag) continue;
     sub.uns.forEach(u=>{ try{ u&&u(); }catch(e){} }); SUBS.delete(b); changed=true;
-    if(!want.has(b)){ rawByBoard.delete(b); rawRepByBoard.delete(b); S.logs.delete(b); delete S.keys[b]; forgetKey(b); }
+    if(!want.has(b)){ rawByBoard.delete(b); rawRepByBoard.delete(b); rawItemsByBoard.delete(b); S.logs.delete(b); delete S.keys[b]; forgetKey(b); }
   }
   for(const [b,tag] of want){
     if(SUBS.has(b)) continue;
     const uns=[];
     uns.push(db.collection('tasks').where('board','==',b).onSnapshot(snap=> ingestBoard(b, snap), err=>{ console.warn('tasks', b, err); if(!retrySub(b)){ rawByBoard.set(b, new Map()); S.tasksLoaded=true; S.connecting=false; render(); } }));
     uns.push(db.collection('reports').where('board','==',b).onSnapshot(snap=> ingestReports(b, snap), err=>{ console.warn('reports', b, err); retrySub(b); }));
+    if(DEPT_FEATURES[b]) uns.push(db.collection('items').where('board','==',b).onSnapshot(snap=> ingestItems(b, snap), err=>{ console.warn('items', b, err); retrySub(b); }));
     if(tag==='m') uns.push(db.doc('settings/'+b).onSnapshot(snap=>{ S.lockSettings[b] = snap.exists? snap.data(): null; S.lockLoaded[b]=true; render(); }, err=>{ console.warn('settings', b, err); S.lockLoaded[b]=true; render(); }));
     else S.lockLoaded[b]=true;
     uns.push(db.collection('deptlogs/'+b+'/items').recent('at', 300).onSnapshot(snap=>{ S.logs.set(b, snap.docs.filter(d=>d.exists).map(d=>({id:d.id, ...d.data()}))); render(); }, err=> console.warn('log', b, err)));
@@ -1848,7 +2191,7 @@ function rebuildRaw(){ const out=new Map(); for(const [b,m] of rawByBoard){ if(!
 async function ingestReports(b, snap){ const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawRepByBoard.set(b, m); await rebuildReports(); render(); }
 async function repFromStored(id, data){ const r={id, ...data, c:{}}; if(data.enc){ const key=keyOf(data.board); if(key){ try{ r.c=await decryptObj(data.enc, key); }catch(e){ r.locked=true; } } else r.locked=true; } delete r.enc; return r; }
 async function rebuildReports(){ const out=new Map(); for(const [b,m] of rawRepByBoard){ if(!SUBS.has(b)) continue; for(const [id,d] of m) out.set(id, await repFromStored(id, d)); } S.reports=out; }
-async function rebuildAll(){ await rebuildTasks(); await rebuildReports(); }
+async function rebuildAll(){ await rebuildTasks(); await rebuildReports(); await rebuildItems(); }
 
 /* ---------- keys ---------- */
 async function syncCeoKey(b){
@@ -1883,6 +2226,7 @@ function logText(e){
   if(typeof f!=='function') return f || e.action || '';
   if(e.action==='task.status') return f(t('st')[e.to]||e.to||'');
   if(e.action==='tasks.fromMeeting') return f(e.n||0);
+  if(/^(faq|process|issue|kb)\./.test(e.action||'')) return f(e['label_'+L()]||e.label||'', e);
   return f((t('kindName')||{})[e.kind]||'', periodLabel(e.kind, e.period));
 }
 function logListHTML(items, showDept){
@@ -1899,15 +2243,18 @@ function logListHTML(items, showDept){
 
 /* ---------- department page: sections ---------- */
 function secTabsHTML(){
-  const b=S.board, lab={weekly:t('secWeekly'), monthly:t('secMonthly'), tasks:t('secTasks'), log:t('secLog')};
-  return `<nav class="sectabs" role="tablist" aria-label="${esc(t('sections'))}">${SECTIONS.map(s=>`<button type="button" role="tab" aria-selected="${S.section===s}" class="${S.section===s?'on':''}" data-action="sec" data-sec="${s}">${SICON[s]}<span>${esc(lab[s])}</span>${s==='log'?'':`<span class="n num" data-cnt="${s}"></span>`}</button>`).join('')}</nav>`;
+  const b=S.board, lab={weekly:t('secWeekly'), monthly:t('secMonthly'), tasks:t('secTasks'), faq:t('secFaq'), process:t('secProcess'), issue:t('secIssue'), log:t('secLog')};
+  return `<nav class="sectabs" role="tablist" aria-label="${esc(t('sections'))}">${sectionsFor(b).map(s=>`<button type="button" role="tab" aria-selected="${S.section===s}" class="${S.section===s?'on':''}" data-action="sec" data-sec="${s}">${SICON[s]}<span>${esc(lab[s])}</span>${s==='log'?'':`<span class="n num" data-cnt="${s}"></span>`}</button>`).join('')}</nav>`;
 }
 function refreshSecCounts(){
   const b=S.board; if(S.view!=='board' || !b) return;
-  const n={weekly:reportsOf(b,'weekly').length, monthly:reportsOf(b,'monthly').length, tasks:boardTasks(b).filter(x=>x.status!=='done').length};
-  document.querySelectorAll('.sectabs [data-cnt]').forEach(el=>{ el.textContent = n[el.dataset.cnt] ?? ''; });
+  const n={weekly:reportsOf(b,'weekly').length, monthly:reportsOf(b,'monthly').length, tasks:boardTasks(b).filter(x=>x.status!=='done').length, faq:itemsOf(b,'faq','published').length, process:itemsOf(b,'process','published').length, issue:itemsOf(b,'issue').filter(issActive).length};
+  document.querySelectorAll('.sectabs [data-cnt]').forEach(el=>{ el.textContent = n[el.dataset.cnt] ? n[el.dataset.cnt] : ''; });
 }
 function deptHeadHTML(){
+  if(S.section==='faq') return faqHeadHTML();
+  if(S.section==='process') return procHeadHTML();
+  if(S.section==='issue') return issHeadHTML();
   const b=S.board, ro=!canWrite(); let sub='', btn='';
   if(S.section==='weekly'){ sub=t('repCount')(reportsOf(b,'weekly').length); if(!ro) btn=`<button class="btn primary" data-action="rep-new" data-kind="weekly" type="button">+ ${esc(t('newWeekly'))}</button>`; }
   else if(S.section==='monthly'){ sub=t('repCount')(reportsOf(b,'monthly').length); if(!ro) btn=`<button class="btn primary" data-action="rep-new" data-kind="monthly" type="button">+ ${esc(t('newMonthly'))}</button>`; }
@@ -1918,6 +2265,9 @@ function deptHeadHTML(){
 function renderDeptBody(){
   const body=$('#body'); if(!body) return; const b=S.board;
   if(S.section==='log') body.innerHTML = logListHTML(S.logs.get(b)||[], false);
+  else if(S.section==='faq') body.innerHTML = faqBodyHTML();
+  else if(S.section==='process') body.innerHTML = procBodyHTML();
+  else if(S.section==='issue') body.innerHTML = issBodyHTML();
   else body.innerHTML = reportListHTML(b, S.section);
 }
 function rsChip(r){ const st=r? (r.status==='final'?'final':'draft') : 'missing'; return `<span class="rs s-${st}">${esc(t('rs')[st])}</span>`; }
@@ -1991,6 +2341,7 @@ function reportEditorHTML(){
     const pending=(c.actions||[]).filter(a=>a && !a.taskId && String(a.text||'').trim()).length;
     if(!ro) h+=`<div class="rrow"><button class="linkbtn" data-action="rep-add" data-list="actions" type="button">+ ${esc(t('addAction'))}</button><span class="grow"></span>${pending?`<button class="btn" data-action="rep-send" type="button">${esc(t('sendActions'))}</button>`:''}</div>`;
     h+=`</section><div class="rgrid one">${ta('risks',t('fRisks'),3)}</div>`;
+    if(feat(R.board,'issue')) h+=meetingIssuesHTML(R, fin);
   } else {
     h+=`<div class="rgrid">${field('r-period',t('fMonth'),`<input type="month" id="r-period" data-rp="period" value="${esc(R.period)}" ${dis}>`)}</div>`;
     h+=`<div class="rgrid one">${ta('summary',t('fSummary'),4)}</div>`;
@@ -2001,6 +2352,7 @@ function reportEditorHTML(){
     h+=`</tbody></table></div>${ro?'':`<div class="rrow"><button class="linkbtn" data-action="rep-add" data-list="kpis" type="button">+ ${esc(t('addKpi'))}</button></div>`}</section>`;
     const sn = (fin && c.snapshot) ? c.snapshot : monthSnapshot(R.board, R.period);
     h+=`<section class="rsec"><h3>${esc(t('snapTitle'))}</h3><div class="snap"><div><b>${sn.created}</b><span>${esc(t('snapCreated'))}</span></div><div class="done"><b>${sn.done}</b><span>${esc(t('snapDone'))}</span></div><div><b>${sn.open}</b><span>${esc(t('snapOpen'))}</span></div><div class="od"><b>${sn.overdue}</b><span>${esc(t('snapOverdue'))}</span></div></div><p class="note">${esc(t('snapNote'))}</p></section>`;
+    if(feat(R.board,'issue')) h+=monthIssuesHTML(R, fin);
     h+=`<div class="rgrid two">${ta('achievements',t('fAchievements'),4)}${ta('issues',t('fIssues'),4)}${ta('support',t('fSupport'),4)}${ta('priorities',t('fPriorities'),4)}</div>`;
   }
   return h+`</div>`;
@@ -2022,11 +2374,13 @@ async function commitReport(status, reopen){
   const wasNew=!R.id, prev=R.status;
   if(status==='final'){
     if(R.kind==='monthly') R.c.snapshot = monthSnapshot(R.board, R.period);
+    if(R.kind==='monthly' && feat(R.board,'issue')) R.c.issueStats = issueMonthStats(R.board, R.period);
+    if(R.kind==='weekly' && feat(R.board,'issue')) R.c.issues = meetingIssues(R.board).map(x=>({code:x.code||'', title:x.c.title||'', severity:x.severity||'', status:x.status||'', due:x.dueAt||''}));
     if(R.c.decisions) R.c.decisions=R.c.decisions.filter(x=>String(x||'').trim());
     if(R.c.actions) R.c.actions=R.c.actions.filter(a=>a && (String(a.text||'').trim() || a.taskId));
     if(R.c.kpis) R.c.kpis=R.c.kpis.filter(k=>k && String(k.name||'').trim());
   }
-  if(reopen) delete R.c.snapshot;
+  if(reopen){ delete R.c.snapshot; delete R.c.issueStats; delete R.c.issues; }
   R.status=status;
   const id=await saveReport(R); if(!id){ R.status=prev; return; }
   R.id=id; R.dirty=false; R.confirm=false; R.leave=false; R.key=id+'|'+Date.now();
@@ -2063,7 +2417,7 @@ function doorHTML(b){
   const state = (isCEO() && !memberOf(id)) ? (unl? t('ceoAccess') : t('ceoWaitTitle')) : unl ? t('isOpen') : t('pwNeeded');
   const st=(r)=> r? (r.status==='final'?'final':'draft') : 'missing';
   return `<a href="#${id}/${S.section||'tasks'}" class="door ${unl?'unl':''}" data-action="nav" data-nav="board:${id}"><div class="dtop">${icon(id)}<span class="dstate">${unl?'':LOCK_SVG}${esc(state)}</span></div><h2>${esc(name)}</h2><p class="dd">${esc(desc)}</p>
-    <dl class="dstats"><div><dt>${esc(t('openTasks'))}</dt><dd class="num">${open}${od?`<small> · ${esc(t('overdue'))} ${od}</small>`:''}</dd></div><div><dt>${esc(t('thisWeek'))}</dt><dd class="s-${st(wk)}">${esc(t('rs')[st(wk)])}</dd></div><div><dt>${esc(t('monthReport')(periodLabel('monthly', ym)))}</dt><dd class="s-${st(mo)}">${esc(t('rs')[st(mo)])}</dd></div></dl>
+    <dl class="dstats"><div><dt>${esc(t('openTasks'))}</dt><dd class="num">${open}${od?`<small> · ${esc(t('overdue'))} ${od}</small>`:''}</dd></div><div><dt>${esc(t('thisWeek'))}</dt><dd class="s-${st(wk)}">${esc(t('rs')[st(wk)])}</dd></div><div><dt>${esc(t('monthReport')(periodLabel('monthly', ym)))}</dt><dd class="s-${st(mo)}">${esc(t('rs')[st(mo)])}</dd></div>${feat(id,'issue')? issDoorStat(id) : ''}</dl>
     <span class="dgo">${esc(t('enter'))}${CHEV_SVG}</span></a>`;
 }
 function homeHTML(){
@@ -2083,12 +2437,12 @@ function ceoHTML(){
   const ym=reportingMonth(), cur=todayISO().slice(0,7), finals=BOARDS.filter(b=>{ const r=monthlyFor(b.id, ym); return r && r.status==='final'; }).length;
   let h=`<div class="vhead"><h1>${esc(t('ceoView'))}</h1><span class="sub">${esc(t('ceoSub'))}</span></div>`;
   h+=`<div class="tiles"><div class="tile"><div class="k">${esc(t('open'))}</div><div class="v">${open}</div></div><div class="tile stuck"><div class="k">${esc(t('stuck'))}</div><div class="v">${stuck}</div></div><div class="tile overdue"><div class="k">${esc(t('overdue'))}</div><div class="v">${od}</div></div><div class="tile ach"><div class="k">${esc(t('reportsFinal')(periodLabel('monthly', ym)))}</div><div class="v">${finals}<small>/${BOARDS.length}</small></div></div></div>`;
-  h+=`<div class="section" style="margin-top:0"><div style="overflow-x:auto"><table class="matrix"><thead><tr><th>${esc(t('cBoard'))}</th><th class="c">${esc(t('open'))}</th><th class="c">${esc(t('stuck'))}</th><th class="c">${esc(t('overdue'))}</th><th class="c">${esc(t('cDoneMonth'))}</th><th>${esc(t('cWeekly'))}</th><th>${esc(t('monthReport')(periodLabel('monthly', ym)))}</th><th>${esc(t('cLastAct'))}</th></tr></thead><tbody>`;
+  h+=`<div class="section" style="margin-top:0"><div style="overflow-x:auto"><table class="matrix"><thead><tr><th>${esc(t('cBoard'))}</th><th class="c">${esc(t('open'))}</th><th class="c">${esc(t('stuck'))}</th><th class="c">${esc(t('overdue'))}</th><th class="c">${esc(t('cDoneMonth'))}</th><th>${esc(t('cWeekly'))}</th><th>${esc(t('monthReport')(periodLabel('monthly', ym)))}</th><th class="c">${esc(t('issActiveCol'))}</th><th>${esc(t('cLastAct'))}</th></tr></thead><tbody>`;
   for(const b of BOARDS){
     const l=boardTasks(b.id), o=l.filter(x=>x.status!=='done').length, s=l.filter(x=>x.status==='stuck').length, d=l.filter(isOverdue).length, dm=l.filter(x=>doneInMonth(x,cur)).length;
     const wk=weeklyThisWeek(b.id), lastW=reportsOf(b.id,'weekly')[0], mo=monthlyFor(b.id, ym), lastLog=(S.logs.get(b.id)||[])[0];
     const z=(n,bold)=> n? (bold?`<b>${n}</b>`:n) : '<span class="muted">0</span>';
-    h+=`<tr class="row" data-action="nav" data-nav="board:${b.id}"><td class="name">${keyOf(b.id)?'':LOCK_SVG+' '}${esc(b[L()])}</td><td class="n">${z(o)}</td><td class="n">${z(s,1)}</td><td class="n">${z(d,1)}</td><td class="n">${z(dm)}</td><td>${rsChip(wk)}${!wk&&lastW?` <span class="muted small">${esc(t('lastOn')(fmtDate(lastW.period)))}</span>`:''}</td><td>${rsChip(mo)}</td><td class="muted small">${lastLog? esc(fmtRel(lastLog.at)) : ''}</td></tr>`;
+    h+=`<tr class="row" data-action="nav" data-nav="board:${b.id}"><td class="name">${keyOf(b.id)?'':LOCK_SVG+' '}${esc(b[L()])}</td><td class="n">${z(o)}</td><td class="n">${z(s,1)}</td><td class="n">${z(d,1)}</td><td class="n">${z(dm)}</td><td>${rsChip(wk)}${!wk&&lastW?` <span class="muted small">${esc(t('lastOn')(fmtDate(lastW.period)))}</span>`:''}</td><td>${rsChip(mo)}</td><td class="n">${feat(b.id,'issue')? issCeoCell(b.id) : ''}</td><td class="muted small">${lastLog? esc(fmtRel(lastLog.at)) : ''}</td></tr>`;
   }
   h+=`</tbody></table></div></div>`;
   h+=`<div class="section"><h2>${esc(t('overdueAll'))}</h2>${listViewHTML('overdue')}</div>`;
@@ -2099,23 +2453,24 @@ function ceoHTML(){
 
 /* ---------- department access (administrators) ---------- */
 function accLists(src){ const d={}; for(const id of DEPT_IDS) d[id] = (src && Array.isArray(src[id])) ? [...new Set(src[id].map(lc).filter(Boolean))] : []; return d; }
+function accLeads(src){ const l=(src && src.leads) || {}; const d={}; for(const id of DEPT_IDS) d[id]=Array.isArray(l[id])? [...new Set(l[id].map(lc).filter(Boolean))] : []; return d; }
 function accSeed(){ const d=accLists(S.access); if(!S.access){ const owners=((window.MARN_CONFIG||{}).owners)||[]; d['human-capital']=[...new Set([...d['human-capital'], ...owners.map(lc)])]; } return d; }
 function accessHTML(){
   if(!isAdmin()) return `<div class="notice"><h2>${esc(t('accessTitle'))}</h2><p>${esc(t('adminOnly'))}</p></div>`;
-  if(!S.accDraft) S.accDraft=accSeed();
-  const D=S.accDraft, dirty = !S.access || JSON.stringify(D)!==JSON.stringify(accLists(S.access));
+  if(!S.accDraft){ S.accDraft=accSeed(); S.accLeadsDraft=accLeads(S.access); }
+  const D=S.accDraft, LD=S.accLeadsDraft||accLeads(S.access), dirty = !S.access || JSON.stringify(D)!==JSON.stringify(accLists(S.access)) || JSON.stringify(LD)!==JSON.stringify(accLeads(S.access));
   const ceo=((window.MARN_CONFIG||{}).ceo||['loai@marn.com']).join(', ');
   let h=`<div class="vhead"><h1>${esc(t('accessTitle'))}</h1><span class="sub">${esc(t('accessSub'))}</span><div class="actions">${dirty&&S.access?`<button class="btn" data-action="acc-reset" type="button">${esc(t('discard'))}</button>`:''}<button class="btn primary" data-action="acc-save" type="button" ${dirty?'':'disabled'}>${esc(t('save'))}</button></div></div>`;
   if(!S.access) h+=`<div class="callout"><span class="dot"></span><span>${esc(t('accSeedNote'))}</span></div>`;
-  h+=`<p class="ceo-line">${icon('ceo')}<span>${esc(t('ceoFixed')(ceo))}</span></p><div class="accgrid">`;
+  h+=`<p class="ceo-line">${icon('ceo')}<span>${esc(t('ceoFixed')(ceo))}</span></p><p class="muted small lead-note">${esc(t('leadNote'))}</p><div class="accgrid">`;
   for(const b of BOARDS){
     const l=D[b.id]||[];
-    h+=`<section class="acc-col"><header>${icon(b.id)}<h2>${esc(b[L()])}</h2><span class="num">${l.length}</span></header><ul>${l.length? l.map((e,i)=>`<li><span class="em" dir="ltr">${esc(e)}</span><button class="iconbtn sm" data-action="acc-rm" data-b="${b.id}" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button></li>`).join('') : `<li class="none">${esc(t('accEmpty'))}</li>`}</ul><form class="acc-add" data-acc="${b.id}"><textarea id="acc-in-${b.id}" rows="1" placeholder="name@marn.com" dir="ltr" autocomplete="off" aria-label="${esc(b[L()])}"></textarea><button class="btn" type="submit">${esc(t('add'))}</button></form></section>`;
+    h+=`<section class="acc-col"><header>${icon(b.id)}<h2>${esc(b[L()])}</h2><span class="num">${l.length}</span></header><ul>${l.length? l.map((e,i)=>{ const ld=(LD[b.id]||[]).includes(e); return `<li class="${ld?'islead':''}"><span class="em" dir="ltr">${esc(e)}</span><button class="leadtg ${ld?'on':''}" data-action="acc-lead" data-b="${b.id}" data-i="${i}" type="button" aria-pressed="${ld}" title="${esc(t('leadHint'))}">${esc(t('leadTag'))}</button><button class="iconbtn sm" data-action="acc-rm" data-b="${b.id}" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button></li>`; }).join('') : `<li class="none">${esc(t('accEmpty'))}</li>`}</ul><form class="acc-add" data-acc="${b.id}"><textarea id="acc-in-${b.id}" rows="1" placeholder="name@marn.com" dir="ltr" autocomplete="off" aria-label="${esc(b[L()])}"></textarea><button class="btn" type="submit">${esc(t('add'))}</button></form></section>`;
   }
   h+=`</div>`;
   const log=(S.access && Array.isArray(S.access.log))? S.access.log : [];
   if(log.length){
-    h+=`<div class="section"><h2>${esc(t('accLog'))}</h2><div class="list">${[...log].reverse().slice(0,20).map(e=>`<div class="li"><span class="when">${esc(fmtRel(e.at))}</span><div class="what"><div class="t em" dir="ltr">${esc(e.by||'')}</div><div class="d">${esc((e.changes||[]).map(c=>`${boardName(c.b)}: ${[(c.added||[]).length?'+ '+c.added.join(', '):'', (c.removed||[]).length?'− '+c.removed.join(', '):''].filter(Boolean).join('  ')}`).join(' · '))}</div></div></div>`).join('')}</div></div>`;
+    h+=`<div class="section"><h2>${esc(t('accLog'))}</h2><div class="list">${[...log].reverse().slice(0,20).map(e=>`<div class="li"><span class="when">${esc(fmtRel(e.at))}</span><div class="what"><div class="t em" dir="ltr">${esc(e.by||'')}</div><div class="d">${esc((e.changes||[]).map(c=>`${boardName(c.b)}: ${[(c.added||[]).length?'+ '+c.added.join(', '):'', (c.removed||[]).length?'− '+c.removed.join(', '):'', (c.leadsAdded||[]).length?t('leadTag')+' + '+c.leadsAdded.join(', '):'', (c.leadsRemoved||[]).length?t('leadTag')+' − '+c.leadsRemoved.join(', '):''].filter(Boolean).join('  ')}`).join(' · '))}</div></div></div>`).join('')}</div></div>`;
   }
   return h;
 }
@@ -2128,22 +2483,24 @@ function accAdd(b){
   for(const v of list) if(!S.accDraft[b].includes(v)) S.accDraft[b].push(v);
   renderMain(true); $('#acc-in-'+b)?.focus();
 }
-function accRm(b, i){ S.accDraft[b].splice(i,1); renderMain(true); }
+function accRm(b, i){ const e=S.accDraft[b][i]; S.accDraft[b].splice(i,1); if(S.accLeadsDraft && S.accLeadsDraft[b]) S.accLeadsDraft[b]=S.accLeadsDraft[b].filter(x=>x!==e); renderMain(true); }
+function accLead(b, i){ const e=S.accDraft[b][i]; if(!e) return; S.accLeadsDraft=S.accLeadsDraft||accLeads(S.access); const l=S.accLeadsDraft[b]=S.accLeadsDraft[b]||[]; const k=l.indexOf(e); if(k>=0) l.splice(k,1); else l.push(e); renderMain(true); }
 async function accSave(){
-  const before=accLists(S.access), D=S.accDraft, now=new Date().toISOString(), by=lc(S.me.email);
-  const changes=DEPT_IDS.map(b=>({b, added:D[b].filter(e=>!before[b].includes(e)), removed:before[b].filter(e=>!D[b].includes(e))})).filter(c=>c.added.length||c.removed.length);
-  const doc={...D, mirrored:false, updatedAt:now, updatedBy:by, log:[...((S.access&&S.access.log)||[]), {at:now, by, changes}].slice(-50)};
+  const before=accLists(S.access), beforeL=accLeads(S.access), D=S.accDraft, now=new Date().toISOString(), by=lc(S.me.email);
+  const LD={}; for(const id of DEPT_IDS) LD[id]=((S.accLeadsDraft||beforeL)[id]||[]).filter(e=>D[id].includes(e));
+  const changes=DEPT_IDS.map(b=>({b, added:D[b].filter(e=>!before[b].includes(e)), removed:before[b].filter(e=>!D[b].includes(e)), leadsAdded:LD[b].filter(e=>!beforeL[b].includes(e)), leadsRemoved:beforeL[b].filter(e=>!LD[b].includes(e))})).filter(c=>c.added.length||c.removed.length||c.leadsAdded.length||c.leadsRemoved.length);
+  const doc={...D, leads:LD, mirrored:false, updatedAt:now, updatedBy:by, log:[...((S.access&&S.access.log)||[]), {at:now, by, changes}].slice(-50)};
   try{ await S.db.doc('access/departments').set(doc); }catch(e){ console.warn(e); toast(t('saveFail'), true); return; }
-  if(!(await mirrorAccess(D, before))){ toast(t('saveFail'), true); }
+  if(!(await mirrorAccess(doc, before))){ toast(t('saveFail'), true); }
   doc.mirrored=true;
-  S.access=doc; S.accDraft=null; S.mainKey=''; toast(t('accSaved')); resubscribe(); render();
+  S.access=doc; S.accDraft=null; S.accLeadsDraft=null; S.mainKey=''; toast(t('accSaved')); resubscribe(); render();
 }
 
 /* ---------- events for the department features ---------- */
 document.addEventListener('click', async (ev)=>{
   const el=ev.target.closest('[data-action]'); if(!el) return; const a=el.dataset.action; const R=S.report;
   if(a==='nav' && el.tagName==='A') ev.preventDefault();
-  if(a==='sec'){ S.section=el.dataset.sec; S.report=null; setHash(); S.mainKey=''; render(); $('#main').scrollTop=0; }
+  if(a==='sec'){ S.section=el.dataset.sec; S.report=null; S.edit=null; setHash(); S.mainKey=''; render(); $('#main').scrollTop=0; }
   else if(a==='rep-new'){ newReport(el.dataset.kind); }
   else if(a==='rep-open'){ ev.stopPropagation(); openReport(el.dataset.id); }
   else if(a==='rep-back'){ if(R && R.dirty && !R.leave && R.status!=='final'){ R.leave=true; toast(t('leaveArmed')); return; } S.report=null; S.mainKey=''; render(); }
@@ -2157,8 +2514,9 @@ document.addEventListener('click', async (ev)=>{
   else if(a==='rep-del-no' && R){ R.confirm=false; renderMain(true); }
   else if(a==='rep-del-yes'){ await removeReport(); }
   else if(a==='acc-rm'){ accRm(el.dataset.b, +el.dataset.i); }
+  else if(a==='acc-lead'){ accLead(el.dataset.b, +el.dataset.i); }
   else if(a==='acc-save'){ el.disabled=true; await accSave(); }
-  else if(a==='acc-reset'){ S.accDraft=null; S.mainKey=''; render(); }
+  else if(a==='acc-reset'){ S.accDraft=null; S.accLeadsDraft=null; S.mainKey=''; render(); }
 });
 document.addEventListener('submit', (ev)=>{ const f=ev.target.closest('form[data-acc]'); if(!f) return; ev.preventDefault(); accAdd(f.dataset.acc); });
 document.addEventListener('input', (ev)=>{
@@ -2171,6 +2529,702 @@ document.addEventListener('input', (ev)=>{
   R.dirty=true; R.leave=false; const u=$('#r-unsaved'); if(u) u.hidden=false;
 });
 window.addEventListener('beforeunload', (ev)=>{ if(S.report && S.report.dirty && S.report.status!=='final'){ ev.preventDefault(); ev.returnValue=''; } });
+
+/* ---------- department knowledge and issues: FAQs, process centre, issue log (October 2026) ----------
+   FAQs follow Knowledge-Centered Service: anyone in the department suggests, the department leads publish, and every
+   published answer is reviewed every 90 days. Process charts use the house format OPS-33 (step, next step, connector
+   label, shape, function, phase) and are drawn as swimlanes, right to left in Arabic. The issue log follows ITIL problem
+   management with the severity clocks of OPS-63 v06 section 6, the escalation rule of OPS-63 (on time, one level at a
+   time, in three sentences), an Ishikawa (fishbone) analysis and a solution box that follows the bones, then a check
+   that the cause did not return. Everything is encrypted with the department password, like the tasks. */
+const DEPT_FEATURES = { 'customer-experience': ['faq','process','issue'] };
+const DEPT_CODE = { 'human-capital':'HC', 'customer-experience':'CX', 'grc-legal':'GRC' };
+const KB_SECTIONS = ['faq','process','issue'];
+const feat = (b,f)=> (DEPT_FEATURES[b]||[]).includes(f);
+function sectionsFor(b){ return SECTIONS.filter(s=> !KB_SECTIONS.includes(s) || feat(b,s)); }
+function isLead(b){ return Array.isArray(S.myLeads) && S.myLeads.includes(b); }
+const REVIEW_DAYS = 90;
+const SEV_KEYS = ['critical','high','medium','low'];
+const SEV_HOURS = { critical:4, high:24, medium:24, low:0 };   // OPS-63 v06 section 6: resolution clock
+const SEV_RANK = { critical:0, high:1, medium:2, low:3 };
+const ISTATUS = ['open','progress','waiting','resolved','closed'];
+const BONES = ['people','process','systems','devices','data','partners'];
+const PARTIES = ['technology','finance','sales','commercial','marketing','humancapital','grc','jahez','integration','marnpay','courier','suppliers','other'];
+const ICATS = ['technical','sync','integration','payments','devices','zatca','billing','onboarding','account','complaint','ministry','outage','other'];
+const RESOLUTIONS = ['fixed','workaround','product','partner','nofault','duplicate'];
+const SHAPES = ['Start','Process','Decision','Subprocess','Document','End'];
+const SEARCH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+const clone = (o)=> JSON.parse(JSON.stringify(o||{}));
+function fold(s){ return String(s||'').toLowerCase().replace(/[ً-ْـ]/g,'').replace(/[إأآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ').trim(); }
+const pick = (c,k)=> String((L()==='en' ? (c[k+'_en'] || c[k+'_ar']) : (c[k+'_ar'] || c[k+'_en'])) || '');
+const splitList = (v)=> String(v||'').split(/[,،]/).map(x=>x.trim());
+function kbLockBtn(b){ return keyOf(b) && memberOf(b) ? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>` : ''; }
+function toLocalInput(iso){ if(!iso) return ''; const d=new Date(iso); if(isNaN(d)) return ''; return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16); }
+function addWorkingDays(iso, n){ const d=new Date(iso); let k=0; while(k<n){ d.setDate(d.getDate()+1); const w=d.getDay(); if(w!==5 && w!==6) k++; } return d.toISOString(); }
+function fo(x, y, w, h, html, rtl){ return `<foreignObject x="${x}" y="${y}" width="${Math.max(0,w)}" height="${Math.max(0,h)}"><div xmlns="http://www.w3.org/1999/xhtml" class="fo" dir="${rtl?'rtl':'ltr'}">${html}</div></foreignObject>`; }
+
+/* ---------- storage: one encrypted collection for the three kinds ---------- */
+const rawItemsByBoard = new Map();
+async function ingestItems(b, snap){ const m=new Map(); snap.docs.forEach(d=>{ if(d.exists) m.set(d.id, d.data()); }); rawItemsByBoard.set(b, m); await rebuildItems(); render(); }
+async function itemFromStored(id, data){ const r={id, ...data, c:{}}; if(data.enc){ const key=keyOf(data.board); if(key){ try{ r.c=await decryptObj(data.enc, key); }catch(e){ r.locked=true; } } else r.locked=true; } delete r.enc; return r; }
+async function rebuildItems(){ const out=new Map(); for(const [b,m] of rawItemsByBoard){ if(!SUBS.has(b)) continue; for(const [id,d] of m) out.set(id, await itemFromStored(id, d)); } S.items=out; }
+function itemsOf(b, kind, st){ return [...(S.items||new Map()).values()].filter(x=> x.board===b && x.kind===kind && !x.locked && (!st || (Array.isArray(st)? st.includes(x.status) : x.status===st))); }
+async function saveItem(it){
+  const key=keyOf(it.board); if(!key){ toast(t('saveFail'), true); return null; }
+  if(!S.items) S.items=new Map();
+  const now=new Date().toISOString(), id=it.id || S.db.collection('items').doc().id, prev=S.items.get(id)||{};
+  const stored={ ...(it.meta||{}), board:it.board, kind:it.kind, status:it.status,
+    createdAt: prev.createdAt||now, createdBy: prev.createdBy||S.me.id||null, createdName: prev.createdName||myName()||'',
+    updatedAt: now, updatedBy: S.me.id||null, updatedName: myName()||'', enc: await encryptObj(it.c||{}, key) };
+  try{ await S.db.collection('items').doc(id).set(stored); }catch(e){ console.warn('item', e); toast(t('saveFail'), true); return null; }
+  const {enc, ...plain}=stored; S.items.set(id, {id, ...plain, c:clone(it.c)});
+  return id;
+}
+async function removeItem(id){ try{ await S.db.collection('items').doc(id).delete(); S.items.delete(id); return true; }catch(e){ console.warn('item delete', e); toast(t('saveFail'), true); return false; } }
+const kbLabel = (kind, c)=> kind==='process' ? {label:c.code||'', label_ar:c.code||''} : {label:c.category_en||c.category_ar||'', label_ar:c.category_ar||c.category_en||''};
+const kbMeta = (kind, c, reviewedAt)=> ({ of:null, reviewedAt: reviewedAt||null, ...(kind==='process'? {code:c.code||''} : {}) });
+function stripNote(c){ const o=clone(c); delete o.note; return o; }
+const reviewDue = (x)=> x.status==='published' && (!x.reviewedAt || (Date.now()-new Date(x.reviewedAt).getTime()) > REVIEW_DAYS*86400000);
+
+/* ---------- shared: review queue and editor state ---------- */
+function kbQueueHTML(b, kind){
+  const lead=isLead(b), sug=itemsOf(b, kind, 'suggested');
+  const show = lead ? sug : sug.filter(x=>x.createdBy===S.me.id);
+  if(!show.length) return '';
+  const nameOf2=(x)=> kind==='faq' ? pick(x.c,'q') : `${x.c.code||''} ${pick(x.c,'name')}`.trim();
+  let h=`<section class="kbqueue"><header><h3>${esc(lead? t('kbQueueTitle')(show.length) : t('kbMineTitle')(show.length))}</h3>${lead&&canWrite()&&show.length>1?`<button class="btn primary" data-action="kb-publish-all" data-kind="${kind}" type="button">${esc(t('kbPublishAll')(show.length))}</button>`:''}</header>`;
+  for(const x of show.sort((a,b2)=>String(a.createdAt).localeCompare(String(b2.createdAt)))){
+    const target = x.of && S.items.get(x.of);
+    const what = x.of ? t('kbChangeTo')(target? nameOf2(target) : '') : t('kbNewItem');
+    h+=`<div class="qitem"><div class="qmain"><b>${esc(nameOf2(x)||'…')}</b><span>${esc(what)} · ${esc(x.createdName||nameOf(x.createdBy)||t('someone'))} · ${esc(fmtRel(x.createdAt))}</span>${x.c.note?`<span class="qnote">${esc(x.c.note)}</span>`:''}</div><div class="qacts">${!canWrite()? '' : lead
+      ? `<button class="btn" data-action="kb-review" data-id="${esc(x.id)}" type="button">${esc(t('kbReview'))}</button><button class="btn primary" data-action="kb-approve" data-id="${esc(x.id)}" type="button">${esc(t('kbPublish'))}</button>`
+      : `<button class="btn" data-action="kb-review" data-id="${esc(x.id)}" type="button">${esc(t('kbEdit'))}</button>`}</div></div>`;
+  }
+  return h+`</section>`;
+}
+function procBlank(){ const st=(id,shape,next)=>({id, shape, text_ar:'', text_en:'', next, labels_ar:[], labels_en:[], function_ar:'', function_en:'', phase_ar:'', phase_en:''});
+  return {code:'', name_ar:'', name_en:'', purpose_ar:'', purpose_en:'', owner_ar:'', owner_en:'', trigger_ar:'', trigger_en:'', output_ar:'', output_en:'', target_ar:'', target_en:'', source:'', steps:[st('1','Start',['2']), st('2','Process',['3']), st('3','End',[])]}; }
+function kbStart(kind, mode, id){
+  const src = id ? S.items.get(id) : null; if(id && !src) return;
+  const e={key:(id||'new')+'|'+Date.now(), kind, mode, id:null, of:null, dirty:false, confirm:'', view: (window.innerWidth<700?'steps':'chart')};
+  if(kind==='issue'){ e.mode='edit'; if(src){ e.id=id; e.draft={meta:{status:src.status, severity:src.severity||'medium', openedAt:src.openedAt||src.createdAt, dueAt:src.dueAt||'', dueManual:!!src.dueManual, withDept:!!src.withDept, recurring:!!src.recurring, occ:src.occ||0, code:src.code||'', closedAt:src.closedAt||''}, c:issNormalize(clone(src.c))}; } else { e.draft=issBlank(); e.dirty=true; } }
+  else {
+    e.draft = src ? clone(src.c) : (kind==='faq' ? {category_ar:'', category_en:'', q_ar:'', q_en:'', a_ar:'', a_en:'', source:''} : procBlank());
+    if(mode==='new') e.dirty=true;
+    if(mode==='edit' || mode==='view') e.id=id;
+    else if(mode==='suggest'){ e.of=id; e.draft.note=''; e.dirty=true; }
+    else if(mode==='review'){ e.id=id; e.of=src.of||null; }
+  }
+  S.edit=e; S.report=null; S.section=kind; S.view='board'; if(src) S.board=src.board; setHash(); S.mainKey=''; render(); $('#main').scrollTop=0;
+}
+function kbBack(){ const E=S.edit; if(E && E.dirty && !E.leave && E.mode!=='view'){ E.leave=true; toast(t('leaveArmed')); return; }
+  if(E && E.kind==='process' && E.mode!=='view' && E.id && S.items.get(E.id)?.status==='published'){ kbStart('process','view',E.id); return; }
+  S.edit=null; S.mainKey=''; render(); }
+function kbDirty(){ const E=S.edit; if(!E) return; E.dirty=true; E.leave=false; const u=$('#kb-unsaved'); if(u) u.hidden=false; }
+function kbConfirmHTML(kind){ return `<span class="confirm"><span>${esc(t(kind==='reject'?'kbRejectAsk':kind==='withdraw'?'kbWithdrawAsk':'kbDeleteAsk'))}</span><button class="btn danger" data-action="kb-${kind}-yes" type="button">${esc(t('yesDelete'))}</button><button class="btn" data-action="kb-confirm-no" type="button">${esc(t('cancel'))}</button></span>`; }
+function kbEditorActions(){
+  const E=S.edit, lead=isLead(S.board); if(!canWrite()) return '';
+  let h='';
+  if(lead){
+    if(E.mode==='review'){ h+= E.confirm==='reject'? kbConfirmHTML('reject') : `<button class="btn" data-action="kb-reject" type="button">${esc(t('kbReject'))}</button>`; h+=`<button class="btn primary" data-action="kb-save" type="button">${esc(t('kbPublish'))}</button>`; }
+    else { if(E.id) h+= E.confirm==='delete'? kbConfirmHTML('delete') : `<button class="btn" data-action="kb-delete" type="button">${esc(t('kbDelete'))}</button>`; h+=`<button class="btn primary" data-action="kb-save" type="button">${esc(t(E.id?'kbSaveChanges':'kbPublish'))}</button>`; }
+  } else {
+    if(E.mode==='review' && E.id) h+= E.confirm==='withdraw'? kbConfirmHTML('withdraw') : `<button class="btn" data-action="kb-withdraw" type="button">${esc(t('kbWithdraw'))}</button>`;
+    h+=`<button class="btn primary" data-action="kb-save" type="button">${esc(t('kbSendSuggestion'))}</button>`;
+  }
+  return h;
+}
+function kbEditorHead(title){
+  const E=S.edit;
+  let h=`<div class="vhead"><button class="btn back" data-action="kb-back" type="button">${BACK_SVG}<span>${esc(t('back'))}</span></button><h1>${esc(title)}</h1><span class="unsaved" id="kb-unsaved" ${E.dirty?'':'hidden'}>${esc(t('unsaved'))}</span><div class="actions">${kbEditorActions()}</div></div>${secTabsHTML()}`;
+  if(E.mode==='review'){ const s=S.items.get(E.id); if(s) h+=`<div class="callout quiet"><span>${esc(t('kbSuggestedBy')(s.createdName||nameOf(s.createdBy)||t('someone'), fmtRel(s.createdAt)))}${s.c.note?` · ${esc(s.c.note)}`:''}</span></div>`; }
+  return h;
+}
+function kbEditorTitle(kind){ const E=S.edit, lead=isLead(S.board);
+  if(E.mode==='new') return lead? t(kind==='faq'?'faqNew':'procNew') : t(kind==='faq'?'faqSuggest':'procSuggest');
+  if(E.mode==='suggest') return t('kbSuggestChange');
+  if(E.mode==='review') return lead? t('kbReviewTitle') : t('kbYourSuggestion');
+  return t('kbEdit'); }
+function kbEditorRouter(){ const E=S.edit; if(E.kind==='faq') return faqEditorHTML(); if(E.kind==='process') return E.mode==='view'? procViewHTML() : procEditorHTML(); return issEditorHTML(); }
+
+async function kbApprove(id, draftC){
+  const s=S.items.get(id); if(!s) return false;
+  const c=stripNote(draftC || s.c), now=new Date().toISOString();
+  if(s.of){ const tg=S.items.get(s.of);
+    if(tg && tg.status!=='suggested'){ const ok=await saveItem({id:tg.id, board:tg.board, kind:tg.kind, status:'published', meta:kbMeta(tg.kind, c, now), c}); if(!ok) return false; await removeItem(id); logEvent(s.board, s.kind+'.publish', kbLabel(s.kind, c)); return tg.id; } }
+  const ok=await saveItem({id, board:s.board, kind:s.kind, status:'published', meta:kbMeta(s.kind, c, now), c});
+  if(ok) logEvent(s.board, s.kind+'.publish', kbLabel(s.kind, c));
+  return ok;
+}
+async function kbSave(){
+  const E=S.edit, b=S.board, lead=isLead(b), d=E.draft, kind=E.kind;
+  if(kind==='faq'){ if(!(String(d.q_ar||'').trim()||String(d.q_en||'').trim()) || !(String(d.a_ar||'').trim()||String(d.a_en||'').trim())){ toast(t('faqNeedQA'), true); return; } }
+  else { const errs=procValidate(d); if(errs.length){ toast(errs[0], true); E.errors=errs; renderMain(true); return; } E.errors=[]; }
+  const now=new Date().toISOString(); let id=null;
+  if(lead){
+    if(E.mode==='review') id=await kbApprove(E.id, d);
+    else { id=await saveItem({id:E.id, board:b, kind, status:'published', meta:kbMeta(kind, d, now), c:stripNote(d)}); if(id) logEvent(b, kind+(E.id?'.edit':'.publish'), kbLabel(kind, d)); }
+  } else {
+    id=await saveItem({id: E.mode==='review'? E.id : null, board:b, kind, status:'suggested', meta:{of:E.of||null, reviewedAt:null, ...(kind==='process'?{code:d.code||''}:{})}, c:d});
+    if(id) logEvent(b, kind+'.suggest', kbLabel(kind, d));
+  }
+  if(!id) return;
+  toast(t(lead?'kbPublished':'kbSuggestionSent'));
+  if(kind==='process' && lead && typeof id==='string'){ kbStart('process','view', id); return; }
+  S.edit=null; S.mainKey=''; render();
+}
+async function kbSimpleUpdate(id, patch){ const x=S.items.get(id); if(!x) return false;
+  const meta={of:x.of||null, reviewedAt:x.reviewedAt||null, ...(x.kind==='process'?{code:x.code||x.c.code||''}:{}), ...(patch.meta||{})};
+  return saveItem({id, board:x.board, kind:x.kind, status:patch.status||x.status, meta, c:x.c}); }
+
+/* ---------- FAQs ---------- */
+function faqHeadHTML(){
+  const b=S.board, lead=isLead(b), ro=!canWrite();
+  const pub=itemsOf(b,'faq','published'), sug=itemsOf(b,'faq','suggested');
+  const cats=[...new Map(pub.map(x=>[x.c.category_en||x.c.category_ar||'', pick(x.c,'category')])).entries()].filter(([k])=>k).sort((a,b2)=>a[1].localeCompare(b2[1], L()));
+  let act=kbLockBtn(b);
+  if(!ro){ if(lead||isAdmin()) act+=`<button class="btn" data-action="kb-import" type="button">${esc(t('kbImport'))}</button>`;
+    act+=`<button class="btn primary" data-action="kb-new" data-kind="faq" type="button">+ ${esc(lead? t('faqNew') : t('faqSuggest'))}</button>`; }
+  return `<div class="vhead"><h1>${esc(boardName(b))}</h1><span class="sub num">${esc(t('faqCount')(pub.length))}${sug.length?` · ${esc(t('awaitingN')(sug.length))}`:''}</span><div class="actions">${act}</div></div>${secTabsHTML()}
+  <div class="toolbar kbtools"><label class="kbsearch">${SEARCH_SVG}<input id="kbq" type="search" value="${esc(S.kbq||'')}" placeholder="${esc(t('faqSearchPh'))}" autocomplete="off" aria-label="${esc(t('faqSearchPh'))}"></label><select id="kbcat" aria-label="${esc(t('kbCategory'))}"><option value="">${esc(t('kbAllCats'))}</option>${cats.map(([k,v])=>`<option value="${esc(k)}" ${S.kbcat===k?'selected':''}>${esc(v)}</option>`).join('')}</select><span class="spacer"></span><span class="count" id="kbcount"></span></div>`;
+}
+function faqBodyHTML(){
+  const b=S.board, lead=isLead(b), q=fold(S.kbq||''), cat=S.kbcat||'';
+  let h=kbQueueHTML(b,'faq');
+  const all=itemsOf(b,'faq','published');
+  let list=all;
+  if(cat) list=list.filter(x=>(x.c.category_en||x.c.category_ar||'')===cat);
+  if(q) list=list.filter(x=> fold([x.c.q_ar,x.c.q_en,x.c.a_ar,x.c.a_en,x.c.category_ar,x.c.category_en].join(' ')).includes(q));
+  const cnt=$('#kbcount'); if(cnt) cnt.textContent=t('faqCount')(list.length);
+  if(!all.length) return h+`<div class="empty"><b>${esc(t('faqEmpty'))}</b>${esc(t('faqEmptyHint'))}</div>`;
+  if(!list.length) return h+`<div class="empty"><b>${esc(t('kbNoMatch'))}</b></div>`;
+  const groups=new Map(); for(const x of list){ const k=pick(x.c,'category')||t('other'); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(x); }
+  h+=`<div class="faqs">`;
+  for(const [g,items] of [...groups.entries()].sort((a,b2)=>a[0].localeCompare(b2[0],L()))){
+    items.sort((a,b2)=>pick(a.c,'q').localeCompare(pick(b2.c,'q'),L()));
+    h+=`<section class="faqcat"><h3><span>${esc(g)}</span><span class="n num">${items.length}</span></h3>${items.map(x=>faqItemHTML(x, lead, !!q)).join('')}</section>`;
+  }
+  return h+`</div>`;
+}
+function faqItemHTML(x, lead, forceOpen){
+  const c=x.c, open=forceOpen || (S.kbOpen && S.kbOpen.has(x.id)), due=reviewDue(x);
+  const langs = L()==='ar' ? ['ar','en'] : ['en','ar'];
+  const ans = langs.filter(l=>c['a_'+l]).map(l=>`<div class="ans" dir="${l==='ar'?'rtl':'ltr'}" lang="${l}"><div class="atext">${esc(c['a_'+l])}</div><button class="copyb" data-action="kb-copy" data-id="${esc(x.id)}" data-l="${l}" type="button">${esc(t(l==='ar'?'copyAr':'copyEn'))}</button></div>`).join('');
+  const acts = !canWrite()? '' : lead
+    ? `<button class="linkbtn small" data-action="kb-edit" data-id="${esc(x.id)}" type="button">${esc(t('kbEdit'))}</button>${due?`<button class="linkbtn small" data-action="kb-reviewed" data-id="${esc(x.id)}" type="button">${esc(t('kbMarkReviewed'))}</button>`:''}<button class="linkbtn small" data-action="kb-archive" data-id="${esc(x.id)}" type="button">${esc(t('kbArchive'))}</button>`
+    : `<button class="linkbtn small" data-action="kb-suggest" data-id="${esc(x.id)}" type="button">${esc(t('kbSuggestChange'))}</button>`;
+  return `<details class="faq" data-id="${esc(x.id)}" ${open?'open':''}><summary><span class="q">${esc(pick(c,'q'))}</span>${due?`<span class="rdue">${esc(t('kbReviewDue'))}</span>`:''}</summary><div class="fbody">${ans}<div class="fmeta">${c.source?`<span>${esc(t('kbSource'))}: ${esc(c.source)}</span>`:''}<span>${esc(t('kbReviewedOn'))} ${esc(fmtDate(String(x.reviewedAt||x.updatedAt||'').slice(0,10)))}</span><span class="grow"></span>${acts}</div></div></details>`;
+}
+function faqEditorHTML(){
+  const E=S.edit, d=E.draft, b=S.board, lead=isLead(b);
+  const isSug = !lead;
+  const target = E.of && S.items.get(E.of);
+  const cats=[...new Set(itemsOf(b,'faq').flatMap(x=>[x.c.category_ar,x.c.category_en]).filter(Boolean))];
+  let h=kbEditorHead(kbEditorTitle('faq'));
+  if(target) h+=`<details class="kbcurrent"><summary>${esc(t('kbCurrentVersion'))}</summary><div class="cur"><b>${esc(pick(target.c,'q'))}</b><div class="atext">${esc(pick(target.c,'a'))}</div></div></details>`;
+  const inp=(k, dir, label, rows, max)=> field('kf-'+k, label, rows? `<textarea id="kf-${k}" data-kf="${k}" dir="${dir}" rows="${rows}" maxlength="${max||4000}">${esc(d[k]||'')}</textarea>` : `<input id="kf-${k}" data-kf="${k}" dir="${dir}" ${k.startsWith('category')?'list="kbcats"':''} value="${esc(d[k]||'')}" maxlength="${max||160}">`);
+  h+=`<div class="repform"><datalist id="kbcats">${cats.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+   <div class="rgrid two">${inp('category_ar','rtl',t('kbCatAr'),0,80)}${inp('category_en','ltr',t('kbCatEn'),0,80)}</div>
+   <div class="rgrid two">${inp('q_ar','rtl',t('faqQAr'),2,400)}${inp('q_en','ltr',t('faqQEn'),2,400)}</div>
+   <div class="rgrid two">${inp('a_ar','rtl',t('faqAAr'),8)}${inp('a_en','ltr',t('faqAEn'),8)}</div>
+   <div class="rgrid two">${inp('source','auto',t('kbSourceRef'),0,160)}${isSug? inp('note','auto',t('kbNoteForLeads'),0,300) : ''}</div></div>`;
+  return h;
+}
+
+/* ---------- process centre ---------- */
+function procHeadHTML(){
+  const b=S.board, lead=isLead(b), ro=!canWrite();
+  const pub=itemsOf(b,'process','published'), sug=itemsOf(b,'process','suggested');
+  let act=kbLockBtn(b);
+  if(!ro){ if(lead||isAdmin()) act+=`<button class="btn" data-action="kb-import" type="button">${esc(t('kbImport'))}</button>`;
+    act+=`<button class="btn primary" data-action="kb-new" data-kind="process" type="button">+ ${esc(lead? t('procNew') : t('procSuggest'))}</button>`; }
+  return `<div class="vhead"><h1>${esc(boardName(b))}</h1><span class="sub num">${esc(t('procCount')(pub.length))}${sug.length?` · ${esc(t('awaitingN')(sug.length))}`:''}</span><div class="actions">${act}</div></div>${secTabsHTML()}
+  <div class="toolbar kbtools"><label class="kbsearch">${SEARCH_SVG}<input id="pq" type="search" value="${esc(S.pq||'')}" placeholder="${esc(t('procSearchPh'))}" autocomplete="off" aria-label="${esc(t('procSearchPh'))}"></label><span class="spacer"></span><span class="count" id="pcount"></span></div>`;
+}
+function procLanes(p){ const out=[]; for(const s of (p.steps||[])){ const f=pick(s,'function').trim(); if(f && !out.includes(f)) out.push(f); } return out; }
+function procBodyHTML(){
+  const b=S.board, q=fold(S.pq||'');
+  let h=kbQueueHTML(b,'process');
+  const all=itemsOf(b,'process','published');
+  let list=all.slice().sort((a,b2)=>String(a.c.code||'').localeCompare(String(b2.c.code||''), 'en', {numeric:true}));
+  if(q) list=list.filter(x=> fold([x.c.code,x.c.name_ar,x.c.name_en,x.c.purpose_ar,x.c.purpose_en,x.c.owner_ar,x.c.owner_en,...(x.c.steps||[]).flatMap(s=>[s.text_ar,s.text_en])].join(' ')).includes(q));
+  const cnt=$('#pcount'); if(cnt) cnt.textContent=t('procCount')(list.length);
+  if(!all.length) return h+`<div class="empty"><b>${esc(t('procEmpty'))}</b>${esc(t('procEmptyHint'))}</div>`;
+  if(!list.length) return h+`<div class="empty"><b>${esc(t('kbNoMatch'))}</b></div>`;
+  h+=`<div class="pgrid">`;
+  for(const x of list){ const p=x.c, lanes=procLanes(p);
+    h+=`<button type="button" class="pcard2" data-action="kb-view" data-id="${esc(x.id)}"><span class="ptop"><span class="pcode num">${esc(p.code||'')}</span>${reviewDue(x)?`<span class="rdue">${esc(t('kbReviewDue'))}</span>`:''}</span><span class="pname">${esc(pick(p,'name'))}</span><span class="ppurpose">${esc(pick(p,'purpose'))}</span><span class="pmeta"><span>${esc(pick(p,'owner'))}</span><span class="num">${esc(t('procStepsLanes')((p.steps||[]).length, lanes.length))}</span>${pick(p,'target')?`<span>${esc(pick(p,'target'))}</span>`:''}</span></button>`; }
+  return h+`</div>`;
+}
+function procViewHTML(){
+  const E=S.edit, x=S.items.get(E.id); if(!x){ S.edit=null; return ''; }
+  const p=x.c, lead=isLead(S.board), due=reviewDue(x);
+  let act='';
+  if(canWrite()){ act += lead ? `${due?`<button class="btn" data-action="kb-reviewed" data-id="${esc(x.id)}" type="button">${esc(t('kbMarkReviewed'))}</button>`:''}<button class="btn" data-action="kb-edit" data-id="${esc(x.id)}" type="button">${esc(t('kbEdit'))}</button>` : `<button class="btn" data-action="kb-suggest" data-id="${esc(x.id)}" type="button">${esc(t('kbSuggestChange'))}</button>`; }
+  act += `<button class="btn" data-action="kb-print" type="button">${esc(t('kbPrint'))}</button>`;
+  let h=`<div class="vhead"><button class="btn back" data-action="kb-back" type="button">${BACK_SVG}<span>${esc(t('back'))}</span></button><h1><span class="pcode num">${esc(p.code||'')}</span> ${esc(pick(p,'name'))}</h1>${due?`<span class="rdue">${esc(t('kbReviewDue'))}</span>`:''}<div class="actions">${act}</div></div>${secTabsHTML()}`;
+  const row=(k,label)=> pick(p,k)? `<div><dt>${esc(label)}</dt><dd>${esc(pick(p,k))}</dd></div>` : '';
+  h+=`<dl class="pinfo">${row('purpose',t('procPurpose'))}${row('owner',t('procOwner'))}${row('trigger',t('procTrigger'))}${row('output',t('procOutput'))}${row('target',t('procTarget'))}${p.source?`<div><dt>${esc(t('kbSource'))}</dt><dd>${esc(p.source)}</dd></div>`:''}<div><dt>${esc(t('kbReviewedOn'))}</dt><dd>${esc(fmtDate(String(x.reviewedAt||x.updatedAt||'').slice(0,10)))}</dd></div></dl>`;
+  h+=`<div class="pviewbar"><div class="tabs" role="tablist">${['chart','steps'].map(v=>`<button type="button" class="${E.view===v?'on':''}" data-action="kb-pview" data-v="${v}">${esc(t(v==='chart'?'procChart':'procSteps'))}</button>`).join('')}</div>${E.view==='chart'?procLegendHTML():''}</div>`;
+  h+= E.view==='chart' ? `<div class="pchart">${procChartSVG(p)}</div>` : procStepsHTML(p);
+  return h;
+}
+function procLegendHTML(){ return `<div class="plegend">${['Start','Process','Decision','Subprocess','Document','End'].map(s=>`<span class="lg-${s.toLowerCase()}"><i></i>${esc(t('shape')[s])}</span>`).join('')}</div>`; }
+function procStepsHTML(p){
+  const steps=(p.steps||[]), ids=new Map(steps.map(s=>[String(s.id), s]));
+  return `<ol class="psteps">${steps.map(s=>{ const nx=(s.next||[]).filter(Boolean), labs=(L()==='en'? s.labels_en : s.labels_ar)||[], labs2=(L()==='en'? s.labels_ar : s.labels_en)||[];
+    const go = (s.shape==='End') ? `<span class="pend">${esc(t('procEnds'))}</span>` : nx.map((n,k)=>`<span class="pgo">${(labs[k]||labs2[k])?`<b>${esc(labs[k]||labs2[k])}</b> `:''}${esc(t('procGoTo'))} ${esc(n)}${ids.has(String(n))?'':' ?'}</span>`).join('');
+    return `<li class="pstep s-${esc(String(s.shape||'Process').toLowerCase())}"><span class="pnum num">${esc(s.id)}</span><div class="pbody"><div class="ptext">${esc(pick(s,'text'))}</div><div class="ptags"><span class="pshape">${esc(t('shape')[s.shape]||s.shape||'')}</span>${pick(s,'function')?`<span class="pfunc">${esc(pick(s,'function'))}</span>`:''}${pick(s,'phase')?`<span class="pphase">${esc(pick(s,'phase'))}</span>`:''}${go}</div></div></li>`; }).join('')}</ol>`;
+}
+function procValidate(p){
+  const errs=[]; const steps=(p.steps||[]);
+  if(!String(p.name_ar||'').trim() && !String(p.name_en||'').trim()) errs.push(t('procErrName'));
+  const ids=steps.map(s=>String(s.id||'').trim());
+  if(steps.length<2) errs.push(t('procErrSteps'));
+  if(ids.some(i=>!i)) errs.push(t('procErrId'));
+  const dup=ids.filter((v,i)=>v && ids.indexOf(v)!==i); if(dup.length) errs.push(t('procErrDup')(dup[0]));
+  if(!steps.some(s=>s.shape==='Start')) errs.push(t('procErrStart'));
+  if(!steps.some(s=>s.shape==='End')) errs.push(t('procErrEnd'));
+  for(const s of steps){ const nx=(s.next||[]).map(v=>String(v).trim()).filter(Boolean);
+    for(const n of nx) if(!ids.includes(n)){ errs.push(t('procErrNext')(s.id, n)); break; }
+    if(s.shape==='Decision'){ const la=(s.labels_ar||[]).filter(v=>String(v).trim()), le=(s.labels_en||[]).filter(v=>String(v).trim());
+      if(nx.length<2) errs.push(t('procErrDecision')(s.id)); else if(Math.max(la.length, le.length)<nx.length) errs.push(t('procErrLabels')(s.id)); } }
+  return errs;
+}
+function procEditorHTML(){
+  const E=S.edit, d=E.draft, b=S.board, lead=isLead(b);
+  const funcs=[...new Set(itemsOf(b,'process').flatMap(x=>(x.c.steps||[]).flatMap(s=>[s.function_ar,s.function_en])).concat((d.steps||[]).flatMap(s=>[s.function_ar,s.function_en])).filter(Boolean))];
+  const phases=[...new Set(itemsOf(b,'process').flatMap(x=>(x.c.steps||[]).flatMap(s=>[s.phase_ar,s.phase_en])).concat((d.steps||[]).flatMap(s=>[s.phase_ar,s.phase_en])).filter(Boolean))];
+  let h=kbEditorHead(kbEditorTitle('process'));
+  if(E.errors && E.errors.length) h+=`<div class="callout"><span class="dot"></span><span>${E.errors.map(esc).join(' · ')}</span></div>`;
+  const inp=(k, dir, label, ta, max)=> field('pm-'+k, label, ta? `<textarea id="pm-${k}" data-pm="${k}" dir="${dir}" rows="2" maxlength="${max||600}">${esc(d[k]||'')}</textarea>` : `<input id="pm-${k}" data-pm="${k}" dir="${dir}" value="${esc(d[k]||'')}" maxlength="${max||160}">`);
+  h+=`<div class="repform"><datalist id="kbfuncs">${funcs.map(v=>`<option value="${esc(v)}">`).join('')}</datalist><datalist id="kbphases">${phases.map(v=>`<option value="${esc(v)}">`).join('')}</datalist>
+   <div class="rgrid">${inp('code','ltr',t('procCode'),0,20)}${inp('name_ar','rtl',t('procNameAr'))}${inp('name_en','ltr',t('procNameEn'))}</div>
+   <div class="rgrid two">${inp('purpose_ar','rtl',t('procPurposeAr'),1)}${inp('purpose_en','ltr',t('procPurposeEn'),1)}</div>
+   <div class="rgrid two">${inp('owner_ar','rtl',t('procOwnerAr'))}${inp('owner_en','ltr',t('procOwnerEn'))}</div>
+   <div class="rgrid two">${inp('trigger_ar','rtl',t('procTriggerAr'),1)}${inp('trigger_en','ltr',t('procTriggerEn'),1)}</div>
+   <div class="rgrid two">${inp('output_ar','rtl',t('procOutputAr'),1)}${inp('output_en','ltr',t('procOutputEn'),1)}</div>
+   <div class="rgrid">${inp('target_ar','rtl',t('procTargetAr'))}${inp('target_en','ltr',t('procTargetEn'))}${inp('source','auto',t('kbSourceRef'))}</div>
+   ${!lead? `<div class="rgrid one">${inp('note','auto',t('kbNoteForLeads'),0,300)}</div>` : ''}
+   <section class="rsec"><h3>${esc(t('procStepsTitle'))}</h3><p class="note">${esc(t('procStepsNote'))}</p><div class="stepcards">${(d.steps||[]).map((s,i)=>procStepCardHTML(s,i,d.steps.length)).join('')}</div><div class="rrow"><button class="linkbtn" data-action="kb-step-add" type="button">+ ${esc(t('procAddStep'))}</button></div></section>
+   <section class="rsec"><h3>${esc(t('procPreview'))}</h3><div class="pchart" id="procpreview">${procChartSVG(d)}</div></section></div>`;
+  return h;
+}
+function procStepCardHTML(s, i, n){
+  const v=(k)=> esc(Array.isArray(s[k])? s[k].join(', ') : (s[k]||''));
+  return `<div class="stepcard s-${esc(String(s.shape||'Process').toLowerCase())}">
+   <div class="sc-top"><input class="sid num" data-ps="id" data-si="${i}" value="${v('id')}" maxlength="6" aria-label="${esc(t('procStepId'))}"><select data-ps="shape" data-si="${i}" aria-label="${esc(t('procShape'))}">${SHAPES.map(sh=>`<option value="${sh}" ${sh===(s.shape||'Process')?'selected':''}>${esc(t('shape')[sh])}</option>`).join('')}</select><input data-ps="function_ar" data-si="${i}" dir="rtl" list="kbfuncs" value="${v('function_ar')}" placeholder="${esc(t('procFuncAr'))}" aria-label="${esc(t('procFuncAr'))}"><input data-ps="function_en" data-si="${i}" dir="ltr" list="kbfuncs" value="${v('function_en')}" placeholder="${esc(t('procFuncEn'))}" aria-label="${esc(t('procFuncEn'))}"><span class="grow"></span><button class="iconbtn sm" data-action="kb-step-up" data-si="${i}" type="button" ${i===0?'disabled':''} aria-label="${esc(t('procUp'))}">↑</button><button class="iconbtn sm" data-action="kb-step-down" data-si="${i}" type="button" ${i===n-1?'disabled':''} aria-label="${esc(t('procDown'))}">↓</button><button class="iconbtn sm" data-action="kb-step-rm" data-si="${i}" type="button" aria-label="${esc(t('remove'))}">×</button></div>
+   <div class="rgrid two"><textarea data-ps="text_ar" data-si="${i}" dir="rtl" rows="2" maxlength="600" placeholder="${esc(t('procTextAr'))}" aria-label="${esc(t('procTextAr'))}">${v('text_ar')}</textarea><textarea data-ps="text_en" data-si="${i}" dir="ltr" rows="2" maxlength="600" placeholder="${esc(t('procTextEn'))}" aria-label="${esc(t('procTextEn'))}">${v('text_en')}</textarea></div>
+   <div class="sc-bot"><label>${esc(t('procNext'))}<input class="num" data-ps="next" data-si="${i}" dir="ltr" value="${v('next')}" placeholder="2, 3"></label><label>${esc(t('procLabelsAr'))}<input data-ps="labels_ar" data-si="${i}" dir="rtl" value="${v('labels_ar')}" placeholder="نعم، لا"></label><label>${esc(t('procLabelsEn'))}<input data-ps="labels_en" data-si="${i}" dir="ltr" value="${v('labels_en')}" placeholder="Yes, No"></label><label>${esc(t('procPhaseAr'))}<input data-ps="phase_ar" data-si="${i}" dir="rtl" list="kbphases" value="${v('phase_ar')}"></label><label>${esc(t('procPhaseEn'))}<input data-ps="phase_en" data-si="${i}" dir="ltr" list="kbphases" value="${v('phase_en')}"></label></div></div>`;
+}
+let procPreviewTimer=null;
+function procPreviewSoon(){ clearTimeout(procPreviewTimer); procPreviewTimer=setTimeout(()=>{ const el=$('#procpreview'); if(el && S.edit && S.edit.kind==='process') el.innerHTML=procChartSVG(S.edit.draft); }, 250); }
+
+/* The swimlane chart. Shape of the content: a path through several functions, so one lane per function (ordered as they
+   first appear, right to left in Arabic), one row per step in the order written, phases as bands, decisions as branches;
+   later branches leave from the side, loops back run in an outer channel. */
+function procChartSVG(p, langOpt){
+  const lang=langOpt||L(), rtl=lang==='ar';
+  const tx=(o,k)=> String((lang==='en' ? (o[k+'_en'] || o[k+'_ar']) : (o[k+'_ar'] || o[k+'_en'])) || '');
+  const steps=(p.steps||[]).filter(s=>s && String(s.id||'').trim());
+  if(!steps.length) return `<div class="empty"><b>${esc(t('procNoSteps'))}</b></div>`;
+  const ids=steps.map(s=>String(s.id).trim()), rowOf=new Map(ids.map((id,i)=>[id,i]));
+  const lanes=[], laneIdx=steps.map(s=>{ const f=tx(s,'function').trim()||t('procNoFunction'); let i=lanes.indexOf(f); if(i<0){ lanes.push(f); i=lanes.length-1; } return i; });
+  const hasPhase=steps.some(s=>tx(s,'phase').trim());
+  const LW=236, NW=200, GAP=40, HEAD=48, PH=hasPhase?136:0;
+  const edges=[];
+  steps.forEach((s,i)=>{ if((s.shape||'Process')==='End') return;
+    let nx=(Array.isArray(s.next)? s.next : []).map(v=>String(v).trim()).filter(Boolean);
+    if(!nx.length && i+1<steps.length) nx=[ids[i+1]];
+    const la=(s.labels_ar||[]), le=(s.labels_en||[]);
+    nx.forEach((to,k)=>{ if(rowOf.has(to)) edges.push({from:i, to:rowOf.get(to), k, label:String((lang==='en'? (le[k]||la[k]) : (la[k]||le[k]))||'').trim()}); }); });
+  const back=edges.filter(e=>e.to<=e.from); back.forEach((e,j)=>{ e.ch=j; });
+  const CW = back.length ? 30 + back.length*12 : 14;
+  const W = PH + lanes.length*LW + CW;
+  const laneX=(i)=> rtl ? (W - PH - (i+1)*LW) : (PH + i*LW);
+  const cpl=28, lines=(s)=> Math.min(16, Math.max(1, Math.ceil((tx(s,'text').length + String(s.id).length + 2)/cpl)));
+  const hOf=(s)=>{ const sh=s.shape||'Process', base=20+lines(s)*16; return (sh==='Start'||sh==='End')? Math.max(42, base) : sh==='Decision'? Math.max(62, base+14) : sh==='Document'? Math.max(58, base+10) : Math.max(54, base); };
+  const ys=[]; let y=HEAD+20;
+  steps.forEach((s,i)=>{ if(i>0) y+= GAP + (hasPhase && tx(steps[i-1],'phase')!==tx(s,'phase') ? 16 : 0); ys.push(y); y+=hOf(s); });
+  const H=y+28;
+  const N=steps.map((s,i)=>{ const h=hOf(s), cx=laneX(laneIdx[i])+LW/2; return {x:cx-NW/2, y:ys[i], w:NW, h, cx, cy:ys[i]+h/2, b:ys[i]+h, s}; });
+  const mid='ah'+Math.random().toString(36).slice(2,8);
+  let svg=`<svg class="proc" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(tx(p,'name'))}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="${mid}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ahd"/></marker></defs>`;
+  lanes.forEach((name,i)=>{ const x=laneX(i); svg+=`<rect class="lane ${i%2?'alt':''}" x="${x}" y="0" width="${LW}" height="${H}"/><rect class="lanehead" x="${x+5}" y="6" width="${LW-10}" height="${HEAD-12}" rx="8"/>`+fo(x+10, 6, LW-20, HEAD-12, `<div class="lh">${esc(name)}</div>`, rtl); });
+  if(hasPhase){ let start=0;
+    for(let i=1;i<=steps.length;i++){ if(i===steps.length || tx(steps[i],'phase')!==tx(steps[start],'phase')){
+      const top = start===0 ? HEAD+4 : (N[start-1].b + ys[start])/2, bot = i===steps.length ? H-6 : (N[i-1].b + ys[i])/2;
+      const px = rtl ? W-PH+5 : 5, ph=tx(steps[start],'phase');
+      if(ph) svg+=`<rect class="phband" x="${px}" y="${top+4}" width="${PH-10}" height="${Math.max(0,bot-top-8)}" rx="8"/>`+fo(px+3, top+4, PH-16, Math.max(0,bot-top-8), `<div class="ph">${esc(ph)}</div>`, rtl);
+      if(i<steps.length) svg+=`<line class="phsep" x1="${rtl?CW:PH}" x2="${rtl?W-PH:W-CW}" y1="${bot}" y2="${bot}"/>`;
+      start=i; } } }
+  /* gutters: four tracks on each side of a lane; a line takes the first track that is free over its vertical span. Lines that leave
+     the same step or reach the same step may share a track, so they read as one line that splits or joins. */
+  const tracks=new Map(), span=(y1,y2,e)=>({lo:Math.min(y1,y2)-6, hi:Math.max(y1,y2)+6, from:e.from, to:e.to});
+  const clear=(iv,sp)=> iv.every(o=> sp.hi<o.lo || sp.lo>o.hi || o.from===sp.from || o.to===sp.to);
+  const gutterFree=(lane, side, y1, y2, e)=>{ const T=tracks.get(lane+':'+side); return !T || clear(T[0], span(y1,y2,e)); };
+  const gutterX=(lane, side, y1, y2, e)=>{ const key=lane+':'+side; if(!tracks.has(key)) tracks.set(key, [[],[],[],[]]); const T=tracks.get(key), sp=span(y1,y2,e);
+    let k=T.findIndex(iv=> clear(iv, sp)); if(k<0) k=T.length-1; T[k].push(sp); const off=5+k*4; return side<0 ? laneX(lane)+off : laneX(lane)+LW-off; };
+  const blocked=(lane, r1, r2)=>{ for(let r=Math.min(r1,r2)+1; r<Math.max(r1,r2); r++) if(laneIdx[r]===lane) return true; return false; };
+  const chX=(j)=> rtl ? (CW - 14 - j*12) : (W - CW + 14 + j*12);
+  let labels='', labMin=4, labMax=W-4;
+  const lab=(text, x, y, toward)=>{ if(!text) return; const w=150, bx = toward>0 ? x : x-w, est=Math.min(w, 18+String(text).length*6.4);
+    if(toward>0) labMax=Math.max(labMax, x+est); else labMin=Math.min(labMin, x-est); labels+=fo(bx, y-10, w, 32, `<div class="el ${toward>0?'tl':'tr'}"><span dir="auto">${esc(text)}</span></div>`, false); };
+  /* exit sides: 0 = bottom, 1 = right, -1 = left. A decision sends the exit that can drop straight down in its own lane out of the
+     bottom (else its first exit), loops leave toward the loop channel, other exits leave from a side. When two forward exits would
+     share a side, a same-lane exit moves to the free side; exits that still share a side carry their label at the arrival point, so
+     every label sits next to the one line it names. Loops land below the side point and leave above it when the side is shared. */
+  const chSide = rtl ? -1 : 1, isDec=(n)=> (n.s.shape||'Process')==='Decision';
+  const outs=new Map(); edges.forEach(e=>{ e.same = laneIdx[e.from]===laneIdx[e.to]; if(e.to<=e.from){ e.back=true; e.side=chSide; } if(!outs.has(e.from)) outs.set(e.from, []); outs.get(e.from).push(e); });
+  outs.forEach((list, from)=>{ const a=N[from], fw=list.filter(x=>!x.back);
+    if(!isDec(a)){ fw.forEach(x=>{ x.side=0; }); }
+    else { const down = fw.find(x=> x.same && !blocked(laneIdx[x.to], from, x.to)) || fw[0];
+      fw.forEach(x=>{ x.side = x===down ? 0 : (x.same ? (rtl? -1 : 1) : (N[x.to].cx > a.cx ? 1 : -1)); });
+      const ca=(sd)=> list.filter(x=>x.side===sd).length;
+      fw.forEach(x=>{ if(x.side && x.same && ca(x.side)>1 && !ca(-x.side)) x.side=-x.side; }); }
+    const cf=(sd)=> fw.filter(x=>x.side===sd).length;
+    fw.forEach(x=>{ x.endLab = !!x.label && cf(x.side)>1; });
+    list.filter(x=>x.back).forEach((x,j)=>{ x.lift = (cf(x.side) ? j+1 : j) * Math.min(16, a.h*0.28); }); });
+  const edgeX=(n, y, side)=>{ const sh=n.s.shape||'Process', dy=Math.abs(y-n.cy); let inset=0;
+    if(sh==='Decision') inset = 14*Math.min(1, dy/(n.h/2));
+    else if(sh==='Start'||sh==='End'){ const r=Math.min(21,n.h/2), st=n.h/2-r; if(dy>st) inset = r - Math.sqrt(Math.max(0, r*r-(dy-st)*(dy-st))); }
+    return side<0 ? n.x+inset : n.x+n.w-inset; };
+  const endUse=new Map();
+  const labEnd=(e, arriveX)=>{ const bN=N[e.to], n=endUse.get(e.to)||0; endUse.set(e.to, n+1);
+    let toward = arriveX==null ? (rtl? -1 : 1) : (arriveX > bN.cx ? -1 : 1); if(n%2) toward=-toward;
+    lab(e.label, bN.cx+(toward>0?6:-6), bN.y-19-Math.floor(n/2)*16, toward); };
+  edges.forEach(e=>{
+    const a=N[e.from], bN=N[e.to], tl=laneIdx[e.to], same=e.same; let d, arrive=null;
+    if(!e.back){
+      const blk=blocked(tl, e.from, e.to);
+      if(e.side===0){
+        const ym=a.b+GAP/2-2;
+        if(!blk){ d = same ? `M${a.cx} ${a.b} V${bN.y}` : `M${a.cx} ${a.b} V${ym} H${bN.cx} V${bN.y}`; arrive = same ? null : a.cx; }
+        else if(!same && !blocked(laneIdx[e.from], e.from, e.to)){ const yt=bN.y-GAP/2+3; d=`M${a.cx} ${a.b} V${yt} H${bN.cx} V${bN.y}`; arrive=a.cx; }
+        else { const yt=bN.y-GAP/2+3; let side = same ? -chSide : (bN.cx < a.cx ? 1 : -1); if(same && !gutterFree(tl, side, ym, yt, e) && gutterFree(tl, -side, ym, yt, e)) side=-side; const gx=gutterX(tl, side, ym, yt, e); d=`M${a.cx} ${a.b} V${ym} H${gx} V${yt} H${bN.cx} V${bN.y}`; arrive=gx; }
+        if(e.endLab) labEnd(e, arrive); else lab(e.label, a.cx+(rtl?-6:6), a.b+12, rtl?-1:1);
+      } else {
+        const dir=e.side, sx = dir>0 ? a.x+a.w : a.x, sy=a.cy;
+        if(!same && !blk){ d=`M${sx} ${sy} H${bN.cx} V${bN.y}`; arrive=null; }
+        else { const yt=bN.y-GAP/2+3, gx = gutterX(tl, same ? dir : (bN.cx>a.cx? -1 : 1), sy, yt, e); d=`M${sx} ${sy} H${gx} V${yt} H${bN.cx} V${bN.y}`; arrive=gx; }
+        if(e.endLab) labEnd(e, arrive); else lab(e.label, sx+(dir>0?6:-6), sy-12, dir);
+      }
+    } else {
+      const cx=chX(e.ch), sd = cx < a.cx ? -1 : 1, sy=a.cy-(e.lift||0), sx=edgeX(a, sy, sd), ay=bN.cy+Math.min(16, bN.h*0.28), ex=edgeX(bN, ay, sd);
+      d=`M${sx} ${sy} H${cx} V${ay} H${ex}`;
+      lab(e.label, sx+6*sd, sy-12, sd);
+    }
+    svg+=`<path class="edge" d="${d}" marker-end="url(#${mid})"/>`;
+  });
+  N.forEach(n=>{ const sh=n.s.shape||'Process'; let shape='';
+    if(sh==='Decision'){ const k=14; shape=`<polygon class="nd dec" points="${n.x+k},${n.y} ${n.x+n.w-k},${n.y} ${n.x+n.w},${n.cy} ${n.x+n.w-k},${n.b} ${n.x+k},${n.b} ${n.x},${n.cy}"/>`; }
+    else if(sh==='Start'||sh==='End') shape=`<rect class="nd ${sh==='End'?'end':'start'}" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="${Math.min(21,n.h/2)}"/>`;
+    else if(sh==='Document') shape=`<path class="nd doc" d="M${n.x} ${n.y+7} Q${n.x} ${n.y} ${n.x+7} ${n.y} H${n.x+n.w-7} Q${n.x+n.w} ${n.y} ${n.x+n.w} ${n.y+7} V${n.b-9} C${n.x+n.w*0.75} ${n.b-20} ${n.x+n.w*0.25} ${n.b+5} ${n.x} ${n.b-9} Z"/>`;
+    else if(sh==='Subprocess') shape=`<rect class="nd" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="6"/><line class="ndl" x1="${n.x+10}" x2="${n.x+10}" y1="${n.y}" y2="${n.b}"/><line class="ndl" x1="${n.x+n.w-10}" x2="${n.x+n.w-10}" y1="${n.y}" y2="${n.b}"/>`;
+    else shape=`<rect class="nd" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="9"/>`;
+    const pad = sh==='Decision'? 18 : sh==='Subprocess'? 15 : 9;
+    svg+=`<g class="node s-${sh.toLowerCase()}">${shape}${fo(n.x+pad, n.y+3, n.w-2*pad, n.h-6-(sh==='Document'?10:0), `<div class="nt"><b>${esc(n.s.id)}</b> ${esc(tx(n.s,'text'))}</div>`, rtl)}</g>`; });
+  const exL=Math.max(0, Math.ceil(4-labMin)), exR=Math.max(0, Math.ceil(labMax+4-W));   /* a label near the edge widens the drawing instead of being cut */
+  if(exL || exR) svg = svg.replace(`viewBox="0 0 ${W} ${H}" width="${W}"`, `viewBox="${-exL} 0 ${W+exL+exR} ${H}" width="${W+exL+exR}"`);
+  return svg+labels+`</svg>`;
+}
+
+/* ---------- issue log ---------- */
+function issActive(x){ return !['resolved','closed'].includes(x.status); }
+function issOverdue(x){ return issActive(x) && x.dueAt && Date.now() > new Date(x.dueAt).getTime(); }
+function issDue(sev, openedAt){ const h=SEV_HOURS[sev]||0; if(!h || !openedAt) return ''; return new Date(new Date(openedAt).getTime()+h*3600000).toISOString(); }
+function nextIssueCode(b){ const pre=(DEPT_CODE[b]||'D')+'-ISS-'; let max=0; for(const x of itemsOf(b,'issue')){ const m=String(x.code||'').match(/(\d+)$/); if(m) max=Math.max(max, +m[1]); } return pre+String(max+1).padStart(3,'0'); }
+function issNormalize(c){ c.esc=c.esc||{}; c.occ=Array.isArray(c.occ)? c.occ : []; c.fb=c.fb||{}; c.fb.bones=c.fb.bones||{}; for(const k of BONES) c.fb.bones[k]=Array.isArray(c.fb.bones[k])? c.fb.bones[k] : []; c.verify=c.verify||{}; c.updates=Array.isArray(c.updates)? c.updates : []; return c; }
+function issBlank(){ const now=new Date().toISOString();
+  return { meta:{status:'open', severity:'medium', openedAt:now, dueAt:issDue('medium', now), dueManual:false, withDept:false, recurring:false, occ:0, code:'', closedAt:''},
+    c: issNormalize({title:'', desc:'', merchant:'', category:'', owner:myName()||'', party:'', partyContact:'', incident:'', esc:{}, occ:[], fb:{problem:'', bones:{}}, verify:{}, resolution:'', closeNote:'', updates:[]}) }; }
+const sevChip = (s)=> `<span class="sev sev-${esc(s||'medium')}">${esc((t('sev')||{})[s]||s||'')}</span>`;
+const istChip = (s)=> `<span class="ist ist-${esc(s||'open')}">${esc((t('ist')||{})[s]||s||'')}</span>`;
+function issDoorStat(b){ const act=itemsOf(b,'issue').filter(issActive), hi=act.filter(x=>x.severity==='critical'||x.severity==='high').length;
+  return `<div><dt>${esc(t('issActiveCol'))}</dt><dd class="num">${act.length}${hi?`<small> · ${esc(t('issCritHigh'))} ${hi}</small>`:''}</dd></div>`; }
+function issCeoCell(b){ const act=itemsOf(b,'issue').filter(issActive), hi=act.filter(x=>x.severity==='critical'||x.severity==='high').length, od=act.filter(issOverdue).length;
+  return act.length ? `<b>${act.length}</b>${hi||od?`<div class="muted small cellsub">${hi?`${esc(t('issCritHigh'))}: <b>${hi}</b>`:''}${hi&&od?' · ':''}${od?`${esc(t('overdue'))}: <b>${od}</b>`:''}</div>`:''}` : '<span class="muted">0</span>'; }
+function issHeadHTML(){
+  const b=S.board, ro=!canWrite(), f=S.issf||(S.issf={st:'active'});
+  const all=itemsOf(b,'issue');
+  const act=kbLockBtn(b)+(ro?'':`<button class="btn primary" data-action="kb-new" data-kind="issue" type="button">+ ${esc(t('issNew'))}</button>`);
+  const sel=(k, opts, allLabel)=> `<select data-issf="${k}" aria-label="${esc(allLabel)}"><option value="">${esc(allLabel)}</option>${opts}</select>`;
+  return `<div class="vhead"><h1>${esc(boardName(b))}</h1><span class="sub num">${esc(t('issActiveCount')(all.filter(issActive).length))}</span><div class="actions">${act}</div></div>${secTabsHTML()}
+   <div class="toolbar kbtools"><label class="kbsearch">${SEARCH_SVG}<input id="issq" type="search" value="${esc(S.issq||'')}" placeholder="${esc(t('issSearchPh'))}" autocomplete="off" aria-label="${esc(t('issSearchPh'))}"></label>
+   <select data-issf="st" aria-label="${esc(t('cStatus'))}"><option value="active" ${f.st==='active'?'selected':''}>${esc(t('issActiveOnly'))}</option><option value="" ${!f.st?'selected':''}>${esc(t('allStatuses'))}</option>${ISTATUS.map(s=>`<option value="${s}" ${f.st===s?'selected':''}>${esc(t('ist')[s])}</option>`).join('')}</select>
+   ${sel('sev', SEV_KEYS.map(s=>`<option value="${s}" ${f.sev===s?'selected':''}>${esc(t('sev')[s])}</option>`).join(''), t('issAllSev'))}
+   ${sel('type', `<option value="dept" ${f.type==='dept'?'selected':''}>${esc(t('issWithDept'))}</option><option value="rec" ${f.type==='rec'?'selected':''}>${esc(t('issRecurring'))}</option>`, t('issAllTypes'))}
+   ${sel('party', PARTIES.map(p=>`<option value="${p}" ${f.party===p?'selected':''}>${esc(t('party')[p])}</option>`).join(''), t('issAllParties'))}
+   <span class="spacer"></span><span class="count" id="isscount"></span></div>`;
+}
+function issBodyHTML(){
+  const b=S.board, f=S.issf||{st:'active'}, q=fold(S.issq||''), all=itemsOf(b,'issue'), act=all.filter(issActive);
+  const tile=(k, v, cls, set)=> `<button class="tile ${cls||''}" data-action="iss-tile" data-set="${set}" type="button"><div class="k">${esc(k)}</div><div class="v">${v}</div></button>`;
+  let h=`<div class="tiles five">${tile(t('issActiveOnly'), act.length, '', 'st:active')}${tile(t('issCritHighLong'), act.filter(x=>x.severity==='critical'||x.severity==='high').length, 'stuck', 'sev:high')}${tile(t('overdue'), act.filter(issOverdue).length, act.some(issOverdue)?'overdue':'', 'od')}${tile(t('issWaiting'), act.filter(x=>x.status==='waiting').length, '', 'st:waiting')}${tile(t('issRecurring'), act.filter(x=>x.recurring).length, '', 'type:rec')}</div>`;
+  let list=all;
+  if(f.st==='active') list=list.filter(issActive); else if(f.st) list=list.filter(x=>x.status===f.st);
+  if(f.sev==='high') list=list.filter(x=>x.severity==='critical'||x.severity==='high'); else if(f.sev) list=list.filter(x=>x.severity===f.sev);
+  if(f.type==='dept') list=list.filter(x=>x.withDept); else if(f.type==='rec') list=list.filter(x=>x.recurring);
+  if(f.party) list=list.filter(x=>x.c.party===f.party);
+  if(f.od) list=list.filter(issOverdue);
+  if(q) list=list.filter(x=> fold([x.code, x.c.title, x.c.desc, x.c.merchant, x.c.owner].join(' ')).includes(q));
+  list.sort((a,b2)=> (SEV_RANK[a.severity]??9)-(SEV_RANK[b2.severity]??9) || String(a.dueAt||'9').localeCompare(String(b2.dueAt||'9')) || String(a.openedAt||'').localeCompare(String(b2.openedAt||'')));
+  const cnt=$('#isscount'); if(cnt) cnt.textContent=t('issCount')(list.length);
+  if(!all.length) return h+`<div class="empty"><b>${esc(t('issEmpty'))}</b>${esc(t('issEmptyHint'))}</div>`;
+  if(!list.length) return h+`<div class="empty"><b>${esc(t('kbNoMatch'))}</b></div>`;
+  h+=`<div class="tscroll"><table class="ttable isstable"><thead><tr><th>${esc(t('issCode'))}</th><th>${esc(t('issTitle'))}</th><th>${esc(t('issSeverity'))}</th><th>${esc(t('cStatus'))}</th><th>${esc(t('issWith'))}</th><th class="c">${esc(t('issOccShort'))}</th><th>${esc(t('cOwner'))}</th><th>${esc(t('cDue'))}</th></tr></thead><tbody>`;
+  for(const x of list){ const od=issOverdue(x), age=Math.max(0, Math.floor((Date.now()-new Date(x.openedAt||x.createdAt).getTime())/86400000));
+    h+=`<tr class="task ${od?'od':''}" data-action="iss-open" data-id="${esc(x.id)}"><td class="ref num">${esc(x.code||'')}</td><td class="title"><div class="t">${esc(x.c.title||'…')}</div><div class="sub2">${x.recurring?`<span class="tagr">${esc(t('issRecurringN')(x.occ||0))}</span>`:''}${x.c.merchant?`<span>${esc(x.c.merchant)}</span>`:''}<span class="muted">${esc(t('issAge')(age))}</span></div></td><td>${sevChip(x.severity)}</td><td>${istChip(x.status)}</td><td>${x.withDept&&x.c.party?esc(t('party')[x.c.party]||''):''}</td><td class="n num">${x.occ||''}</td><td class="owner">${esc(x.c.owner||'')}</td><td>${x.dueAt?`<span class="due ${od?'over':''}">${esc(fmtDateTime(x.dueAt))}</span>`:`<span class="muted">${esc(t('noDue'))}</span>`}</td></tr>`; }
+  return h+`</tbody></table></div>`;
+}
+function fishboneSVG(fb, langOpt){
+  const lang=langOpt||L(), rtl=lang==='ar';
+  const W=1000, H=480, my=H/2, HW=214, HH=124;
+  const headX = rtl ? 12 : W-12-HW, tailX = rtl ? W-20 : 20, neck = rtl ? headX+HW : headX, span=Math.abs(tailX-neck);
+  let s=`<svg class="fish" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('fbTitle'))}" xmlns="http://www.w3.org/2000/svg">`;
+  s+=`<line class="spine" x1="${tailX}" y1="${my}" x2="${neck}" y2="${my}"/><path class="tail" d="M${tailX} ${my-26} L${tailX+(rtl?-22:22)} ${my} L${tailX} ${my+26}"/>`;
+  s+=`<rect class="fhead" x="${headX}" y="${my-HH/2}" width="${HW}" height="${HH}" rx="14"/>`+fo(headX+12, my-HH/2+6, HW-24, HH-12, `<div class="fh">${fb.problem? `<span dir="${textDir(fb.problem)||(rtl?'rtl':'ltr')}">${esc(fb.problem)}</span>` : `<span class="ph2">${esc(t('fbProblemPh'))}</span>`}</div>`, rtl);
+  const slots=[0.08, 0.37, 0.66];
+  BONES.forEach((k,i)=>{
+    const top=i<3, slot=slots[i%3];
+    const ax = rtl ? neck + slot*span + 40 : neck - slot*span - 40;
+    const ex = rtl ? ax + 70 : ax - 70, ey = top ? 78 : H-78;
+    s+=`<line class="bone" x1="${ax}" y1="${my}" x2="${ex}" y2="${ey}"/>`;
+    const lw=164, lx=ex-lw/2, ly= top ? ey-46 : ey+10;
+    s+=`<rect class="bonelab" x="${lx}" y="${ly}" width="${lw}" height="36" rx="18"/>`+fo(lx+8, ly, lw-16, 36, `<div class="bl">${esc(t('bone')[k])}</div>`, rtl);
+    const causes=((fb.bones||{})[k]||[]).filter(cs=>cs && String(cs.cause||'').trim()), show=causes.slice(0,4);
+    show.forEach((cs,j)=>{ const f=(j+1)/(show.length+1), px=ex+(ax-ex)*f, py=ey+(my-ey)*f, rw=124, rx2 = rtl ? px+rw : px-rw;
+      s+=`<line class="rib ${cs.root?'root':''}" x1="${px}" y1="${py}" x2="${rx2}" y2="${py}"/>`;
+      s+=fo(rtl ? px+4 : px-4-(rw-6), py-31, rw-6, 30, `<div class="cz ${cs.root?'root':''}">${cs.root?'<i></i>':''}<span dir="${textDir(cs.cause)||(rtl?'rtl':'ltr')}">${esc(cs.cause)}</span></div>`, rtl); });
+    if(causes.length>4){ const tx2 = rtl ? ex+20 : ex-20; s+=`<text class="more" x="${tx2}" y="${top? ey+18 : ey-10}" text-anchor="middle">+${causes.length-4}</text>`; }
+  });
+  return s+`</svg>`;
+}
+function issEditorHTML(){
+  const E=S.edit, m=E.draft.meta, c=E.draft.c, b=S.board, ro=!canWrite(), dis=ro?'disabled':'', leadOrAdmin=isLead(b)||isAdmin();
+  const closed=m.status==='closed', overdue=issActive({status:m.status}) && m.dueAt && Date.now()>new Date(m.dueAt).getTime();
+  const people=[...new Set([...S.members.values()].map(x=>x.name).filter(Boolean))];
+  let act='';
+  if(!ro){ if(E.id && leadOrAdmin) act+= E.confirm==='delete'? `<span class="confirm"><span>${esc(t('issDeleteAsk'))}</span><button class="btn danger" data-action="iss-delete-yes" type="button">${esc(t('yesDelete'))}</button><button class="btn" data-action="kb-confirm-no" type="button">${esc(t('cancel'))}</button></span>` : `<button class="btn" data-action="iss-delete" type="button">${esc(t('kbDelete'))}</button>`;
+    act+=`<button class="btn primary" data-action="iss-save" type="button">${esc(t('save'))}</button>`; }
+  let h=`<div class="vhead"><button class="btn back" data-action="kb-back" type="button">${BACK_SVG}<span>${esc(t('back'))}</span></button><h1>${m.code?`<span class="pcode num">${esc(m.code)}</span> `:''}${esc(c.title || t('issNew'))}</h1>${sevChip(m.severity)}${istChip(m.status)}<span class="unsaved" id="kb-unsaved" ${E.dirty?'':'hidden'}>${esc(t('unsaved'))}</span><div class="actions">${act}</div></div>${secTabsHTML()}`;
+  h+=`<datalist id="peoplelist">${people.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="repform issform">`;
+  // 1. the issue
+  h+=`<section class="rsec"><h3>${esc(t('issSecDetails'))}</h3>
+   <div class="rgrid one">${field('if-title', t('issTitle'), `<input id="if-title" data-if="title" value="${esc(c.title||'')}" maxlength="200" ${dis}>`)}</div>
+   <div class="rgrid">${field('im-severity', t('issSeverity'), `<select id="im-severity" data-im="severity" ${dis}>${SEV_KEYS.map(s=>`<option value="${s}" ${m.severity===s?'selected':''}>${esc(t('sev')[s])}</option>`).join('')}</select>`)}${field('im-status', t('cStatus'), `<select id="im-status" data-im="status" ${dis}>${ISTATUS.filter(s=>s!=='closed'||closed).map(s=>`<option value="${s}" ${m.status===s?'selected':''}>${esc(t('ist')[s])}</option>`).join('')}</select>`)}${field('if-category', t('issCategory'), `<select id="if-category" data-if="category" ${dis}><option value="">${esc(t('issChoose'))}</option>${ICATS.map(k=>`<option value="${k}" ${c.category===k?'selected':''}>${esc(t('icat')[k])}</option>`).join('')}</select>`)}</div>
+   <p class="note sevnote">${esc(t('sevDef')[m.severity]||'')}</p>
+   <div class="rgrid">${field('if-owner', t('cOwner'), `<input id="if-owner" data-if="owner" list="peoplelist" value="${esc(c.owner||'')}" maxlength="120" ${dis}>`)}${field('if-merchant', t('issMerchant'), `<input id="if-merchant" data-if="merchant" value="${esc(c.merchant||'')}" maxlength="120" placeholder="${esc(t('issMerchantPh'))}" ${dis}>`)}${field('im-dueAt', t('cDue'), `<input id="im-dueAt" type="datetime-local" data-im="dueAt" value="${esc(toLocalInput(m.dueAt))}" ${dis}>`)}</div>
+   <p class="note">${esc(t('issOpenedOn')(fmtDateTime(m.openedAt)))}${overdue?` · <b>${esc(t('issOverdueNow'))}</b>`:''} · ${esc(t('issClockNote'))}</p>
+   <div class="rgrid one">${field('if-desc', t('issDesc'), `<textarea id="if-desc" data-if="desc" rows="3" maxlength="3000" ${dis}>${esc(c.desc||'')}</textarea>`)}</div>
+   <div class="rgrid">${field('if-incident', t('issIncident'), `<input id="if-incident" data-if="incident" value="${esc(c.incident||'')}" maxlength="20" placeholder="INC-26-01" dir="ltr" ${dis}>`)}</div>
+   <div class="typerow"><label class="ck"><input type="checkbox" data-im="withDept" ${m.withDept?'checked':''} ${dis}><span><b>${esc(t('issWithDept'))}</b><small>${esc(t('issWithDeptHint'))}</small></span></label><label class="ck"><input type="checkbox" data-im="recurring" ${m.recurring?'checked':''} ${dis}><span><b>${esc(t('issRecurring'))}</b><small>${esc(t('issRecurringHint'))}</small></span></label></div></section>`;
+  // 2. the other department
+  if(m.withDept){ const e=c.esc||{}; const due=e.at? addWorkingDays(e.at,1) : '', late=e.at && !e.respondedAt && Date.now()>new Date(due).getTime();
+    h+=`<section class="rsec"><h3>${esc(t('issSecDept'))}</h3>
+     <div class="rgrid">${field('if-party', t('issParty'), `<select id="if-party" data-if="party" ${dis}><option value="">${esc(t('issChoose'))}</option>${PARTIES.map(p=>`<option value="${p}" ${c.party===p?'selected':''}>${esc(t('party')[p])}</option>`).join('')}</select>`)}${field('if-partyContact', t('issPartyContact'), `<input id="if-partyContact" data-if="partyContact" value="${esc(c.partyContact||'')}" maxlength="120" ${dis}>`)}<div class="field"><label>${esc(t('issRoute'))}</label><div class="route">${esc(c.party? (t('partyHint')[c.party]||'') : t('issPickParty'))}</div></div></div>
+     <p class="note">${esc(t('issEscRule'))}</p>
+     <div class="rgrid">${field('ie-issue', t('issEscIssue'), `<textarea id="ie-issue" data-ie="issue" rows="2" maxlength="600" ${dis}>${esc(e.issue||'')}</textarea>`)}${field('ie-tried', t('issEscTried'), `<textarea id="ie-tried" data-ie="tried" rows="2" maxlength="600" ${dis}>${esc(e.tried||'')}</textarea>`)}${field('ie-decision', t('issEscDecision'), `<textarea id="ie-decision" data-ie="decision" rows="2" maxlength="600" ${dis}>${esc(e.decision||'')}</textarea>`)}</div>
+     <div class="rrow escrow">${e.at? `<span>${esc(t('issEscalatedOn')(fmtDateTime(e.at)))}</span><span class="${late?'late':''}">${esc(t('issRespDue')(fmtDateTime(due)))}</span>${e.respondedAt? `<span class="ok">${esc(t('issRespondedOn')(fmtDateTime(e.respondedAt)))}</span>` : (ro?'':`<button class="btn" data-action="iss-esc-resp" type="button">${esc(t('issRespReceived'))}</button>`)}` : (ro?'':`<button class="btn" data-action="iss-esc-now" type="button">${esc(t('issEscNow'))}</button>`)}</div></section>`; }
+  // 3. occurrences
+  if(m.recurring || c.occ.length){ const n=c.occ.length;
+    h+=`<section class="rsec"><h3>${esc(t('issSecOcc'))} <span class="num muted">${n}</span></h3>${n>=3?`<div class="callout"><span class="dot"></span><span>${esc(t('issThirdRule'))}</span></div>`:''}
+     <div class="occlist">${c.occ.map((o,i)=>`<div class="occ"><input type="date" data-io="${i}" data-ok="at" value="${esc(String(o.at||'').slice(0,10))}" ${dis}><input data-io="${i}" data-ok="note" value="${esc(o.note||'')}" maxlength="300" placeholder="${esc(t('issOccNotePh'))}" ${dis}>${ro?'':`<button class="iconbtn sm" data-action="iss-occ-rm" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button>`}</div>`).join('')}</div>
+     ${ro?'':`<div class="rrow"><button class="linkbtn" data-action="iss-occ-add" type="button">+ ${esc(t('issOccAdd'))}</button></div>`}</section>`; }
+  // 4. fishbone
+  h+=`<section class="rsec"><h3>${esc(t('fbTitle'))}</h3><p class="note">${esc(t('fbNote'))}</p>
+   <div class="rgrid one">${field('ifb-problem', t('fbProblem'), `<textarea id="ifb-problem" data-ifb="problem" rows="2" maxlength="300" placeholder="${esc(t('fbProblemPh'))}" ${dis}>${esc(c.fb.problem||'')}</textarea>`)}</div>
+   <div class="fishwrap" id="fbsvg">${fishboneSVG(c.fb)}</div>
+   <div class="bones">${BONES.map(k=>`<section class="bonecard"><header><h4>${esc(t('bone')[k])}</h4><span>${esc(t('boneHint')[k])}</span></header>${(c.fb.bones[k]||[]).map((cs,i)=>`<div class="cause"><input data-ib="${k}" data-ix="${i}" data-ik="cause" value="${esc(cs.cause||'')}" maxlength="200" placeholder="${esc(t('fbCausePh'))}" aria-label="${esc(t('fbCausePh'))}" ${dis}><label class="rootck"><input type="checkbox" data-ib="${k}" data-ix="${i}" data-ik="root" ${cs.root?'checked':''} ${dis}>${esc(t('fbRoot'))}</label>${ro?'':`<button class="iconbtn sm" data-action="iss-cause-rm" data-ib="${k}" data-ix="${i}" type="button" aria-label="${esc(t('remove'))}">×</button>`}</div>`).join('')}${ro?'':`<button class="linkbtn small" data-action="iss-cause-add" data-ib="${k}" type="button">+ ${esc(t('fbAddCause'))}</button>`}</section>`).join('')}</div></section>`;
+  // 5. solution box, following the bones
+  h+=`<section class="rsec"><h3>${esc(t('solTitle'))}</h3><p class="note">${esc(t('solNote'))}</p><div id="solbox">${solutionBoxHTML(c, dis)}</div></section>`;
+  // 6. verification and closure
+  const v=c.verify||{};
+  h+=`<section class="rsec"><h3>${esc(t('issSecClose'))}</h3>
+   <div class="rgrid">${field('iv-date', t('issVerifyDate'), `<input id="iv-date" type="date" data-iv="date" value="${esc(v.date||'')}" ${dis}>`)}${field('iv-result', t('issVerifyResult'), `<select id="iv-result" data-iv="result" ${dis}><option value="">${esc(t('issChoose'))}</option>${['norecur','recurred'].map(r=>`<option value="${r}" ${v.result===r?'selected':''}>${esc(t('verify')[r])}</option>`).join('')}</select>`)}${field('if-resolution', t('issResolution'), `<select id="if-resolution" data-if="resolution" ${dis}><option value="">${esc(t('issChoose'))}</option>${RESOLUTIONS.map(r=>`<option value="${r}" ${c.resolution===r?'selected':''}>${esc(t('reso')[r])}</option>`).join('')}</select>`)}</div>
+   <div class="rgrid one">${field('if-closeNote', t('issCloseNote'), `<textarea id="if-closeNote" data-if="closeNote" rows="2" maxlength="1000" ${dis}>${esc(c.closeNote||'')}</textarea>`)}</div>
+   <p class="note">${esc(t('issCloseRule'))}</p>
+   ${ro?'':`<div class="rrow">${closed? `<button class="btn" data-action="iss-reopen" type="button">${esc(t('issReopen'))}</button>` : `<button class="btn primary" data-action="iss-close" type="button">${esc(t('issClose'))}</button>`}</div>`}</section>`;
+  // 7. updates
+  h+=`<section class="rsec"><h3>${esc(t('updates'))} <span class="num muted">${c.updates.length}</span></h3>${c.updates.length? [...c.updates].reverse().map(u=>`<div class="upd"><div class="by">${esc(u.by===S.me.id? t('you') : (u.name||nameOf(u.by)||t('someone')))} · ${esc(fmtDateTime(u.at))}</div><div class="tx">${esc(u.text)}</div></div>`).join('') : `<p class="muted small">${esc(t('noUpdates'))}</p>`}
+   ${ro?'':`<div class="compose"><textarea id="iss-update" placeholder="${esc(t('writeUpdate'))}" maxlength="2000"></textarea><button class="btn" data-action="iss-post" type="button">${esc(t('post'))}</button></div>`}</section></div>`;
+  return h;
+}
+function solutionBoxHTML(c, dis){
+  const rows=[]; BONES.forEach(k=>(c.fb.bones[k]||[]).forEach((cs,i)=>{ if(cs && String(cs.cause||'').trim()) rows.push({k,i,cs}); }));
+  if(!rows.length) return `<p class="muted small">${esc(t('solEmpty'))}</p>`;
+  const pending=rows.filter(r=>!r.cs.taskId && String(r.cs.solution||'').trim()).length;
+  let h=`<div class="rtable solbox"><table><thead><tr><th>${esc(t('solBone'))}</th><th>${esc(t('solCause'))}</th><th>${esc(t('solSolution'))}</th><th>${esc(t('cOwner'))}</th><th>${esc(t('cDue'))}</th><th>${esc(t('cStatus'))}</th></tr></thead><tbody>`;
+  let last='';
+  for(const {k,i,cs} of rows){ const tk=cs.taskId && S.tasks.get(cs.taskId), sent=!!cs.taskId, d2=(dis||sent)?'disabled':'';
+    h+=`<tr class="${cs.root?'isroot':''} ${k!==last?'first':''}"><td class="bn">${k!==last? esc(t('bone')[k]) : ''}</td><td class="czc">${cs.root?`<span class="rootmark">${esc(t('fbRootShort'))}</span>`:''}${esc(cs.cause)}</td><td><input data-ib="${k}" data-ix="${i}" data-ik="solution" value="${esc(cs.solution||'')}" maxlength="300" placeholder="${esc(t('solPh'))}" aria-label="${esc(t('solSolution'))}" ${d2}></td><td><input data-ib="${k}" data-ix="${i}" data-ik="owner" list="peoplelist" value="${esc(cs.owner||'')}" maxlength="120" aria-label="${esc(t('cOwner'))}" ${d2}></td><td><input type="date" data-ib="${k}" data-ix="${i}" data-ik="due" value="${esc(cs.due||'')}" aria-label="${esc(t('cDue'))}" ${d2}></td><td>${tk? `<button class="linkbtn" data-action="open" data-id="${esc(tk.id)}" type="button">${esc(t('st')[tk.status])}</button>` : `<span class="muted small">${esc(sent? t('inTasks') : t('notSent'))}</span>`}</td></tr>`;
+    last=k; }
+  h+=`</tbody></table></div>`;
+  if(!dis && pending) h+=`<div class="rrow"><span class="grow"></span><button class="btn" data-action="iss-send" type="button">${esc(t('solSend'))}</button></div>`;
+  return h;
+}
+let fbTimer=null;
+function fbRefresh(){ clearTimeout(fbTimer); fbTimer=setTimeout(()=>{ const E=S.edit; if(!E || E.kind!=='issue') return; const el=$('#fbsvg'); if(el) el.innerHTML=fishboneSVG(E.draft.c.fb); const sb=$('#solbox'); if(sb && !sb.contains(document.activeElement)) sb.innerHTML=solutionBoxHTML(E.draft.c, canWrite()?'':'disabled'); }, 200); }
+async function issSave(silent){
+  const E=S.edit, b=S.board, m=E.draft.meta, c=E.draft.c;
+  if(!String(c.title||'').trim()){ toast(t('issNeedTitle'), true); $('#if-title')?.focus(); return false; }
+  const isNew=!E.id; if(isNew && !m.code) m.code=nextIssueCode(b);
+  m.occ=(c.occ||[]).length; if(m.occ>=2) m.recurring=true;
+  const prev=E.id? S.items.get(E.id) : null;
+  const meta={severity:m.severity, openedAt:m.openedAt, dueAt:m.dueAt||'', dueManual:!!m.dueManual, withDept:!!m.withDept, recurring:!!m.recurring, occ:m.occ, code:m.code, closedAt: m.status==='closed' ? (m.closedAt||new Date().toISOString()) : ''};
+  const id=await saveItem({id:E.id, board:b, kind:'issue', status:m.status, meta, c});
+  if(!id) return false;
+  if(isNew) logEvent(b,'issue.create',{label:m.code, label_ar:m.code});
+  else if(prev && prev.status!==m.status) logEvent(b, m.status==='closed'?'issue.close':'issue.status', {label:m.code, label_ar:m.code, to:m.status});
+  else logEvent(b,'issue.edit',{label:m.code, label_ar:m.code},'iss:'+id);
+  E.id=id; E.dirty=false; E.leave=false; E.key=id+'|'+Date.now(); m.closedAt=meta.closedAt;
+  if(!silent) toast(t('issSaved'));
+  renderMain(true); return true;
+}
+async function issSendTasks(){
+  const E=S.edit, b=S.board, c=E.draft.c, m=E.draft.meta; let n=0;
+  if(!E.id || E.dirty){ const ok=await issSave(true); if(!ok) return; }
+  for(const k of BONES) for(const cs of (c.fb.bones[k]||[])){
+    if(!cs || cs.taskId || !String(cs.solution||'').trim()) continue;
+    const owners=String(cs.owner||'').split(',').map(v=>v.trim()).filter(Boolean).map(nm=>({id:findMemberOne(nm), name:nm}));
+    const task={...blankTask(b), title:String(cs.solution).trim().slice(0,200), due:cs.due||'', group:t('issTaskGroup')(m.code), ref:m.code, notes:t('issTaskNote')(m.code, t('bone')[k], cs.cause||''), ...ownerFields(owners)};
+    const id=await saveTask(task, hist('created')); if(id){ cs.taskId=id; n++; } }
+  if(!n){ toast(t('solNone'), true); return; }
+  await issSave(true); logEvent(b,'issue.tasks',{label:m.code, label_ar:m.code, n}); toast(t('sentActions')(n));
+}
+function meetingIssues(b){ return itemsOf(b,'issue').filter(x=> issActive(x) && (x.severity==='critical' || x.severity==='high' || issOverdue(x) || x.status==='waiting')).sort((a,b2)=>(SEV_RANK[a.severity]??9)-(SEV_RANK[b2.severity]??9)); }
+function meetingIssuesHTML(R, fin){
+  const rows = (fin && Array.isArray(R.c.issues)) ? R.c.issues : meetingIssues(R.board).map(x=>({code:x.code, title:x.c.title, severity:x.severity, status:x.status, due:x.dueAt, id:x.id}));
+  let h=`<section class="rsec"><h3>${esc(t('repIssuesTitle'))}</h3><p class="note">${esc(fin? t('repIssuesFrozen') : t('repIssuesNote'))}</p>`;
+  if(!rows.length) return h+`<p class="muted small">${esc(t('repIssuesNone'))}</p></section>`;
+  return h+`<div class="rtable"><table><thead><tr><th>${esc(t('issCode'))}</th><th>${esc(t('issTitle'))}</th><th>${esc(t('issSeverity'))}</th><th>${esc(t('cStatus'))}</th><th>${esc(t('cDue'))}</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="num">${esc(r.code||'')}</td><td>${esc(r.title||'')}</td><td>${sevChip(r.severity)}</td><td>${istChip(r.status)}</td><td>${r.due?esc(fmtDateTime(r.due)):''}</td></tr>`).join('')}</tbody></table></div></section>`;
+}
+function issueMonthStats(b, ym){
+  const all=itemsOf(b,'issue'), inM=(iso)=> String(iso||'').slice(0,7)===ym;
+  const opened=all.filter(x=>inM(x.openedAt)).length, closedL=all.filter(x=>x.status==='closed' && inM(x.closedAt));
+  const days=closedL.map(x=> (new Date(x.closedAt)-new Date(x.openedAt||x.createdAt))/86400000).filter(v=>v>=0);
+  const avg = days.length ? Math.round(days.reduce((a,v)=>a+v,0)/days.length*10)/10 : null;
+  const bones={}; for(const x of all.filter(x=>inM(x.openedAt)||inM(x.closedAt))) for(const k of BONES) for(const cs of ((x.c.fb||{}).bones||{})[k]||[]) if(cs && cs.root) bones[k]=(bones[k]||0)+1;
+  const top=Object.entries(bones).sort((a,b2)=>b2[1]-a[1]).slice(0,3).map(([k,n])=>({k,n}));
+  return {opened, closed:closedL.length, avgDays:avg, recurring:all.filter(x=>x.recurring && (inM(x.openedAt) || issActive(x))).length, active:all.filter(issActive).length, top};
+}
+function monthIssuesHTML(R, fin){
+  const s=(fin && R.c.issueStats) ? R.c.issueStats : issueMonthStats(R.board, R.period);
+  return `<section class="rsec"><h3>${esc(t('repIssMonth'))}</h3><div class="snap"><div><b>${s.opened}</b><span>${esc(t('repIssOpened'))}</span></div><div class="done"><b>${s.closed}</b><span>${esc(t('repIssClosed'))}</span></div><div><b>${s.avgDays==null?'':s.avgDays}</b><span>${esc(t('repIssAvg'))}</span></div><div class="od"><b>${s.recurring}</b><span>${esc(t('issRecurring'))}</span></div></div>${s.top&&s.top.length?`<p class="note">${esc(t('repIssTop'))}: ${s.top.map(x=>`${esc(t('bone')[x.k])} (${x.n})`).join(' · ')}</p>`:''}</section>`;
+}
+
+/* ---------- import from Excel (house template OPS-33 plus FAQs); everything arrives as suggestions for the leads ---------- */
+function normShape(v){ const s=nrm(v); const f=SHAPES.find(x=>nrm(x)===s); if(f) return f; if(/قرار|decision/.test(s)) return 'Decision'; if(/بداية|start/.test(s)) return 'Start'; if(/نهاية|end/.test(s)) return 'End'; if(/مستند|document/.test(s)) return 'Document'; if(/فرعي|sub/.test(s)) return 'Subprocess'; return 'Process'; }
+async function kbImportFile(file){
+  const b=S.board; if(!window.XLSX){ toast(t('importFail'), true); return; }
+  toast(t('importing'));
+  try{
+    const wb=XLSX.read(await file.arrayBuffer(), {type:'array'});
+    const sheet=(names)=>{ const n=wb.SheetNames.find(s=>names.some(x=>nrm(s)===nrm(x))); return n? XLSX.utils.sheet_to_json(wb.Sheets[n], {defval:''}) : []; };
+    const col=(row, ...names)=>{ for(const k of Object.keys(row)) if(names.some(n=>nrm(k)===nrm(n))) return String(row[k]??'').trim(); return ''; };
+    const faqs=sheet(['FAQs','FAQ','الأسئلة الشائعة']).map(r=>({category_en:col(r,'Category (EN)'), category_ar:col(r,'Category (AR)'), q_en:col(r,'Question (EN)'), q_ar:col(r,'Question (AR)'), a_en:col(r,'Answer (EN)'), a_ar:col(r,'Answer (AR)'), source:col(r,'Source')})).filter(x=>(x.q_en||x.q_ar)&&(x.a_en||x.a_ar));
+    const procs=sheet(['Processes','الإجراءات']).map(r=>({code:col(r,'Process Code'), name_en:col(r,'Process Name (EN)'), name_ar:col(r,'Process Name (AR)'), purpose_en:col(r,'Purpose (EN)'), purpose_ar:col(r,'Purpose (AR)'), owner_en:col(r,'Owner (EN)'), owner_ar:col(r,'Owner (AR)'), trigger_en:col(r,'Trigger (EN)'), trigger_ar:col(r,'Trigger (AR)'), output_en:col(r,'Output (EN)'), output_ar:col(r,'Output (AR)'), target_en:col(r,'Target (EN)'), target_ar:col(r,'Target (AR)'), source:col(r,'Source'), steps:[]})).filter(p=>p.code);
+    for(const r of sheet(['Steps','Workflow','الخطوات'])){ const p=procs.find(x=>x.code===col(r,'Process Code')); if(!p) continue;
+      p.steps.push({id:col(r,'Process Step ID'), shape:normShape(col(r,'Shape Type')), text_en:col(r,'Process Step Description (EN)','Process Step Description'), text_ar:col(r,'Process Step Description (AR)'), next:splitList(col(r,'Next Step ID')).filter(Boolean), labels_en:splitList(col(r,'Connector Label (EN)','Connector Label')), labels_ar:splitList(col(r,'Connector Label (AR)')), function_en:col(r,'Function (EN)','Function'), function_ar:col(r,'Function (AR)'), phase_en:col(r,'Phase (EN)','Phase'), phase_ar:col(r,'Phase (AR)')}); }
+    let nf=0, np=0; const seen=new Set(itemsOf(b,'faq').map(x=>fold(x.c.q_en||x.c.q_ar)));
+    for(const f of faqs){ const k=fold(f.q_en||f.q_ar); if(seen.has(k)) continue; const id=await saveItem({board:b, kind:'faq', status:'suggested', meta:{of:null, reviewedAt:null}, c:{...f, note:t('kbImportedNote')}}); if(id){ nf++; seen.add(k); } }
+    const pubByCode=new Map(itemsOf(b,'process','published').map(x=>[x.c.code, x])), sugCodes=new Set(itemsOf(b,'process','suggested').map(x=>x.c.code));
+    for(const p of procs){ if(!p.steps.length || sugCodes.has(p.code)) continue; const tg=pubByCode.get(p.code); const id=await saveItem({board:b, kind:'process', status:'suggested', meta:{of: tg? tg.id : null, reviewedAt:null, code:p.code}, c:{...p, note:t('kbImportedNote')}}); if(id) np++; }
+    logEvent(b,'kb.import',{n:nf+np, label:String(nf+np), label_ar:String(nf+np)});
+    toast(t('kbImported')(nf, np)); S.mainKey=''; render();
+  }catch(e){ console.warn(e); toast(t('importFail'), true); }
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', async (ev)=>{
+  const el=ev.target.closest('[data-action]'); if(!el) return; const a=el.dataset.action, E=S.edit;
+  if(!/^(kb-|iss-)/.test(a)) return;
+  const id=el.dataset.id;
+  try{
+  if(a==='kb-new') kbStart(el.dataset.kind, 'new');
+  else if(a==='kb-view'){ ev.stopPropagation(); kbStart('process','view', id); }
+  else if(a==='kb-edit') kbStart(S.items.get(id)?.kind||'faq', 'edit', id);
+  else if(a==='kb-suggest') kbStart(S.items.get(id)?.kind||'faq', 'suggest', id);
+  else if(a==='kb-review') kbStart(S.items.get(id)?.kind||'faq', 'review', id);
+  else if(a==='kb-back') kbBack();
+  else if(a==='kb-save'){ el.disabled=true; await kbSave(); el.disabled=false; }
+  else if(a==='kb-approve'){ el.disabled=true; if(await kbApprove(id)){ toast(t('kbPublished')); S.mainKey=''; render(); } else el.disabled=false; }
+  else if(a==='kb-publish-all'){ el.disabled=true; const list=itemsOf(S.board, el.dataset.kind, 'suggested'); let n=0; for(const x of list){ if(await kbApprove(x.id)) n++; } toast(t('kbPublishedN')(n)); S.mainKey=''; render(); }
+  else if(a==='kb-reject' || a==='kb-delete' || a==='kb-withdraw' || a==='iss-delete'){ if(E){ E.confirm = a==='kb-reject'?'reject': a==='kb-withdraw'?'withdraw':'delete'; renderMain(true); } }
+  else if(a==='kb-confirm-no'){ if(E){ E.confirm=''; renderMain(true); } }
+  else if(a==='kb-reject-yes' || a==='kb-delete-yes' || a==='kb-withdraw-yes' || a==='iss-delete-yes'){ if(!E || !E.id) return; const x=S.items.get(E.id); const lbl=x? (x.kind==='issue'? {label:x.code, label_ar:x.code} : kbLabel(x.kind, x.c)) : {};
+    if(await removeItem(E.id)){ logEvent(S.board, (x?x.kind:E.kind)+(a==='kb-reject-yes'?'.reject':'.delete'), lbl); toast(t(a==='kb-reject-yes'?'kbRejected':'kbDeleted')); S.edit=null; S.mainKey=''; render(); } }
+  else if(a==='kb-reviewed'){ const x=S.items.get(id); if(x && await kbSimpleUpdate(id, {meta:{reviewedAt:new Date().toISOString()}})){ logEvent(x.board, x.kind+'.review', kbLabel(x.kind, x.c)); toast(t('kbReviewedToast')); if(E && E.mode==='view') E.key=id+'|'+Date.now(); S.mainKey=''; render(); } }
+  else if(a==='kb-archive'){ const x=S.items.get(id); if(x && await kbSimpleUpdate(id, {status:'archived'})){ logEvent(x.board, x.kind+'.archive', kbLabel(x.kind, x.c)); toast(t('kbArchived')); S.mainKey=''; render(); } }
+  else if(a==='kb-copy'){ const x=S.items.get(id); const text=x? String(x.c['a_'+el.dataset.l]||'') : ''; try{ await navigator.clipboard.writeText(text); toast(t('copied')); }catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); toast(t('copied')); }catch(e2){} ta.remove(); } }
+  else if(a==='kb-import'){ let inp=$('#kbfile'); if(!inp){ inp=document.createElement('input'); inp.type='file'; inp.id='kbfile'; inp.accept='.xlsx,.xls'; inp.hidden=true; document.body.appendChild(inp); inp.addEventListener('change', async ()=>{ const f=inp.files&&inp.files[0]; inp.value=''; if(f) await kbImportFile(f); }); } inp.click(); }
+  else if(a==='kb-print'){ window.print(); }
+  else if(a==='kb-pview'){ if(E){ E.view=el.dataset.v; E.key=E.id+'|'+Date.now(); renderMain(true); } }
+  else if(a==='kb-step-add' && E){ const st=E.draft.steps; const last=st[st.length-1]; const nid=String(Math.max(0,...st.map(s=>+s.id||0))+1); const ns={id:nid, shape:'Process', text_ar:'', text_en:'', next:[], labels_ar:[], labels_en:[], function_ar:last?last.function_ar:'', function_en:last?last.function_en:'', phase_ar:last?last.phase_ar:'', phase_en:last?last.phase_en:''}; const endAt=st.length && st[st.length-1].shape==='End' ? st.length-1 : st.length; st.splice(endAt, 0, ns); kbDirty(); renderMain(true); }
+  else if(a==='kb-step-rm' && E){ E.draft.steps.splice(+el.dataset.si,1); kbDirty(); renderMain(true); }
+  else if((a==='kb-step-up' || a==='kb-step-down') && E){ const i=+el.dataset.si, j=a==='kb-step-up'? i-1 : i+1, st=E.draft.steps; if(j<0||j>=st.length) return; [st[i],st[j]]=[st[j],st[i]]; kbDirty(); renderMain(true); }
+  else if(a==='iss-open'){ ev.stopPropagation(); kbStart('issue','edit', id); }
+  else if(a==='iss-tile'){ const [k,v]=String(el.dataset.set||'').split(':'); S.issf={st:'active'}; if(k==='od') S.issf.od=true; else if(k) S.issf[k]=v||''; if(k==='st') S.issf.st=v; S.mainKey=''; render(); }
+  else if(a==='iss-save'){ el.disabled=true; await issSave(); el.disabled=false; }
+  else if(a==='iss-post' && E){ const ta=$('#iss-update'); const text=String(ta&&ta.value||'').trim(); if(!text) return; E.draft.c.updates.push({at:new Date().toISOString(), by:S.me.id||null, name:myName()||'', text}); await issSave(true); }
+  else if(a==='iss-occ-add' && E){ E.draft.c.occ.push({at:todayISO(), note:''}); if(E.draft.c.occ.length>=2) E.draft.meta.recurring=true; kbDirty(); renderMain(true); }
+  else if(a==='iss-occ-rm' && E){ E.draft.c.occ.splice(+el.dataset.i,1); kbDirty(); renderMain(true); }
+  else if(a==='iss-cause-add' && E){ const k=el.dataset.ib; E.draft.c.fb.bones[k].push({cause:'', root:false, solution:'', owner:'', due:''}); kbDirty(); renderMain(true); const ins=document.querySelectorAll(`[data-ib="${k}"][data-ik="cause"]`); ins[ins.length-1]?.focus(); }
+  else if(a==='iss-cause-rm' && E){ E.draft.c.fb.bones[el.dataset.ib].splice(+el.dataset.ix,1); kbDirty(); renderMain(true); }
+  else if(a==='iss-esc-now' && E){ E.draft.c.esc.at=new Date().toISOString(); if(!['resolved','closed'].includes(E.draft.meta.status)) E.draft.meta.status='waiting'; kbDirty(); await issSave(true); }
+  else if(a==='iss-esc-resp' && E){ E.draft.c.esc.respondedAt=new Date().toISOString(); if(E.draft.meta.status==='waiting') E.draft.meta.status='progress'; kbDirty(); await issSave(true); }
+  else if(a==='iss-send'){ el.disabled=true; await issSendTasks(); }
+  else if(a==='iss-close' && E){ const c=E.draft.c; if(!c.resolution){ toast(t('issNeedResolution'), true); $('#if-resolution')?.focus(); return; }
+    const roots=BONES.flatMap(k=>c.fb.bones[k]||[]).filter(cs=>cs && cs.root); if(roots.length && !roots.some(cs=>String(cs.solution||'').trim())){ toast(t('issNeedSolution'), true); return; }
+    E.draft.meta.status='closed'; E.draft.meta.closedAt=new Date().toISOString(); await issSave(); }
+  else if(a==='iss-reopen' && E){ E.draft.meta.status='open'; E.draft.meta.closedAt=''; await issSave(); logEvent(S.board,'issue.reopen',{label:E.draft.meta.code, label_ar:E.draft.meta.code}); }
+  }catch(err){ console.warn(err); toast(t('saveFail'), true); }
+});
+document.addEventListener('input', (ev)=>{
+  const el=ev.target;
+  if(el.id==='kbq'){ S.kbq=el.value; renderDeptBody(); return; }
+  if(el.id==='pq'){ S.pq=el.value; renderDeptBody(); return; }
+  if(el.id==='issq'){ S.issq=el.value; renderDeptBody(); return; }
+  if(el.id==='kbcat'){ S.kbcat=el.value; renderDeptBody(); return; }
+  if(el.dataset && el.dataset.issf!==undefined && el.tagName==='SELECT'){ S.issf=S.issf||{st:'active'}; S.issf[el.dataset.issf]=el.value; delete S.issf.od; renderDeptBody(); return; }
+  const E=S.edit; if(!E || !el.closest('#main')) return;
+  if(E.kind==='faq' && el.dataset.kf){ E.draft[el.dataset.kf]=el.value; kbDirty(); return; }
+  if(E.kind==='process'){
+    if(el.dataset.pm){ E.draft[el.dataset.pm]=el.value; kbDirty(); procPreviewSoon(); return; }
+    if(el.dataset.ps){ const s=E.draft.steps[+el.dataset.si]; if(s){ const f=el.dataset.ps; s[f] = ['next','labels_ar','labels_en'].includes(f) ? splitList(el.value) : el.value; if(f==='shape'){ kbDirty(); renderMain(true); return; } } kbDirty(); procPreviewSoon(); return; }
+  }
+  if(E.kind==='issue'){
+    const m=E.draft.meta, c=E.draft.c;
+    if(el.dataset.if){ c[el.dataset.if]=el.value; if(el.dataset.if==='party'){ kbDirty(); renderMain(true); return; } }
+    else if(el.dataset.im){ const k=el.dataset.im;
+      if(el.type==='checkbox'){ m[k]=el.checked; kbDirty(); renderMain(true); return; }
+      if(k==='dueAt'){ m.dueAt = el.value ? new Date(el.value).toISOString() : ''; m.dueManual=true; }
+      else { m[k]=el.value; if(k==='severity'){ if(!m.dueManual){ m.dueAt=issDue(el.value, m.openedAt); const dd=$('#im-dueAt'); if(dd) dd.value=toLocalInput(m.dueAt); } const sn=document.querySelector('.sevnote'); if(sn) sn.textContent=(t('sevDef')||{})[el.value]||''; } } }
+    else if(el.dataset.ie){ c.esc[el.dataset.ie]=el.value; }
+    else if(el.dataset.ifb){ c.fb.problem=el.value; fbRefresh(); }
+    else if(el.dataset.ib){ const cs=(c.fb.bones[el.dataset.ib]||[])[+el.dataset.ix]; if(cs){ const k=el.dataset.ik; cs[k] = el.type==='checkbox' ? el.checked : el.value; if(k==='cause' || k==='root') fbRefresh(); } }
+    else if(el.dataset.iv){ c.verify[el.dataset.iv]=el.value; }
+    else if(el.dataset.io!==undefined){ const o=c.occ[+el.dataset.io]; if(o) o[el.dataset.ok||'note']=el.value; }
+    else return;
+    kbDirty();
+  }
+});
+document.addEventListener('toggle', (ev)=>{ const d=ev.target; if(d && d.matches && d.matches('details.faq')){ S.kbOpen=S.kbOpen||new Set(); if(d.open) S.kbOpen.add(d.dataset.id); else S.kbOpen.delete(d.dataset.id); } }, true);
+window.addEventListener('beforeunload', (ev)=>{ if(S.edit && S.edit.dirty && S.edit.mode!=='view'){ ev.preventDefault(); ev.returnValue=''; } });
+
+/* ---------- text direction: what people type keeps the direction of its own language ----------
+   An Arabic title shown in the English view (or an English one in the Arabic view) reads in the right order. The direction follows
+   the language most of the letters are in, so an Arabic sentence that starts with a brand name such as Marn Pay stays right to left. */
+const AR_LETTERS=/[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/g, LATIN_LETTERS=/[A-Za-z]/g;
+function textDir(s){ s=String(s||''); const a=(s.match(AR_LETTERS)||[]).length, l=(s.match(LATIN_LETTERS)||[]).length; return !a && !l ? '' : (a>=l ? 'rtl' : 'ltr'); }
+const DIR_FIELDS='input:not([type]),input[type="text"],input[type="search"],textarea';
+const DIR_SEL=DIR_FIELDS+',.vhead h1,.title .t,.qmain b,details.faq .q,.atext';
+function fixDir(el){ const d=textDir(el.matches(DIR_FIELDS) ? el.value : el.textContent), page=document.documentElement.getAttribute('dir')||'rtl';
+  if(d && d!==page) el.setAttribute('dir', d); else if(el.hasAttribute('dir')) el.removeAttribute('dir'); }
+(function(){ const m=document.getElementById('main'); if(!m || !window.MutationObserver) return;
+  const run=(root)=>{ if(root.nodeType!==1) return; if(root.matches(DIR_SEL)) fixDir(root); root.querySelectorAll(DIR_SEL).forEach(fixDir); };
+  new MutationObserver(list=>{ for(const r of list) r.addedNodes.forEach(run); }).observe(m, {childList:true, subtree:true});
+  document.addEventListener('input', ev=>{ const el=ev.target; if(el && el.matches && el.matches(DIR_FIELDS) && el.closest('#main')) fixDir(el); }, true); })();
 
 /* ---------- boot ---------- */
 async function boot(){
