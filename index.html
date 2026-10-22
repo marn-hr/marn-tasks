@@ -1025,9 +1025,8 @@ async function rebuildTasks(){
   S.tasks=out;
 }
 function subscribeAll(){
-  // Access list first: it decides which departments this person may subscribe to (the rules enforce the same).
-  S.db.doc('access/departments').onSnapshot(snap=>{ S.access = snap.exists? snap.data(): null; S.accessLoaded=true; S.accessErr=false; resubscribe(); render(); },
-    err=>{ console.warn('access', err); S.access=null; S.accessLoaded=true; S.accessErr=true; resubscribe(); render(); });
+  // Each person reads only their own membership record; administrators also read the full lists (enforced by firestore.rules).
+  startAccess();
 }
 
 /* ---------- writes ---------- */
@@ -1757,7 +1756,31 @@ const SICON = {
 const lc = (s)=> String(s||'').trim().toLowerCase();
 const isCEO = ()=> !!S.me.isCEO;
 const isAdmin = ()=> !!S.me.isOwner;
-function memberOf(b){ const l = S.access && Array.isArray(S.access[b]) ? S.access[b] : []; return !!S.me.email && l.map(lc).includes(lc(S.me.email)); }
+function memberOf(b){ return !!S.me.email && Array.isArray(S.mine) && S.mine.includes(b); }
+/* Access model: memberships/{email} holds that person's departments and is readable only by that person and the
+   administrators; access/departments (the full lists and their change log) is readable only by the administrators. */
+function startAccess(){
+  const db=S.db, email=lc(S.me.email);
+  if(!email){ S.mine=[]; S.accessLoaded=true; render(); return; }
+  db.doc('memberships/'+email).onSnapshot(snap=>{ const d=snap.exists? snap.data(): null; S.mine = d && Array.isArray(d.depts) ? d.depts : []; S.accessLoaded=true; resubscribe(); render(); },
+    err=>{ console.warn('membership', err); S.mine=[]; S.accessLoaded=true; resubscribe(); render(); });
+  if(isAdmin()) db.doc('access/departments').onSnapshot(snap=>{ S.access = snap.exists? snap.data(): null; if(S.access && !S.access.mirrored) mirrorAccess(S.access, accLists(null)); render(); },
+    err=> console.warn('access', err));
+}
+// write each person's membership record from the lists; people dropped from every list get an empty record
+let mirroring=false;
+async function mirrorAccess(lists, before){
+  if(mirroring) return true; mirroring=true;
+  try{ return await mirrorRun(lists, before); } finally { mirroring=false; }
+}
+async function mirrorRun(lists, before){
+  const now=new Date().toISOString(), by=lc(S.me.email), emails=new Set();
+  for(const id of DEPT_IDS){ (lists[id]||[]).forEach(e=>emails.add(lc(e))); (before[id]||[]).forEach(e=>emails.add(lc(e))); }
+  let ok=true;
+  for(const e of emails){ const depts=DEPT_IDS.filter(id=>(lists[id]||[]).map(lc).includes(e)); try{ await S.db.doc('memberships/'+e).set({email:e, depts, updatedAt:now, updatedBy:by}); }catch(err){ ok=false; console.warn('mirror', e, err); } }
+  if(ok){ try{ await S.db.doc('access/departments').update({mirrored:true}); }catch(err){ console.warn('mirror flag', err); } }
+  return ok;
+}
 function canSee(b){ return DEPT_IDS.includes(b) && (isCEO() || memberOf(b)); }
 function myBoards(){ return BOARDS.filter(b=>canSee(b.id)); }
 function hasAnyAccess(){ return isCEO() || myBoards().length>0; }
@@ -2109,8 +2132,10 @@ function accRm(b, i){ S.accDraft[b].splice(i,1); renderMain(true); }
 async function accSave(){
   const before=accLists(S.access), D=S.accDraft, now=new Date().toISOString(), by=lc(S.me.email);
   const changes=DEPT_IDS.map(b=>({b, added:D[b].filter(e=>!before[b].includes(e)), removed:before[b].filter(e=>!D[b].includes(e))})).filter(c=>c.added.length||c.removed.length);
-  const doc={...D, updatedAt:now, updatedBy:by, log:[...((S.access&&S.access.log)||[]), {at:now, by, changes}].slice(-50)};
+  const doc={...D, mirrored:false, updatedAt:now, updatedBy:by, log:[...((S.access&&S.access.log)||[]), {at:now, by, changes}].slice(-50)};
   try{ await S.db.doc('access/departments').set(doc); }catch(e){ console.warn(e); toast(t('saveFail'), true); return; }
+  if(!(await mirrorAccess(D, before))){ toast(t('saveFail'), true); }
+  doc.mirrored=true;
   S.access=doc; S.accDraft=null; S.mainKey=''; toast(t('accSaved')); resubscribe(); render();
 }
 
