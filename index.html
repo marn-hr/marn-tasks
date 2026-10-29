@@ -968,6 +968,65 @@ svg.fish .more{fill:var(--g5);font-size:12px;font-weight:700}
   <div class="toasts" id="toasts" aria-live="polite"></div>
 </div>
 
+<style id="opx-css">
+/* Operational Excellence trackers */
+.oxhome{margin-top:28px}
+.oxhome header h2{display:flex;align-items:center;gap:10px;margin:0 0 4px;font-size:18px}
+.oxhome header p{margin:0 0 14px}
+.oxcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.oxcard{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:start;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:14px 16px;cursor:pointer;box-shadow:var(--shadow-1,none);color:inherit;font:inherit}
+.oxcard:hover{border-color:var(--accent,var(--fg))}
+.oxcard b{font-size:15px}
+.oxnums{font-size:12px;color:var(--g5);margin-top:auto}
+.oxnums b{color:var(--fg)}
+.oxtag{font-size:11px;border:1px solid var(--g3);border-radius:999px;padding:1px 8px;color:var(--g5)}
+.oxtag.pub{border-color:var(--accent,var(--fg));color:var(--accent,var(--fg))}
+.oxalerts{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 12px}
+.oxal{font:inherit;font-size:13px;border:1px solid var(--g3);border-radius:999px;padding:4px 12px;background:var(--surface);color:var(--g6)}
+.oxal.bad{background:var(--fg);color:var(--bg);border-color:var(--fg);cursor:pointer}
+.oxq{height:34px;border:1px solid var(--g3);border-radius:var(--radius);background:var(--surface);padding:0 10px;min-width:220px;flex:1;max-width:360px}
+.pbar{display:inline-block;width:70px;height:6px;border-radius:3px;background:var(--g2);overflow:hidden;vertical-align:middle;margin-inline-end:6px}
+.pbar i{display:block;height:100%;background:var(--g4)}
+.pbar.strong i{background:var(--accent,var(--fg))}
+.oxst{font-size:12px;border-radius:999px;padding:2px 10px;border:1px solid var(--g3);white-space:nowrap}
+.oxst.st-doing,.oxst.st-progress,.oxst.st-dev,.oxst.st-testing,.oxst.st-approved{background:var(--g2);border-color:var(--g2)}
+.oxst.st-stuck,.oxst.st-hold,.oxst.st-open{border-style:dashed}
+.oxst.st-done,.oxst.st-completed,.oxst.st-live,.oxst.st-resolved,.oxst.st-closed{background:var(--accent-soft,var(--g1));border-color:transparent;color:var(--accent,var(--fg))}
+.oxh{font-size:12px;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.oxh.h-on{background:var(--accent-soft,var(--g1));color:var(--accent,var(--fg))}
+.oxh.h-risk{border:1px solid var(--fg)}
+.oxh.h-off{background:var(--fg);color:var(--bg)}
+.oxpri{font-size:12px;white-space:nowrap}
+.oxpri.p-high,.oxpri.p-critical{font-weight:700}
+.oxpri.p-low{color:var(--g5)}
+.ttable.oxt tr.late td:first-child{box-shadow:inset 3px 0 0 var(--fg)}
+[dir="rtl"] .ttable.oxt tr.late td:first-child{box-shadow:inset -3px 0 0 var(--fg)}
+.oxgrp{margin-bottom:22px}
+.oxgrp header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.oxgrp h3{margin:0;font-size:15px}
+.oxproj{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.pcardx{display:flex;flex-direction:column;gap:8px;text-align:start;border:1px solid var(--g2);border-radius:var(--radius);background:var(--surface);padding:14px 16px;cursor:pointer;font:inherit;color:inherit;box-shadow:var(--shadow-1,none)}
+.pcardx:hover{border-color:var(--accent,var(--fg))}
+.pcardx.h-off{border-inline-start:3px solid var(--fg)}
+.pcardx.h-risk{border-inline-start:3px dashed var(--fg)}
+.pcardx .row1,.pcardx .row3{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.pcardx .pt{font-size:15px}
+.pcardx .pbar{width:calc(100% - 48px)}
+.pcardx .blk{border-top:1px dashed var(--g3);padding-top:6px;color:var(--g6)}
+.oxdrawer{width:min(680px,100%)}
+.oxdrawer .field.need label{color:var(--fg);font-weight:700}
+.oxdrawer .field.need textarea{border-color:var(--fg)}
+.oxdrawer .err{color:var(--fg);font-weight:700;margin-bottom:10px}
+.pctin{display:flex;align-items:center;gap:10px}
+.pctin input{flex:1;height:auto}
+.ttable.ms{min-width:0}
+.ttable.ms td{padding:4px}
+.ttable.ms input,.ttable.ms select{width:100%;height:32px;border:1px solid var(--g3);border-radius:var(--radius);padding:0 6px;background:var(--surface);font:inherit}
+.ttable.ms tr.late input[data-mk="deadline"]{border-color:var(--fg);font-weight:700}
+.mvadd{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.mvadd input,.mvadd select{height:34px;border:1px solid var(--g3);border-radius:var(--radius);padding:0 8px;background:var(--surface);font:inherit;min-width:0;flex:1}
+
+</style>
 <script>
 (function(){
 'use strict';
@@ -982,6 +1041,7 @@ const BOARDS = [
   {id:'human-capital',       en:'Human Capital',       ar:'رأس المال البشري', locked:true},
   {id:'customer-experience', en:'Customer Experience', ar:'تجربة العملاء', locked:true},
   {id:'grc-legal',           en:'GRC and Legal',       ar:'الحوكمة والمخاطر والالتزام والشؤون القانونية', locked:true},
+  {id:'operational-excellence', en:'Operational Excellence', ar:'التميز التشغيلي', locked:true},
 ];
 const COMMITTEE = 'committee';
 const LOCKED = BOARDS.filter(b=>b.locked).map(b=>b.id);
@@ -1261,6 +1321,7 @@ const ICONS = {
   'customer-experience': IC('<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2.5" y="14" width="4" height="6" rx="1.5"/><rect x="17.5" y="14" width="4" height="6" rx="1.5"/><path d="M19.5 20c0 1-1.5 2-4.5 2h-2"/>'),
   achievements: IC('<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>'),
 };
+ICONS['operational-excellence']=ICONS.operations; ICONS['ox-public']=ICONS.overview;
 const icon = (k)=> `<span class="ibox">${ICONS[k]||''}</span>`;
 
 /* ---------- state ---------- */
@@ -1543,6 +1604,7 @@ function renderRail(){
       for(const b of mb){ const o=open(b).length, s=stuck(b).length;
         h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span>${keyOf(b.id)?'':LOCK_SVG}<span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`; }
     }
+    h += oxRailHTML();
   }
   const me=S.me;
   if(me.id){
@@ -1573,7 +1635,9 @@ function renderMain(force){
   if(S.view==='board' && !sectionsFor(S.board).includes(S.section)){ S.section='tasks'; S.edit=null; }
   if(S.view==='ceo' && !isCEO()) S.view='home';
   if(S.view==='access' && !isAdmin()) S.view='home';
-  if(!['home','ceo','access','board','mine','overdue','activity','search'].includes(S.view)) S.view='home';
+  if(!['home','ceo','access','board','mine','overdue','activity','search','ox'].includes(S.view)) S.view='home';
+  if(S.view==='ox'){ if(!oxCanRead(S.oxPage)){ const f=oxPages()[0]; if(f) S.oxPage=f.id; else S.view='home'; } }
+  if(S.view==='ox'){ S.mainKey='ox'; if(document.activeElement && document.activeElement.id==='oxq' && $('#oxbody')){ $('#oxbody').innerHTML=oxBodyHTML(); } else { main.innerHTML=oxMainHTML(); $('#oxbody').innerHTML=oxBodyHTML(); } return; }
   const showLock = S.view==='board' && isLocked(S.board) && (!keyOf(S.board) || S.lockUI.mode==='rc' || S.lockUI.mode==='change');
   const key = [S.view,S.board,S.section,S.boardView,S.lang,keyOf(S.board)?1:0,S.lockLoaded[S.board]?1:0,S.me.canWrite,showLock?S.lockUI.mode:'',S.report?S.report.key:'',S.edit?S.edit.key:''].join('|');
   if(S.view==='home'){ S.mainKey=key; main.innerHTML = homeHTML(); return; }
@@ -1988,6 +2052,7 @@ function nav(target){
     S.filters={q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}; $('#q').value='';
     if(keyOf(b)) logEvent(b,'open',null,'open');
   }
+  else if(target.startsWith('ox:')){ S.view='ox'; S.oxPage=target.slice(3); S.board=null; S.oxDrawer=null; oxRenderDrawer(); }
   else { S.view=target; S.board=null; }
   setHash(); S.mainKey=''; render(); $('#main').scrollTop=0;
 }
@@ -2090,6 +2155,7 @@ const DEPT_DESC = {
   'human-capital':      {en:'People, organisation, policies and compliance', ar:'الأفراد والتنظيم والسياسات والالتزام'},
   'customer-experience':{en:'Customer support, success and quality', ar:'دعم العملاء ونجاحهم والجودة'},
   'grc-legal':          {en:'Policies, risk, contracts and regulatory compliance', ar:'السياسات والمخاطر والعقود والالتزام التنظيمي'},
+  'operational-excellence':{en:'Projects, meetings follow-up, HubSpot and continuous improvement', ar:'المشاريع ومتابعة الاجتماعات وHubSpot والتحسين المستمر'},
 };
 const CHEV_SVG = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 const BACK_SVG = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
@@ -2111,7 +2177,7 @@ function memberOf(b){ return !!S.me.email && Array.isArray(S.mine) && S.mine.inc
 function startAccess(){
   const db=S.db, email=lc(S.me.email);
   if(!email){ S.mine=[]; S.accessLoaded=true; render(); return; }
-  db.doc('memberships/'+email).onSnapshot(snap=>{ const d=snap.exists? snap.data(): null; S.mine = d && Array.isArray(d.depts) ? d.depts : []; S.myLeads = d && Array.isArray(d.leads) ? d.leads : []; S.accessLoaded=true; resubscribe(); render(); },
+  db.doc('memberships/'+email).onSnapshot(snap=>{ const d=snap.exists? snap.data(): null; S.mine = d && Array.isArray(d.depts) ? d.depts : []; S.myLeads = d && Array.isArray(d.leads) ? d.leads : []; S.oxPublic = !!(d && d.ox); S.accessLoaded=true; resubscribe(); render(); },
     err=>{ console.warn('membership', err); S.mine=[]; S.myLeads=[]; S.accessLoaded=true; resubscribe(); render(); });
   if(isAdmin()) db.doc('access/departments').onSnapshot(snap=>{ S.access = snap.exists? snap.data(): null; if(S.access && !S.access.mirrored) mirrorAccess(S.access, accLists(null)); render(); },
     err=> console.warn('access', err));
@@ -2124,18 +2190,18 @@ async function mirrorAccess(lists, before){
 }
 async function mirrorRun(lists, before){
   const now=new Date().toISOString(), by=lc(S.me.email), emails=new Set();
-  for(const id of DEPT_IDS){ (lists[id]||[]).forEach(e=>emails.add(lc(e))); (before[id]||[]).forEach(e=>emails.add(lc(e))); }
+  for(const id of ACC_IDS){ (lists[id]||[]).forEach(e=>emails.add(lc(e))); (before[id]||[]).forEach(e=>emails.add(lc(e))); }
   let ok=true;
   const leads=(lists && lists.leads) || {};
-  for(const e of emails){ const depts=DEPT_IDS.filter(id=>(lists[id]||[]).map(lc).includes(e)); const ld=depts.filter(id=>(leads[id]||[]).map(lc).includes(e)); try{ await S.db.doc('memberships/'+e).set({email:e, depts, leads:ld, updatedAt:now, updatedBy:by}); }catch(err){ ok=false; console.warn('mirror', e, err); } }
+  for(const e of emails){ const depts=DEPT_IDS.filter(id=>(lists[id]||[]).map(lc).includes(e)); const ld=depts.filter(id=>(leads[id]||[]).map(lc).includes(e)); try{ await S.db.doc('memberships/'+e).set({email:e, depts, leads:ld, ox:(lists['ox-public']||[]).map(lc).includes(e), updatedAt:now, updatedBy:by}); }catch(err){ ok=false; console.warn('mirror', e, err); } }
   if(ok){ try{ await S.db.doc('access/departments').update({mirrored:true}); }catch(err){ console.warn('mirror flag', err); } }
   return ok;
 }
 function canSee(b){ return DEPT_IDS.includes(b) && (isCEO() || memberOf(b)); }
 function myBoards(){ return BOARDS.filter(b=>canSee(b.id)); }
-function hasAnyAccess(){ return isCEO() || myBoards().length>0; }
+function hasAnyAccess(){ return isCEO() || myBoards().length>0 || !!S.oxPublic; }
 function defaultBoard(){ if(S.view==='board' && canSee(S.board)) return S.board; const mb=myBoards(); return (mb.find(b=>keyOf(b.id))||mb[0]||BOARDS[0]).id; }
-function setHash(){ try{ history.replaceState(null,'', '#'+(S.view==='board'? S.board+'/'+S.section : S.view)); }catch(e){} }
+function setHash(){ try{ history.replaceState(null,'', '#'+(S.view==='board'? S.board+'/'+S.section : S.view==='ox'? 'ox/'+S.oxPage : S.view)); }catch(e){} }
 
 /* periods: the Saudi working week starts on Sunday; the monthly report covers the month just ended */
 function weekStart(iso){ const d=parseISO(iso)||new Date(); return toISO(addDays(d, -d.getDay())); }
@@ -2186,6 +2252,7 @@ function resubscribe(){
   }
   if(changed){ rebuildRaw(); rebuildAll().then(()=>render()); }
   if(!want.size){ S.tasksLoaded=true; S.connecting=false; }
+  oxResubscribe();
 }
 // Just after a member list changes, the rules can briefly still see the old list; retry a few times before giving up.
 const subRetries = new Map();
@@ -2432,6 +2499,7 @@ function homeHTML(){
   const nm=(myName()||'').trim().split(/\s+/)[0]||'', hr=new Date().getHours();
   let h=`<section class="hero"><p class="hello">${esc(hr<12?t('goodMorning'):t('goodEvening'))}${nm?esc(t('comma')+nm):''}</p><h1>${esc(t('homeTitle'))}</h1><p class="lead">${esc(isCEO()?t('homeSubCEO'):t('homeSub'))}</p></section>`;
   h+=`<div class="doors">${BOARDS.map(doorHTML).join('')}</div>`;
+  h+=oxHomeSection();
   if(isCEO()) h+=`<button class="ceo-cta" data-action="nav" data-nav="ceo" type="button">${icon('ceo')}<span><b>${esc(t('ceoView'))}</b><span>${esc(t('ceoCta'))}</span></span>${CHEV_SVG}</button>`;
   if(isAdmin()) h+=`<p class="home-foot"><button class="linkbtn" data-action="nav" data-nav="access" type="button">${esc(t('manageAccess'))}</button></p>`;
   return h;
@@ -2460,7 +2528,9 @@ function ceoHTML(){
 }
 
 /* ---------- department access (administrators) ---------- */
-function accLists(src){ const d={}; for(const id of DEPT_IDS) d[id] = (src && Array.isArray(src[id])) ? [...new Set(src[id].map(lc).filter(Boolean))] : []; return d; }
+const ACC_IDS = [...DEPT_IDS, 'ox-public'];
+const ACC_COLS = ()=> [...BOARDS, {id:'ox-public', en:'Department managers and leads', ar:'مديرو الإدارات والقادة'}];
+function accLists(src){ const d={}; for(const id of ACC_IDS) d[id] = (src && Array.isArray(src[id])) ? [...new Set(src[id].map(lc).filter(Boolean))] : []; return d; }
 function accLeads(src){ const l=(src && src.leads) || {}; const d={}; for(const id of DEPT_IDS) d[id]=Array.isArray(l[id])? [...new Set(l[id].map(lc).filter(Boolean))] : []; return d; }
 function accSeed(){ const d=accLists(S.access); if(!S.access){ const owners=((window.MARN_CONFIG||{}).owners)||[]; d['human-capital']=[...new Set([...d['human-capital'], ...owners.map(lc)])]; } return d; }
 function accessHTML(){
@@ -2471,9 +2541,9 @@ function accessHTML(){
   let h=`<div class="vhead"><h1>${esc(t('accessTitle'))}</h1><span class="sub">${esc(t('accessSub'))}</span><div class="actions">${dirty&&S.access?`<button class="btn" data-action="acc-reset" type="button">${esc(t('discard'))}</button>`:''}<button class="btn primary" data-action="acc-save" type="button" ${dirty?'':'disabled'}>${esc(t('save'))}</button></div></div>`;
   if(!S.access) h+=`<div class="callout"><span class="dot"></span><span>${esc(t('accSeedNote'))}</span></div>`;
   h+=`<p class="ceo-line">${icon('ceo')}<span>${esc(t('ceoFixed')(ceo))}</span></p><p class="muted small lead-note">${esc(t('leadNote'))}</p><div class="accgrid">`;
-  for(const b of BOARDS){
+  for(const b of ACC_COLS()){
     const l=D[b.id]||[];
-    h+=`<section class="acc-col"><header>${icon(b.id)}<h2>${esc(b[L()])}</h2><span class="num">${l.length}</span></header><ul>${l.length? l.map((e,i)=>{ const ld=(LD[b.id]||[]).includes(e); return `<li class="${ld?'islead':''}"><span class="em" dir="ltr">${esc(e)}</span><button class="leadtg ${ld?'on':''}" data-action="acc-lead" data-b="${b.id}" data-i="${i}" type="button" aria-pressed="${ld}" title="${esc(t('leadHint'))}">${esc(t('leadTag'))}</button><button class="iconbtn sm" data-action="acc-rm" data-b="${b.id}" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button></li>`; }).join('') : `<li class="none">${esc(t('accEmpty'))}</li>`}</ul><form class="acc-add" data-acc="${b.id}"><textarea id="acc-in-${b.id}" rows="1" placeholder="name@marn.com" dir="ltr" autocomplete="off" aria-label="${esc(b[L()])}"></textarea><button class="btn" type="submit">${esc(t('add'))}</button></form></section>`;
+    h+=`<section class="acc-col"><header>${icon(b.id)}<h2>${esc(b[L()])}</h2><span class="num">${l.length}</span></header><ul>${l.length? l.map((e,i)=>{ const ld=(LD[b.id]||[]).includes(e); return `<li class="${ld?'islead':''}"><span class="em" dir="ltr">${esc(e)}</span>${b.id==='ox-public'?'':`<button class="leadtg ${ld?'on':''}" data-action="acc-lead" data-b="${b.id}" data-i="${i}" type="button" aria-pressed="${ld}" title="${esc(t('leadHint'))}">${esc(t('leadTag'))}</button>`}<button class="iconbtn sm" data-action="acc-rm" data-b="${b.id}" data-i="${i}" type="button" aria-label="${esc(t('remove'))}">×</button></li>`; }).join('') : `<li class="none">${esc(t('accEmpty'))}</li>`}</ul><form class="acc-add" data-acc="${b.id}"><textarea id="acc-in-${b.id}" rows="1" placeholder="name@marn.com" dir="ltr" autocomplete="off" aria-label="${esc(b[L()])}"></textarea><button class="btn" type="submit">${esc(t('add'))}</button></form></section>`;
   }
   h+=`</div>`;
   const log=(S.access && Array.isArray(S.access.log))? S.access.log : [];
@@ -2496,10 +2566,11 @@ function accLead(b, i){ const e=S.accDraft[b][i]; if(!e) return; S.accLeadsDraft
 async function accSave(){
   const before=accLists(S.access), beforeL=accLeads(S.access), D=S.accDraft, now=new Date().toISOString(), by=lc(S.me.email);
   const LD={}; for(const id of DEPT_IDS) LD[id]=((S.accLeadsDraft||beforeL)[id]||[]).filter(e=>D[id].includes(e));
-  const changes=DEPT_IDS.map(b=>({b, added:D[b].filter(e=>!before[b].includes(e)), removed:before[b].filter(e=>!D[b].includes(e)), leadsAdded:LD[b].filter(e=>!beforeL[b].includes(e)), leadsRemoved:beforeL[b].filter(e=>!LD[b].includes(e))})).filter(c=>c.added.length||c.removed.length||c.leadsAdded.length||c.leadsRemoved.length);
+  const changes=ACC_IDS.map(b=>({b, added:D[b].filter(e=>!before[b].includes(e)), removed:before[b].filter(e=>!D[b].includes(e)), leadsAdded:(LD[b]||[]).filter(e=>!(beforeL[b]||[]).includes(e)), leadsRemoved:(beforeL[b]||[]).filter(e=>!(LD[b]||[]).includes(e))})).filter(c=>c.added.length||c.removed.length||c.leadsAdded.length||c.leadsRemoved.length);
   const doc={...D, leads:LD, mirrored:false, updatedAt:now, updatedBy:by, log:[...((S.access&&S.access.log)||[]), {at:now, by, changes}].slice(-50)};
   try{ await S.db.doc('access/departments').set(doc); }catch(e){ console.warn(e); toast(t('saveFail'), true); return; }
   if(!(await mirrorAccess(doc, before))){ toast(t('saveFail'), true); }
+  try{ await S.db.doc('oxdir/people').set({emails:[...new Set(ACC_IDS.flatMap(k=>doc[k]||[]))], updatedAt:now}); }catch(e){ console.warn('oxdir', e); }
   doc.mirrored=true;
   S.access=doc; S.accDraft=null; S.accLeadsDraft=null; S.mainKey=''; toast(t('accSaved')); resubscribe(); render();
 }
@@ -2546,7 +2617,7 @@ window.addEventListener('beforeunload', (ev)=>{ if(S.report && S.report.dirty &&
    time, in three sentences), an Ishikawa (fishbone) analysis and a solution box that follows the bones, then a check
    that the cause did not return. Everything is encrypted with the department password, like the tasks. */
 const DEPT_FEATURES = { 'customer-experience': ['faq','process','issue'] };
-const DEPT_CODE = { 'human-capital':'HC', 'customer-experience':'CX', 'grc-legal':'GRC' };
+const DEPT_CODE = { 'human-capital':'HC', 'customer-experience':'CX', 'grc-legal':'GRC', 'operational-excellence':'OPX' };
 const KB_SECTIONS = ['faq','process','issue'];
 const feat = (b,f)=> (DEPT_FEATURES[b]||[]).includes(f);
 function sectionsFor(b){ return SECTIONS.filter(s=> !KB_SECTIONS.includes(s) || feat(b,s)); }
@@ -3234,13 +3305,440 @@ function fixDir(el){ const d=textDir(el.matches(DIR_FIELDS) ? el.value : el.text
   new MutationObserver(list=>{ for(const r of list) r.addedNodes.forEach(run); }).observe(m, {childList:true, subtree:true});
   document.addEventListener('input', ev=>{ const el=ev.target; if(el && el.matches && el.matches(DIR_FIELDS) && el.closest('#main')) fixDir(el); }, true); })();
 
+/* ---------- Operational Excellence: department and its eight trackers (29 October 2026) ----------
+   Data lives in the plain collection "ox" (one document per row, field "page"), so that managers and leads of
+   other departments can open the public trackers without the department password. Who reads and writes what is
+   enforced by firestore.rules: public pages for the managers and leads list, Operational Excellence and the CEO;
+   restricted pages for the groups named in the request. Owners of a row may update only its progress fields. */
+const OPX='operational-excellence';
+const OXT={
+ ar:{
+  area:'متتبعات التميز التشغيلي', areaShort:'المتتبعات', newRow:'إضافة', exportX:'تصدير إلى Excel', searchPh:'ابحث في كل الحقول',
+  all:'الكل', onlyOverdue:'المتأخرة فقط', hideClosed:'إخفاء المغلقة', rows:(n)=>arN(n,'سجل واحد','سجلان','سجلات','سجلًا'),
+  overdueN:(n)=>`${n} متأخرة`, soonN:(n)=>`${n} تستحق خلال 7 أيام`, lowN:(n)=>`${n} أصناف تحت حد إعادة الطلب`,
+  vTable:'الجدول', vDept:'حسب الإدارة', vOwner:'حسب المسؤول', vDash:'لوحة الأداء', vBoard:'لوحة المشاريع',
+  save:'حفظ', create:'إضافة', cancel:'إلغاء', close:'إغلاق', del:'حذف', delAsk:'حذف هذا السجل نهائيًا؟', yesDel:'نعم، احذف',
+  saved:'تم الحفظ', deleted:'تم الحذف', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', needTitle:'اكتب العنوان أولًا.',
+  needReason:'المهمة متأخرة: اكتب سبب التأخير قبل الحفظ.', ownerOnly:'أنت مسؤول هذا السجل: تستطيع تحديث الحالة والإنجاز والملاحظات فقط.',
+  readOnly:'عرض فقط', noAccess:'لا تملك صلاحية هذه الصفحة.', empty:'لا توجد سجلات بعد.', emptyF:'لا توجد سجلات تطابق التصفية.',
+  addOwner:'أضف مسؤولًا (الاسم أو البريد)', history:'السجل', created:'أنشأ السجل', changed:(f)=>`عدّل ${f}`,
+  dept:'الإدارة', owner:'المسؤول', total:'الإجمالي', done:'المنجزة', open:'المفتوحة', overdue:'المتأخرة', pctDone:'نسبة الإنجاز', onTime:'في الموعد',
+  avgProg:'متوسط التقدم', workload:'عبء العمل حسب المسؤول', deptPerf:'أداء الإدارات', noOwner:'غير مسندة',
+  projects:'المشاريع', active:'النشطة', atRisk:'معرضة للخطر', offTrack:'خارج المسار', issuesN:(n)=>n? arN(n,'مشكلة مفتوحة واحدة','مشكلتان مفتوحتان','مشكلات مفتوحة','مشكلة مفتوحة') : 'لا مشكلات مفتوحة',
+  milestones:'المراحل والمخرجات', addMs:'إضافة مرحلة', msName:'المرحلة', msOwner:'المسؤول', msDue:'الموعد', msStatus:'الحالة',
+  moves:'حركة المخزون', addMove:'تسجيل حركة', mvIn:'وارد', mvOut:'صادر', mvQty:'الكمية', mvRef:'المرجع', mvDate:'التاريخ', mvType:'النوع',
+  lowStock:'تحت حد الطلب', pendingWith:'بانتظار', openLink:'فتح', restricted:'مقيّدة', publicPg:'عامة',
+  oxList:'مديرو الإدارات والقادة', oxListSub:'يرون صفحات التميز التشغيلي العامة ويحدّثون المهام المسندة إليهم.',
+  intro:'صفحات المتابعة التي يديرها التميز التشغيلي. العامة لمديري الإدارات والقادة، والمقيّدة لمن حُددت لهم.',
+  nextDue:'أقرب موعد', lastUpd:'آخر تحديث', projIssues:'مشكلات المشروع', noProj:'بلا مشروع',
+ },
+ en:{
+  area:'Operational Excellence trackers', areaShort:'Trackers', newRow:'Add', exportX:'Export to Excel', searchPh:'Search every field',
+  all:'All', onlyOverdue:'Overdue only', hideClosed:'Hide closed', rows:(n)=> n===1?'1 record':`${n} records`,
+  overdueN:(n)=>`${n} overdue`, soonN:(n)=>`${n} due in the next 7 days`, lowN:(n)=>`${n} items at or below reorder level`,
+  vTable:'Table', vDept:'By department', vOwner:'By owner', vDash:'Performance', vBoard:'Project board',
+  save:'Save', create:'Add', cancel:'Cancel', close:'Close', del:'Delete', delAsk:'Delete this record for good?', yesDel:'Yes, delete',
+  saved:'Saved', deleted:'Deleted', saveFail:'Could not save. Check your access.', needTitle:'Write the title first.',
+  needReason:'This task is overdue: write the reason for delay before saving.', ownerOnly:'You own this record: you can update status, progress and notes only.',
+  readOnly:'View only', noAccess:'You do not have access to this page.', empty:'No records yet.', emptyF:'No records match these filters.',
+  addOwner:'Add an owner (name or email)', history:'History', created:'created the record', changed:(f)=>`changed ${f}`,
+  dept:'Department', owner:'Owner', total:'Total', done:'Done', open:'Open', overdue:'Overdue', pctDone:'Completion', onTime:'On time',
+  avgProg:'Average progress', workload:'Workload by owner', deptPerf:'Department performance', noOwner:'Unassigned',
+  projects:'Projects', active:'Active', atRisk:'At risk', offTrack:'Off track', issuesN:(n)=>n?`${n} open issues`:'No open issues',
+  milestones:'Deliverables and milestones', addMs:'Add milestone', msName:'Milestone', msOwner:'Owner', msDue:'Deadline', msStatus:'Status',
+  moves:'Stock movements', addMove:'Record a movement', mvIn:'In', mvOut:'Out', mvQty:'Quantity', mvRef:'Reference', mvDate:'Date', mvType:'Type',
+  lowStock:'Below reorder level', pendingWith:'Pending with', openLink:'Open', restricted:'Restricted', publicPg:'Public',
+  oxList:'Department managers and leads', oxListSub:'They see the public Operational Excellence pages and update the tasks assigned to them.',
+  intro:'Follow-up pages run by Operational Excellence. Public pages are for department managers and leads; restricted pages for the groups named.',
+  nextDue:'Next deadline', lastUpd:'Last updated', projIssues:'Project issues', noProj:'No project',
+ }};
+const ot=(k)=> OXT[S.lang][k] ?? OXT.en[k] ?? k;
+const O=(en,ar)=>({en,ar});
+const OX_DEPTS=[['marketing',O('Marketing','التسويق')],['sales',O('Sales','المبيعات')],['commercial',O('Commercial and Partnerships','التجاري والشراكات')],['customer-experience',O('Customer Experience','تجربة العملاء')],['technology',O('Technology','التقنية')],['finance',O('Finance','المالية')],['human-capital',O('Human Capital','رأس المال البشري')],['grc-legal',O('GRC and Legal','الحوكمة والالتزام والقانونية')],[OPX,O('Operational Excellence','التميز التشغيلي')],['ceo-office',O('CEO Office','مكتب الرئيس التنفيذي')]];
+const ST4={todo:O('Not started','لم تبدأ'),doing:O('In progress','قيد التنفيذ'),stuck:O('On hold','متوقفة'),done:O('Done','منجزة')};
+const PRI={high:O('High','عالية'),med:O('Medium','متوسطة'),low:O('Low','منخفضة')};
+const SEV={critical:O('Critical','حرجة'),high:O('High','عالية'),medium:O('Medium','متوسطة'),low:O('Low','منخفضة')};
+const F=(k,type,en,ar,x)=>({k,type,label:O(en,ar),...(x||{})});
+// page definitions: fields, which field is the due date, which status values close a row, and what an owner may update
+const OX_PAGES=[
+ {id:'meeting', icon:'activity', prefix:'MT', access:'public', name:O('Meeting Task Tracker','متتبع مهام الاجتماعات'), desc:O('Tasks from meeting minutes, followed to closure','مهام محاضر الاجتماعات حتى الإغلاق'),
+  due:'due', closed:['done'], ownerKeys:['status','progress','note','delayReason','pendingWith'], views:['table','dept','owner','dash'],
+  fields:[F('title','text','Task','المهمة',{req:1,wide:1}),F('dept','dept','Department','الإدارة'),F('owners','people','Task owner','مسؤول المهمة'),
+   F('meetingTitle','text','Meeting','الاجتماع'),F('meetingDate','date','Meeting date','تاريخ الاجتماع'),F('meetingLink','link','Minutes of meeting (PDF link)','محضر الاجتماع (رابط PDF)'),
+   F('priority','sel','Priority','الأولوية',{opts:PRI,def:'med'}),F('due','date','Due date','الموعد النهائي'),F('status','sel','Status','الحالة',{opts:ST4,def:'todo'}),
+   F('progress','pct','Progress','نسبة الإنجاز'),F('pendingWith','text','Pending with','بانتظار'),F('note','area','Latest update','آخر المستجدات',{wide:1}),F('delayReason','area','Reason for delay','سبب التأخير',{wide:1,delay:1})],
+  cols:['code','title','dept','owners','priority','due','status','progress','pendingWith']},
+ {id:'project', icon:'overview', prefix:'PRJ', access:'public', name:O('Project Task Tracker','متتبع المشاريع'), desc:O('Every project, its health, milestones and blockers','كل المشاريع وحالتها ومراحلها والعوائق'),
+  due:'due', closed:['completed'], ownerKeys:['status','health','progress','blockers','notes','milestones','actual'], views:['board','table'],
+  fields:[F('title','text','Project name','اسم المشروع',{req:1,wide:1}),F('dept','dept','Department','الإدارة'),F('scope','area','Project scope','نطاق المشروع',{wide:1}),F('owners','people','Owner','المسؤول'),
+   F('priority','sel','Priority','الأولوية',{opts:PRI,def:'med'}),F('status','sel','Status','الحالة',{opts:{notstarted:O('Not started','لم يبدأ'),progress:O('In progress','قيد التنفيذ'),hold:O('On hold','متوقف'),completed:O('Completed','مكتمل')},def:'notstarted'}),
+   F('health','sel','Health','الوضع',{opts:{on:O('On track','على المسار'),risk:O('At risk','معرض للخطر'),off:O('Off track','خارج المسار')},def:'on'}),F('progress','pct','Progress','نسبة الإنجاز'),
+   F('start','date','Start date','تاريخ البدء'),F('due','date','Target end date','تاريخ الانتهاء المستهدف'),F('budget','money','Budget (SAR, optional)','الميزانية (ريال، اختياري)'),F('actual','money','Actual cost (SAR, optional)','التكلفة الفعلية (ريال، اختياري)'),
+   F('blockers','area','Blockers / support needed','العوائق والدعم المطلوب',{wide:1}),F('notes','area','Notes','ملاحظات',{wide:1}),F('milestones','milestones','Deliverables / milestones','المخرجات والمراحل',{wide:1})],
+  cols:['code','title','dept','owners','status','health','progress','due','openIssues']},
+ {id:'inventory', icon:'commercial', prefix:'INV', access:'public', name:O('Inventory and Warehouse Tracker','متتبع المخزون والمستودع'), desc:O('Devices and stock, movements and reorder alerts','الأجهزة والمخزون والحركة وتنبيهات إعادة الطلب'),
+  due:null, closed:[], ownerKeys:[], views:['table'],
+  fields:[F('title','text','Item name','اسم الصنف',{req:1,wide:1}),F('itemCode','text','Item code','رمز الصنف'),
+   F('category','sel','Category','الفئة',{opts:{pos:O('POS device','جهاز نقاط بيع'),printer:O('Printer','طابعة'),kds:O('Kitchen display (KDS)','شاشة مطبخ KDS'),drawer:O('Cash drawer','درج نقد'),acc:O('Accessories','ملحقات'),sim:O('SIM card','شريحة اتصال'),other:O('Other','أخرى')},def:'pos'}),
+   F('serial','text','Serial number','الرقم التسلسلي'),F('location','text','Warehouse / location','المستودع أو الموقع'),F('qty','num','Quantity on hand','الكمية المتاحة'),F('reorder','num','Reorder level','حد إعادة الطلب'),
+   F('istatus','sel','Status','الحالة',{opts:{stock:O('In stock','في المخزون'),reserved:O('Reserved','محجوز'),merchant:O('With a merchant','مسلَّم لعميل'),employee:O('With an employee','لدى موظف'),repair:O('Under repair','تحت الصيانة'),lost:O('Lost','مفقود')},def:'stock'}),
+   F('assignedTo','text','Assigned to','مسلَّم إلى'),F('notes','area','Notes','ملاحظات',{wide:1}),F('moves','moves','Stock movements','حركة المخزون',{wide:1})],
+  cols:['code','itemCode','title','category','location','qty','reorder','istatus','assignedTo']},
+ {id:'pissue', icon:'overdue', prefix:'PI', access:'pissue', name:O('Project Issue Log','سجل مشكلات المشاريع'), desc:O('Issues and risks of each project','مشكلات كل مشروع ومخاطره'),
+  due:'due', closed:['closed'], ownerKeys:[], views:['table'],
+  fields:[F('projectId','proj','Project','المشروع'),F('kind','sel','Type','النوع',{opts:{issue:O('Issue','مشكلة'),risk:O('Risk','خطر')},def:'issue'}),F('title','text','Description','الوصف',{req:1,wide:1}),
+   F('impact','area','Impact','الأثر',{wide:1}),F('severity','sel','Severity','الخطورة',{opts:SEV,def:'medium'}),F('action','area','Action required','الإجراء المطلوب',{wide:1}),F('owners','people','Owner','المسؤول'),
+   F('due','date','Due date','الموعد'),F('status','sel','Status','الحالة',{opts:{open:O('Open','مفتوحة'),progress:O('In progress','قيد المعالجة'),closed:O('Closed','مغلقة')},def:'open'}),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','projectId','kind','title','severity','owners','due','status']},
+ {id:'hsdev', icon:'technology', prefix:'HSD', access:'hubspot', name:O('HubSpot Development Tracker','متتبع تطوير HubSpot'), desc:O('Change requests to HubSpot, from request to launch','طلبات تطوير HubSpot من الطلب إلى الإطلاق'),
+  due:'due', closed:['live','rejected'], ownerKeys:[], views:['table'],
+  fields:[F('title','text','Request','الطلب',{req:1,wide:1}),F('rtype','sel','Type','النوع',{opts:{property:O('Property','حقل'),pipeline:O('Pipeline','Pipeline'),workflow:O('Workflow','Workflow'),report:O('Report or dashboard','تقرير أو لوحة'),integration:O('Integration','تكامل'),permission:O('Permissions','صلاحيات'),other:O('Other','أخرى')},def:'property'}),
+   F('dept','dept','Requesting department','الإدارة الطالبة'),F('owners','people','Implementer','المنفّذ'),F('priority','sel','Priority','الأولوية',{opts:PRI,def:'med'}),
+   F('status','sel','Status','الحالة',{opts:{requested:O('Requested','مطلوب'),approved:O('Approved','معتمد'),dev:O('In development','قيد التطوير'),testing:O('Testing','اختبار'),live:O('Live','مُطلق'),rejected:O('Rejected','مرفوض')},def:'requested'}),
+   F('need','area','Business need and expected impact','الحاجة والأثر المتوقع',{wide:1}),F('requested','date','Request date','تاريخ الطلب'),F('due','date','Target date','الموعد المستهدف'),F('launched','date','Launch date','تاريخ الإطلاق'),
+   F('link','link','HubSpot link','رابط HubSpot'),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','title','rtype','dept','owners','priority','status','due']},
+ {id:'hsissue', icon:'overdue', prefix:'HSI', access:'hubspot', name:O('HubSpot Issue Log','سجل مشكلات HubSpot'), desc:O('Data and system issues in HubSpot, by severity','مشكلات البيانات والنظام في HubSpot حسب الخطورة'),
+  due:null, closed:['resolved','closed'], ownerKeys:[], views:['table'],
+  fields:[F('title','text','Issue','المشكلة',{req:1,wide:1}),F('found','date','Date found','تاريخ الاكتشاف'),
+   F('harea','sel','Area','المجال',{opts:{deals:O('Deals','الصفقات'),contacts:O('Contacts and companies','جهات الاتصال والشركات'),tickets:O('Tickets','التذاكر'),workflows:O('Workflows','Workflows'),data:O('Data quality','جودة البيانات'),integrations:O('Integrations','التكاملات'),other:O('Other','أخرى')},def:'data'}),
+   F('severity','sel','Severity','الخطورة',{opts:SEV,def:'medium'}),F('records','num','Records affected','السجلات المتأثرة'),F('foundBy','text','Found by','المكتشِف'),F('owners','people','Owner','المسؤول'),
+   F('rootCause','area','Root cause','السبب الجذري',{wide:1}),F('action','area','Action','الإجراء',{wide:1}),
+   F('status','sel','Status','الحالة',{opts:{open:O('Open','مفتوحة'),progress:O('In progress','قيد المعالجة'),resolved:O('Resolved','محلولة'),closed:O('Closed','مغلقة')},def:'open'}),
+   F('resolved','date','Resolved on','تاريخ الحل'),F('devRef','text','Linked development request','طلب التطوير المرتبط'),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','title','harea','severity','records','owners','status','found']},
+ {id:'excellence', icon:'achievements', prefix:'EX', access:'public', name:O('Excellence Management Tracker','متتبع إدارة التميز'), desc:O('Improvement initiatives, run on DMAIC','مبادرات التحسين وفق منهجية DMAIC'),
+  due:'due', closed:['done'], ownerKeys:['phase','current','status','progress','notes'], views:['table'],
+  fields:[F('title','text','Initiative','المبادرة',{req:1,wide:1}),F('dept','dept','Department','الإدارة'),F('process','text','Process','العملية'),F('problem','area','Problem','المشكلة',{wide:1}),F('owners','people','Owner','المسؤول'),
+   F('phase','sel','DMAIC phase','مرحلة DMAIC',{opts:{define:O('Define','تعريف'),measure:O('Measure','قياس'),analyze:O('Analyze','تحليل'),improve:O('Improve','تحسين'),control:O('Control','ضبط')},def:'define'}),
+   F('kpi','text','Measure (KPI)','المؤشر'),F('baseline','num','Baseline','خط الأساس'),F('target','num','Target','المستهدف'),F('current','num','Current','القيمة الحالية'),F('saving','text','Expected saving (time or cost)','الوفر المتوقع (وقت أو تكلفة)'),
+   F('status','sel','Status','الحالة',{opts:ST4,def:'todo'}),F('progress','pct','Progress','نسبة الإنجاز'),F('start','date','Start','البدء'),F('due','date','Target date','الموعد المستهدف'),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','title','dept','owners','phase','kpi','baseline','target','current','status','due']},
+ {id:'internal', icon:'mine', prefix:'IT', access:'internal', name:O('Internal Task Tracker','متتبع المهام الداخلية'), desc:O('Internal tasks shared by Operational Excellence and Human Capital','المهام الداخلية بين التميز التشغيلي ورأس المال البشري'),
+  due:'due', closed:['done'], ownerKeys:['status','progress','notes'], views:['table','owner'],
+  fields:[F('title','text','Task','المهمة',{req:1,wide:1}),F('owners','people','Owner','المسؤول'),F('priority','sel','Priority','الأولوية',{opts:PRI,def:'med'}),F('status','sel','Status','الحالة',{opts:ST4,def:'todo'}),
+   F('due','date','Due date','الموعد'),F('progress','pct','Progress','نسبة الإنجاز'),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','title','owners','priority','status','due','progress']},
+];
+const oxPage=(id)=> OX_PAGES.find(p=>p.id===id);
+const oxF=(p,k)=> p.fields.find(f=>f.k===k);
+const ACCESS_TAG={public:'publicPg'};
+/* who can see and do what (mirrors firestore.rules) */
+const oxMember=()=> isAdmin() || memberOf(OPX);
+const oxHR=()=> memberOf('human-capital');
+function oxCanRead(id){ const p=oxPage(id); if(!p) return false;
+  if(p.access==='public') return oxMember() || isCEO() || !!S.oxPublic;
+  if(p.access==='pissue') return oxMember() || isCEO() || oxHR();
+  if(p.access==='hubspot') return oxMember() || isCEO();
+  if(p.access==='internal') return oxMember() || oxHR();
+  return false; }
+function oxCanManage(id){ const p=oxPage(id); if(!p || !oxCanRead(id)) return false; return p.access==='public' ? (oxMember()||isCEO()) : true; }
+function oxPages(){ return OX_PAGES.filter(p=>oxCanRead(p.id)); }
+const myMail=()=> lc(S.me.email);
+const isOxOwner=(r)=> (r.ownerEmails||[]).includes(myMail());
+function oxCanEdit(r){ return oxCanManage(r.page) || (oxPage(r.page).ownerKeys.length>0 && isOxOwner(r)); }
+
+/* state and data */
+S.ox=new Map(); S.oxPage='meeting'; S.oxView={}; S.oxF={}; S.oxDrawer=null; S.oxDir=[]; S.oxPublic=false; S.oxLoaded={};
+const OX_SUBS=new Map(); let oxDirSub=null;
+function oxResubscribe(){
+  const db=S.db; if(!db) return;
+  const want=new Set(oxPages().map(p=>p.id));
+  for(const [p,u] of [...OX_SUBS]){ if(!want.has(p)){ try{u();}catch(e){} OX_SUBS.delete(p); for(const [id,r] of [...S.ox]) if(r.page===p) S.ox.delete(id); } }
+  for(const p of want){ if(OX_SUBS.has(p)) continue;
+    OX_SUBS.set(p, db.collection('ox').where('page','==',p).onSnapshot(snap=>{
+      for(const [id,r] of [...S.ox]) if(r.page===p) S.ox.delete(id);
+      snap.docs.forEach(d=>{ if(d.exists) S.ox.set(d.id, {id:d.id, ...d.data()}); });
+      S.oxLoaded[p]=true; if(S.view==='ox' || S.view==='home') render();
+    }, err=>{ console.warn('ox', p, err); S.oxLoaded[p]=true; OX_SUBS.delete(p); }));
+  }
+  if(!oxDirSub && want.size){ oxDirSub=db.doc('oxdir/people').onSnapshot(s=>{ const d=s.exists? s.data(): null; S.oxDir=(d && Array.isArray(d.emails))? d.emails : []; }, e=>{ console.warn('oxdir', e); oxDirSub=null; }); }
+}
+const oxRows=(p)=> [...S.ox.values()].filter(r=>r.page===p);
+const oxClosed=(r)=> { const p=oxPage(r.page); return p.closed.includes(r.status); };
+const oxDueOf=(r)=> { const p=oxPage(r.page); return p.due ? (r[p.due]||'') : ''; };
+const oxOverdue=(r)=> { const d=oxDueOf(r); return !!d && !oxClosed(r) && d < todayISO(); };
+const oxSoon=(r)=> { const d=oxDueOf(r); if(!d || oxClosed(r)) return false; const n=daysBetween(todayISO(), d); return n>=0 && n<=7; };
+const oxLow=(r)=> r.page==='inventory' && r.reorder!==undefined && r.reorder!=='' && Number(r.qty||0) <= Number(r.reorder);
+const msOverdue=(m)=> m && m.deadline && m.status!=='done' && m.deadline < todayISO();
+function oxNextCode(p){ const pg=oxPage(p); let n=0; for(const r of oxRows(p)){ const m=String(r.code||'').match(/(\d+)$/); if(m) n=Math.max(n, +m[1]); } return `${pg.prefix}-${String(n+1).padStart(3,'0')}`; }
+const optL=(o)=> o? (o[L()]||o.en) : '';
+const deptName=(k)=> { const d=OX_DEPTS.find(x=>x[0]===k); return d? optL(d[1]) : (k||''); };
+function personName(e){ e=lc(e); for(const m of S.members.values()){ if(lc(m.email)===e && m.name) return m.name; } return e; }
+const ownersText=(r)=> (r.owners||[]).map(o=> o.name || personName(o.email)).join('، ');
+function projName(id){ const r=S.ox.get(id); return r? `${r.code||''} ${r.title||''}`.trim() : ''; }
+
+/* cells */
+function oxCell(p, r, k){
+  if(k==='code') return `<span class="num muted">${esc(r.code||'')}</span>`;
+  if(k==='openIssues'){ const n=+r.openIssues||0; return n? `<b class="num">${n}</b>` : '<span class="muted">0</span>'; }
+  const f=oxF(p,k); if(!f) return '';
+  const v=r[k];
+  switch(f.type){
+    case 'people': return esc(ownersText(r)) || `<span class="muted">${esc(ot('noOwner'))}</span>`;
+    case 'dept': return esc(deptName(v));
+    case 'sel': { if(!v) return ''; const lab=optL(f.opts[v]); if(k==='status'||k==='istatus') return `<span class="oxst st-${esc(v)}">${esc(lab)}</span>`; if(k==='health') return `<span class="oxh h-${esc(v)}">${esc(lab)}</span>`; if(k==='priority'||k==='severity') return `<span class="oxpri p-${esc(v)}">${esc(lab)}</span>`; return esc(lab); }
+    case 'date': { if(!v) return ''; const od = k===p.due && oxOverdue(r); return `<span class="due ${od?'overdue':''}">${esc(fmtDate(v))}</span>`; }
+    case 'pct': { const n=Math.max(0,Math.min(100,+v||0)); return `<span class="pbar" title="${n}%"><i style="width:${n}%"></i></span><span class="num small">${n}%</span>`; }
+    case 'num': case 'money': return (v===''||v===undefined||v===null)? '' : `<span class="num">${Number(v).toLocaleString('en-US')}</span>${k==='qty'&&oxLow(r)?` <span class="oxpri p-high">${esc(ot('lowStock'))}</span>`:''}`;
+    case 'proj': return esc(projName(v)) || `<span class="muted">${esc(ot('noProj'))}</span>`;
+    case 'link': return v? `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(ot('openLink'))}</a>` : '';
+    default: return esc(v||'');
+  }
+}
+function oxColLabel(p,k){ if(k==='code') return '#'; if(k==='openIssues') return ot('projIssues'); const f=oxF(p,k); return f? optL(f.label) : k; }
+
+/* filtering */
+function oxFilters(pid){ return S.oxF[pid] || (S.oxF[pid]={q:'',od:false,hide:false,sel:{}}); }
+function oxText(p, r){ return fold(p.fields.map(f=>{ const v=r[f.k]; if(f.type==='people') return ownersText(r)+' '+(r.ownerEmails||[]).join(' '); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); if(f.type==='milestones') return (v||[]).map(m=>m.name+' '+m.owner).join(' '); return v==null?'':String(v); }).join(' ')+' '+(r.code||'')); }
+function oxApply(p, list){
+  const f=oxFilters(p.id), q=fold(f.q.trim());
+  return list.filter(r=>{
+    if(f.od && !(oxOverdue(r) || oxLow(r))) return false;
+    if(f.hide && oxClosed(r)) return false;
+    for(const [k,v] of Object.entries(f.sel)){ if(!v) continue; if(k==='owners'){ if(!(r.ownerEmails||[]).includes(v)) return false; } else if(String(r[k]||'')!==v) return false; }
+    if(q && !oxText(p, r).includes(q)) return false;
+    return true;
+  });
+}
+function oxSort(p, list){ const dk=p.due; return [...list].sort((a,b)=> (oxClosed(a)-oxClosed(b)) || (dk? String(a[dk]||'9999').localeCompare(String(b[dk]||'9999')) : 0) || String(a.code||'').localeCompare(String(b.code||''))); }
+
+/* page */
+function oxHomeSection(){
+  const pages=oxPages(); if(!pages.length) return '';
+  let h=`<section class="oxhome"><header><h2>${icon(OPX)}<span>${esc(ot('area'))}</span></h2><p class="muted">${esc(ot('intro'))}</p></header><div class="oxcards">`;
+  for(const p of pages){ const l=oxRows(p.id), open=l.filter(r=>!oxClosed(r)).length, od=l.filter(r=>oxOverdue(r)||oxLow(r)).length;
+    h+=`<button class="oxcard" data-action="nav" data-nav="ox:${p.id}" type="button"><span class="oxtag ${p.access==='public'?'pub':''}">${esc(p.access==='public'?ot('publicPg'):ot('restricted'))}</span><b>${esc(optL(p.name))}</b><span class="muted small">${esc(optL(p.desc))}</span><span class="oxnums"><span class="num">${open}</span> ${esc(ot('open'))}${od?` · <b class="num">${od}</b> ${esc(p.id==='inventory'?ot('lowStock'):ot('overdue'))}`:''}</span></button>`; }
+  return h+`</div></section>`;
+}
+function oxRailHTML(){
+  const pages=oxPages(); if(!pages.length) return '';
+  let h=`<span class="rsep"></span><h4>${esc(ot('areaShort'))}</h4>`;
+  for(const p of pages){ const od=oxRows(p.id).filter(r=>oxOverdue(r)||oxLow(r)).length, open=oxRows(p.id).filter(r=>!oxClosed(r)).length;
+    h+=`<button class="item ${S.view==='ox'&&S.oxPage===p.id?'on':''}" data-action="nav" data-nav="ox:${p.id}" type="button" title="${esc(optL(p.name))}">${icon(p.icon)}<span class="lbl">${esc(optL(p.name))}</span>${p.access==='public'?'':LOCK_SVG}<span class="cnt">${od?`<b>${od}</b> · `:''}${open}</span></button>`; }
+  return h;
+}
+function oxMainHTML(){
+  const p=oxPage(S.oxPage); if(!p || !oxCanRead(p.id)) return `<div class="notice"><h2>${esc(ot('noAccess'))}</h2></div>`;
+  const all=oxRows(p.id), view=S.oxView[p.id] || p.views[0], f=oxFilters(p.id);
+  const od=all.filter(oxOverdue).length, soon=all.filter(oxSoon).length, low=all.filter(oxLow).length, msod=p.id==='project'? all.reduce((n,r)=>n+(r.milestones||[]).filter(msOverdue).length,0) : 0;
+  let h=`<div class="vhead"><h1>${esc(optL(p.name))}</h1><span class="sub">${esc(optL(p.desc))}</span><div class="actions">`;
+  if(p.views.length>1) h+=`<div class="tabs" role="tablist">${p.views.map(v=>`<button type="button" class="${view===v?'on':''}" data-action="ox-view" data-v="${v}">${esc(ot({table:'vTable',dept:'vDept',owner:'vOwner',dash:'vDash',board:'vBoard'}[v]))}</button>`).join('')}</div>`;
+  if(S.downloads) h+=`<button class="btn" data-action="ox-export" type="button">${esc(ot('exportX'))}</button>`;
+  if(oxCanManage(p.id)) h+=`<button class="btn primary" data-action="ox-new" type="button">+ ${esc(ot('newRow'))}</button>`;
+  h+=`</div></div>`;
+  if(od || soon || low || msod) h+=`<div class="oxalerts">${od?`<button class="oxal bad" data-action="ox-od" type="button">${esc(ot('overdueN')(od))}</button>`:''}${msod?`<span class="oxal bad">${esc(ot('milestones'))}: ${esc(ot('overdueN')(msod))}</span>`:''}${soon?`<span class="oxal">${esc(ot('soonN')(soon))}</span>`:''}${low?`<button class="oxal bad" data-action="ox-od" type="button">${esc(ot('lowN')(low))}</button>`:''}</div>`;
+  // toolbar: search plus one filter per choice field
+  const selF=p.fields.filter(x=>['sel','dept'].includes(x.type) && x.k!=='kind').slice(0,4);
+  const ownersAll=[...new Set(all.flatMap(r=>r.ownerEmails||[]))];
+  h+=`<div class="toolbar"><input id="oxq" class="oxq" type="search" placeholder="${esc(ot('searchPh'))}" value="${esc(f.q)}">`;
+  for(const x of selF){ const opts = x.type==='dept'? OX_DEPTS.map(d=>[d[0], optL(d[1])]) : Object.entries(x.opts).map(([k,o])=>[k,optL(o)]);
+    h+=`<select data-action="ox-sel" data-k="${x.k}" id="oxf-${x.k}"><option value="">${esc(optL(x.label))}: ${esc(ot('all'))}</option>${opts.map(([k,l])=>`<option value="${esc(k)}" ${f.sel[x.k]===k?'selected':''}>${esc(l)}</option>`).join('')}</select>`; }
+  if(ownersAll.length) h+=`<select data-action="ox-sel" data-k="owners" id="oxf-owners"><option value="">${esc(ot('owner'))}: ${esc(ot('all'))}</option>${ownersAll.map(e=>`<option value="${esc(e)}" ${f.sel.owners===e?'selected':''}>${esc(personName(e))}</option>`).join('')}</select>`;
+  if(p.due || p.id==='inventory') h+=`<label class="toggle"><input type="checkbox" id="oxf-od" data-action="ox-flag" data-k="od" ${f.od?'checked':''}>${esc(p.id==='inventory'?ot('lowStock'):ot('onlyOverdue'))}</label>`;
+  if(p.closed.length) h+=`<label class="toggle"><input type="checkbox" id="oxf-hide" data-action="ox-flag" data-k="hide" ${f.hide?'checked':''}>${esc(ot('hideClosed'))}</label>`;
+  h+=`<span class="spacer"></span><span class="count" id="oxcount"></span></div><div id="oxbody"></div>`;
+  return h;
+}
+function oxBodyHTML(){
+  const p=oxPage(S.oxPage); if(!p) return ''; const view=S.oxView[p.id]||p.views[0];
+  const all=oxRows(p.id), list=oxSort(p, oxApply(p, all));
+  const c=$('#oxcount'); if(c) c.textContent=ot('rows')(list.length);
+  if(view==='dash') return oxDashHTML(p, oxApply(p, all));
+  if(view==='board') return oxProjectBoard(p, list);
+  if(!list.length) return `<div class="empty"><b>${esc(all.length? ot('emptyF') : ot('empty'))}</b></div>`;
+  if(view==='dept' || view==='owner'){
+    const groups=new Map();
+    for(const r of list){ const keys = view==='dept' ? [r.dept||''] : ((r.ownerEmails||[]).length? r.ownerEmails : ['']); for(const k of keys){ if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(r); } }
+    let h=''; const names=(k)=> k? (view==='dept'? deptName(k) : personName(k)) : (view==='dept'? '—' : ot('noOwner'));
+    for(const [k,rs] of [...groups].sort((a,b)=> names(a[0]).localeCompare(names(b[0]), L()))){ const done=rs.filter(oxClosed).length, od=rs.filter(oxOverdue).length;
+      h+=`<section class="oxgrp"><header><h3>${esc(names(k))}</h3><span class="muted small">${esc(ot('total'))} ${rs.length} · ${esc(ot('done'))} ${done} · ${esc(ot('overdue'))} ${od} · ${esc(ot('pctDone'))} ${Math.round(done/rs.length*100)}%</span></header>${oxTable(p, rs)}</section>`; }
+    return h;
+  }
+  return oxTable(p, list);
+}
+function oxTable(p, list){
+  let h=`<div class="tscroll"><table class="ttable oxt"><thead><tr>${p.cols.map(k=>`<th>${esc(oxColLabel(p,k))}</th>`).join('')}</tr></thead><tbody>`;
+  for(const r of list){ h+=`<tr class="task ${oxClosed(r)?'done':''} ${oxOverdue(r)?'late':''}" data-action="ox-open" data-id="${esc(r.id)}">${p.cols.map(k=>`<td class="${k==='title'?'title':''}">${k==='title'?`<div class="t">${esc(r.title||'…')}</div>${r.page==='meeting'&&r.meetingTitle?`<div class="meta"><span>${esc(r.meetingTitle)}${r.meetingDate?' · '+esc(fmtDate(r.meetingDate)):''}</span></div>`:''}${oxOverdue(r)&&r.delayReason?`<div class="meta"><span class="muted">${esc(ot('overdue'))}: ${esc(String(r.delayReason).slice(0,90))}</span></div>`:''}`:oxCell(p,r,k)}</td>`).join('')}</tr>`; }
+  return h+`</tbody></table></div>`;
+}
+function oxDashHTML(p, list){
+  const total=list.length, done=list.filter(oxClosed).length, od=list.filter(oxOverdue).length, open=total-done;
+  const onTime=list.filter(r=>oxClosed(r) && (!r.due || !r.doneAt || r.doneAt.slice(0,10)<=r.due)).length;
+  const avg=total? Math.round(list.reduce((n,r)=>n+(+r.progress||0),0)/total) : 0;
+  let h=`<div class="tiles"><div class="tile"><div class="k">${esc(ot('total'))}</div><div class="v num">${total}</div></div><div class="tile"><div class="k">${esc(ot('pctDone'))}</div><div class="v num">${total?Math.round(done/total*100):0}%</div></div><div class="tile"><div class="k">${esc(ot('onTime'))}</div><div class="v num">${done?Math.round(onTime/done*100):0}%</div></div><div class="tile ${od?'overdue':''}"><div class="k">${esc(ot('overdue'))}</div><div class="v num">${od}</div></div></div>`;
+  const perf=(keyOf2, nameOf2, label)=>{ const m=new Map(); for(const r of list){ for(const k of keyOf2(r)){ if(!m.has(k)) m.set(k,[]); m.get(k).push(r); } }
+    let t2=`<div class="section"><h2>${esc(label)}</h2><div class="tscroll"><table class="ttable"><thead><tr><th>${esc(label===ot('deptPerf')?ot('dept'):ot('owner'))}</th><th>${esc(ot('total'))}</th><th>${esc(ot('open'))}</th><th>${esc(ot('overdue'))}</th><th>${esc(ot('done'))}</th><th>${esc(ot('avgProg'))}</th><th>${esc(ot('pctDone'))}</th></tr></thead><tbody>`;
+    for(const [k,rs] of [...m].sort((a,b)=>b[1].length-a[1].length)){ const d=rs.filter(oxClosed).length, o=rs.filter(oxOverdue).length, pc=Math.round(d/rs.length*100), av=Math.round(rs.reduce((n,r)=>n+(+r.progress||0),0)/rs.length);
+      t2+=`<tr><td>${esc(nameOf2(k))}</td><td class="num">${rs.length}</td><td class="num">${rs.length-d}</td><td class="num">${o?`<b>${o}</b>`:'0'}</td><td class="num">${d}</td><td><span class="pbar"><i style="width:${av}%"></i></span><span class="num small">${av}%</span></td><td><span class="pbar strong"><i style="width:${pc}%"></i></span><span class="num small">${pc}%</span></td></tr>`; }
+    return t2+`</tbody></table></div></div>`; };
+  h+=perf(r=>[r.dept||''], k=>k? deptName(k) : '—', ot('deptPerf'));
+  h+=perf(r=>(r.ownerEmails||[]).length? r.ownerEmails : [''], k=>k? personName(k) : ot('noOwner'), ot('workload'));
+  return h;
+}
+function oxProjectBoard(p, list){
+  const act=list.filter(r=>!oxClosed(r)), risk=act.filter(r=>r.health==='risk').length, off=act.filter(r=>r.health==='off').length;
+  let h=`<div class="tiles"><div class="tile"><div class="k">${esc(ot('projects'))}</div><div class="v num">${list.length}</div></div><div class="tile"><div class="k">${esc(ot('active'))}</div><div class="v num">${act.length}</div></div><div class="tile"><div class="k">${esc(ot('atRisk'))}</div><div class="v num">${risk}</div></div><div class="tile ${off?'overdue':''}"><div class="k">${esc(ot('offTrack'))}</div><div class="v num">${off}</div></div></div>`;
+  if(!list.length) return h+`<div class="empty"><b>${esc(oxRows(p.id).length? ot('emptyF') : ot('empty'))}</b></div>`;
+  h+=`<div class="oxproj">`;
+  for(const r of list){ const ms=r.milestones||[], msd=ms.filter(m=>m.status==='done').length, next=ms.filter(m=>m.status!=='done' && m.deadline).sort((a,b)=>a.deadline.localeCompare(b.deadline))[0];
+    h+=`<button class="pcardx h-${esc(r.health||'on')}" data-action="ox-open" data-id="${esc(r.id)}" type="button"><span class="row1"><span class="num muted">${esc(r.code||'')}</span>${oxCell(p,r,'health')}</span><b class="pt">${esc(r.title||'')}</b><span class="muted small">${esc(deptName(r.dept))}${ownersText(r)?' · '+esc(ownersText(r)):''}</span>
+      <span class="row2">${oxCell(p,r,'progress')}</span>
+      <span class="row3"><span>${oxCell(p,r,'status')}</span><span class="small">${r.due?`${esc(ot('nextDue'))}: <span class="due ${oxOverdue(r)?'overdue':''}">${esc(fmtDate(r.due))}</span>`:''}</span></span>
+      <span class="row3 small muted"><span>${esc(ot('milestones'))}: ${msd}/${ms.length}${next?` · ${esc(next.name)} ${esc(fmtDate(next.deadline))}`:''}</span><span>${esc(ot('issuesN')(+r.openIssues||0))}</span></span>
+      ${r.blockers?`<span class="blk small">${esc(String(r.blockers).slice(0,120))}</span>`:''}</button>`; }
+  return h+`</div>`;
+}
+
+/* drawer */
+function oxBlank(pid){ const p=oxPage(pid), r={page:pid}; for(const f of p.fields){ if(f.def!==undefined) r[f.k]=f.def; else if(f.type==='people') { r.owners=[]; r.ownerEmails=[]; } else if(f.type==='milestones'||f.type==='moves') r[f.k]=[]; else if(f.type==='pct') r[f.k]=0; else r[f.k]=''; } if(pid==='hsdev') r.requested=todayISO(); if(pid==='hsissue') r.found=todayISO(); return r; }
+function oxOpen(id){ const r=S.ox.get(id); if(!r) return; S.oxDrawer={mode:'edit', id, draft:clone(r), confirm:false, err:''}; oxRenderDrawer(); }
+function oxNew(){ if(!oxCanManage(S.oxPage)) return; S.oxDrawer={mode:'new', id:null, draft:oxBlank(S.oxPage), confirm:false, err:''}; oxRenderDrawer(); setTimeout(()=>$('#ox-title')?.focus(),30); }
+function oxFieldHTML(p, f, x, canAll, ownKeys){
+  const ro = !(canAll || ownKeys.includes(f.k)); const dis=ro?'disabled':''; const id='ox-'+f.k; const v=x[f.k]; const lab=optL(f.label);
+  const wrap=(inner)=> `<div class="field ${f.wide?'full':''} ${f.delay&&oxOverdue(x)&&!String(x.delayReason||'').trim()?'need':''}"><label for="${id}">${esc(lab)}</label>${inner}</div>`;
+  switch(f.type){
+    case 'text': return wrap(`<input id="${id}" data-oxf="${f.k}" value="${esc(v||'')}" maxlength="${f.k==='title'?200:120}" ${dis}>`);
+    case 'link': return wrap(`<input id="${id}" data-oxf="${f.k}" type="url" dir="ltr" placeholder="https://drive.google.com/..." value="${esc(v||'')}" ${dis}>${v?` <a class="small" href="${esc(v)}" target="_blank" rel="noopener">${esc(ot('openLink'))}</a>`:''}`);
+    case 'area': return wrap(`<textarea id="${id}" data-oxf="${f.k}" rows="3" maxlength="3000" ${dis}>${esc(v||'')}</textarea>`);
+    case 'date': return wrap(`<input id="${id}" type="date" data-oxf="${f.k}" value="${esc(v||'')}" ${dis}>`);
+    case 'num': case 'money': return wrap(`<input id="${id}" type="number" step="any" data-oxf="${f.k}" data-num="1" value="${esc(v??'')}" ${dis}>`);
+    case 'pct': return wrap(`<div class="pctin"><input id="${id}" type="range" min="0" max="100" step="5" data-oxf="${f.k}" data-num="1" value="${+v||0}" ${dis}><output id="${id}-o" class="num">${+v||0}%</output></div>`);
+    case 'sel': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}>${Object.entries(f.opts).map(([k,o])=>`<option value="${esc(k)}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
+    case 'dept': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value=""></option>${OX_DEPTS.map(([k,o])=>`<option value="${k}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
+    case 'proj': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value="">${esc(ot('noProj'))}</option>${oxRows('project').map(r=>`<option value="${esc(r.id)}" ${v===r.id?'selected':''}>${esc(projName(r.id))}</option>`).join('')}</select>`);
+    case 'people': { const chips=(x.owners||[]).map((o,i)=>`<span class="ochip">${esc(o.name||personName(o.email))}${ro?'':`<button type="button" data-action="ox-rmowner" data-i="${i}" aria-label="×">×</button>`}</span>`).join('');
+      return wrap(`<div class="ochips">${chips}${ro?'':`<input id="${id}" list="oxdir" placeholder="${esc(ot('addOwner'))}" autocomplete="off"><datalist id="oxdir">${oxDirOptions()}</datalist>`}</div>`); }
+    case 'milestones': { const ms=v||[]; let t2=`<table class="ttable ms"><thead><tr><th>${esc(ot('msName'))}</th><th>${esc(ot('msOwner'))}</th><th>${esc(ot('msDue'))}</th><th>${esc(ot('msStatus'))}</th>${ro?'':'<th></th>'}</tr></thead><tbody>`;
+      ms.forEach((m,i)=>{ t2+=`<tr class="${msOverdue(m)?'late':''}"><td><input data-ms="${i}" data-mk="name" value="${esc(m.name||'')}" ${dis}></td><td><input data-ms="${i}" data-mk="owner" list="oxdir" value="${esc(m.owner||'')}" ${dis}></td><td><input type="date" data-ms="${i}" data-mk="deadline" value="${esc(m.deadline||'')}" ${dis}></td><td><select data-ms="${i}" data-mk="status" ${dis}>${['todo','doing','done'].map(s=>`<option value="${s}" ${m.status===s?'selected':''}>${esc(optL(ST4[s]))}</option>`).join('')}</select></td>${ro?'':`<td><button class="iconbtn sm" type="button" data-action="ox-rmms" data-i="${i}">×</button></td>`}</tr>`; });
+      t2+=`</tbody></table>${ro?'':`<button class="btn" type="button" data-action="ox-addms">+ ${esc(ot('addMs'))}</button>`}`; return wrap(t2); }
+    case 'moves': { const mv=v||[]; let t2=`<table class="ttable ms"><thead><tr><th>${esc(ot('mvDate'))}</th><th>${esc(ot('mvType'))}</th><th>${esc(ot('mvQty'))}</th><th>${esc(ot('mvRef'))}</th><th></th></tr></thead><tbody>${mv.slice().reverse().map(m=>`<tr><td class="num">${esc(fmtDate(m.date))}</td><td>${esc(m.type==='in'?ot('mvIn'):ot('mvOut'))}</td><td class="num">${esc(m.qty)}</td><td>${esc(m.ref||'')}</td><td class="muted small">${esc(personName(m.by||''))}</td></tr>`).join('')}</tbody></table>`;
+      if(!ro) t2+=`<div class="mvadd"><select id="mv-type"><option value="in">${esc(ot('mvIn'))}</option><option value="out">${esc(ot('mvOut'))}</option></select><input id="mv-qty" type="number" min="1" step="1" placeholder="${esc(ot('mvQty'))}"><input id="mv-ref" placeholder="${esc(ot('mvRef'))}"><input id="mv-date" type="date" value="${todayISO()}"><button class="btn" type="button" data-action="ox-addmove">+ ${esc(ot('addMove'))}</button></div>`;
+      return wrap(t2); }
+  }
+  return '';
+}
+function oxDirOptions(){ const set=new Map(); for(const m of S.members.values()){ if(m.email) set.set(lc(m.email), m.name||''); } for(const e of S.oxDir||[]) if(!set.has(lc(e))) set.set(lc(e), ''); return [...set].map(([e,n])=>`<option value="${esc(e)}">${esc(n||e)}</option>`).join(''); }
+function oxRenderDrawer(){
+  const host=$('#oxdrawerhost') || (()=>{ const d=document.createElement('div'); d.id='oxdrawerhost'; document.getElementById('app').appendChild(d); return d; })();
+  const D=S.oxDrawer; if(!D){ host.innerHTML=''; return; }
+  const x=D.draft, p=oxPage(x.page), canAll=oxCanManage(p.id), ownKeys = (!canAll && isOxOwner(S.ox.get(D.id)||x)) ? p.ownerKeys : [];
+  const ro=!canAll && !ownKeys.length;
+  let h=`<div class="scrim" data-action="ox-close"></div><aside class="drawer oxdrawer" role="dialog" aria-modal="true"><div class="dh"><span class="bname">${esc(optL(p.name))}${x.code?' · '+esc(x.code):''}</span><button class="iconbtn" data-action="ox-close" type="button" aria-label="${esc(ot('close'))}">✕</button></div><div class="db">`;
+  if(ownKeys.length) h+=`<div class="callout small"><span class="dot"></span><span>${esc(ot('ownerOnly'))}</span></div>`;
+  if(ro) h+=`<div class="callout small"><span class="dot"></span><span>${esc(ot('readOnly'))}</span></div>`;
+  if(D.err) h+=`<div class="err">${esc(D.err)}</div>`;
+  h+=`<div class="fgrid">${p.fields.filter(f=> !(f.delay && !oxOverdue(x) && !x.delayReason)).map(f=>oxFieldHTML(p,f,x,canAll,ownKeys)).join('')}</div>`;
+  if(p.id==='project' && D.mode==='edit' && (isCEO()||oxMember()||oxHR())){ const iss=oxRows('pissue').filter(r=>r.projectId===D.id); if(iss.length) h+=`<div class="dsec"><h3>${esc(ot('projIssues'))}</h3>${oxTable(oxPage('pissue'), iss)}</div>`; }
+  if(D.mode==='edit'){ const hs=(x.history||[]).slice().reverse().slice(0,25); if(hs.length) h+=`<div class="dsec"><h3>${esc(ot('history'))}</h3><ul class="hist">${hs.map(e=>`<li><span class="w">${esc(fmtDateTime(e.at))}</span><span>${esc(e.name||personName(e.email||''))} · ${esc(e.what==='created'?ot('created'):ot('changed')(e.fields.map(k=>{ const f=oxF(p,k); return f? optL(f.label):k; }).join('، ')))}</span></li>`).join('')}</ul></div>`; }
+  h+=`</div><div class="dfoot">`;
+  if(!ro) h+=`<button class="btn primary" data-action="ox-save" type="button">${esc(D.mode==='new'?ot('create'):ot('save'))}</button>`;
+  h+=`<button class="btn" data-action="ox-close" type="button">${esc(ro?ot('close'):ot('cancel'))}</button><span class="grow"></span>`;
+  if(D.mode==='edit' && canAll) h+= D.confirm ? `<span class="confirm"><span>${esc(ot('delAsk'))}</span><button class="btn danger" data-action="ox-delyes" type="button">${esc(ot('yesDel'))}</button></span>` : `<button class="btn" data-action="ox-delask" type="button">${esc(ot('del'))}</button>`;
+  h+=`</div></aside>`;
+  host.innerHTML=h;
+}
+async function oxSave(){
+  const D=S.oxDrawer; if(!D) return; const x=D.draft, p=oxPage(x.page), prev=D.id? S.ox.get(D.id) : null;
+  x.title=String(x.title||'').trim(); if(!x.title){ D.err=ot('needTitle'); oxRenderDrawer(); return; }
+  const closing = p.closed.includes(x.status);
+  if(p.id==='meeting' && x.due && x.due<todayISO() && !closing && !String(x.delayReason||'').trim()){ D.err=ot('needReason'); oxRenderDrawer(); $('#ox-delayReason')?.focus(); return; }
+  const now=new Date().toISOString(), me={at:now, email:myMail(), name:myName()||''};
+  const rec=clone(x); delete rec.id;
+  rec.ownerEmails=[...new Set((rec.owners||[]).map(o=>lc(o.email)).filter(Boolean))];
+  if(closing && !(prev && p.closed.includes(prev.status))) rec.doneAt=now; else if(!closing) delete rec.doneAt;
+  if(p.id==='project' && prev) rec.openIssues=prev.openIssues||0;
+  const fields = prev ? Object.keys({...rec, ...prev}).filter(k=>!['history','updatedAt','updatedBy','updatedByEmail','doneAt','openIssues'].includes(k) && JSON.stringify(rec[k]??null)!==JSON.stringify(prev[k]??null)) : [];
+  if(prev && !fields.length && rec.doneAt===prev.doneAt){ S.oxDrawer=null; oxRenderDrawer(); return; }
+  rec.updatedAt=now; rec.updatedBy=S.me.id||null; rec.updatedByEmail=myMail();
+  if(!prev){ rec.code=oxNextCode(p.id); rec.createdAt=now; rec.createdBy=S.me.id||null; rec.createdByEmail=myMail(); rec.history=[{...me, what:'created', fields:[]}]; }
+  else rec.history=[...(prev.history||[]), {...me, what:'field', fields}].slice(-30);
+  const id = D.id || S.db.collection('ox').doc().id;
+  try{ await S.db.collection('ox').doc(id).set(rec); }catch(e){ console.warn(e); D.err=ot('saveFail'); oxRenderDrawer(); return; }
+  S.ox.set(id, {id, ...rec});
+  if(p.id==='pissue') await oxSyncIssues([rec.projectId, prev && prev.projectId]);
+  S.oxDrawer=null; oxRenderDrawer(); toast(ot('saved')); render();
+}
+// the public project page shows only the number of open issues; it is written by whoever saves an issue
+async function oxSyncIssues(ids){
+  for(const pid of [...new Set(ids.filter(Boolean))]){ const pr=S.ox.get(pid); if(!pr) continue; const n=oxRows('pissue').filter(r=>r.projectId===pid && r.status!=='closed').length;
+    if((pr.openIssues||0)===n) continue; try{ await S.db.collection('ox').doc(pid).update({openIssues:n}); pr.openIssues=n; }catch(e){ console.warn('issues count', e); } }
+}
+async function oxDelete(){ const D=S.oxDrawer; if(!D||!D.id) return; const r=S.ox.get(D.id); try{ await S.db.collection('ox').doc(D.id).delete(); S.ox.delete(D.id); if(r && r.page==='pissue') await oxSyncIssues([r.projectId]); toast(ot('deleted')); }catch(e){ toast(ot('saveFail'), true); } S.oxDrawer=null; oxRenderDrawer(); render(); }
+async function oxExport(){
+  const p=oxPage(S.oxPage); if(!p||!S.downloads) return;
+  const list=oxSort(p, oxApply(p, oxRows(p.id)));
+  const cols=['code', ...p.fields.filter(f=>!['milestones','moves'].includes(f.type)).map(f=>f.k)].concat(p.id==='project'?['openIssues']:[]);
+  const head=cols.map(k=> k==='code'?'#': k==='openIssues'? ot('projIssues') : optL(oxF(p,k).label)).concat([ot('overdue'), ot('lastUpd')]);
+  const val=(r,k)=>{ if(k==='code'||k==='openIssues') return r[k]??''; const f=oxF(p,k), v=r[k]; if(f.type==='people') return ownersText(r); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); return v??''; };
+  const rows=list.map(r=> cols.map(k=>val(r,k)).concat([oxOverdue(r)? -daysBetween(todayISO(), oxDueOf(r)) : '', (r.updatedAt||'').slice(0,16).replace('T',' ')]));
+  const name=`Marn_${p.prefix}_${optL(p.name).replace(/[^\w]+/g,'_')}_${todayISO()}`;
+  try{
+    if(typeof XLSX==='undefined'){ const csv='﻿'+[head,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n'); await S.downloads.save({filename:name+'.csv', data:csv}); return; }
+    const wb=XLSX.utils.book_new(); if(L()==='ar') wb.Workbook={Views:[{RTL:true}]};
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([head,...rows]), p.prefix);
+    if(p.id==='project'){ const ms=[[ot('msName'),ot('msOwner'),ot('msDue'),ot('msStatus'),'#']]; list.forEach(r=>(r.milestones||[]).forEach(m=>ms.push([m.name,m.owner,m.deadline,optL(ST4[m.status]),r.code]))); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ms), 'Milestones'); }
+    await S.downloads.save({filename:name+'.xlsx', data:new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})])});
+  }catch(e){ if(e&&e.code!=='declined') toast(ot('saveFail'), true); }
+}
+
+/* events */
+function oxRefreshBody(){ const b=$('#oxbody'); if(b) b.innerHTML=oxBodyHTML(); }
+document.addEventListener('click', async (ev)=>{
+  const el=ev.target.closest('[data-action]'); if(!el) return; const a=el.dataset.action; if(!a.startsWith('ox-')) return;
+  const D=S.oxDrawer;
+  if(a==='ox-view'){ S.oxView[S.oxPage]=el.dataset.v; S.mainKey=''; render(); }
+  else if(a==='ox-new'){ oxNew(); }
+  else if(a==='ox-open'){ ev.stopPropagation(); oxOpen(el.dataset.id); }
+  else if(a==='ox-close'){ S.oxDrawer=null; oxRenderDrawer(); }
+  else if(a==='ox-save'){ await oxSave(); }
+  else if(a==='ox-delask'){ D.confirm=true; oxRenderDrawer(); }
+  else if(a==='ox-delyes'){ await oxDelete(); }
+  else if(a==='ox-export'){ oxExport(); }
+  else if(a==='ox-od'){ const f=oxFilters(S.oxPage); f.od=!f.od; S.mainKey=''; render(); }
+  else if(a==='ox-rmowner' && D){ D.draft.owners.splice(+el.dataset.i,1); oxRenderDrawer(); }
+  else if(a==='ox-addms' && D){ (D.draft.milestones=D.draft.milestones||[]).push({name:'',owner:'',deadline:'',status:'todo'}); oxRenderDrawer(); }
+  else if(a==='ox-rmms' && D){ D.draft.milestones.splice(+el.dataset.i,1); oxRenderDrawer(); }
+  else if(a==='ox-addmove' && D){ const q=Math.abs(parseInt($('#mv-qty')?.value||'0',10)); if(!q) { $('#mv-qty')?.focus(); return; } const type=$('#mv-type').value;
+    (D.draft.moves=D.draft.moves||[]).push({date:$('#mv-date').value||todayISO(), type, qty:q, ref:($('#mv-ref').value||'').trim().slice(0,80), by:myMail()});
+    D.draft.qty=(Number(D.draft.qty)||0)+(type==='in'?q:-q); oxRenderDrawer(); }
+});
+function oxAddOwner(v){ const D=S.oxDrawer; if(!D) return; v=String(v||'').trim(); if(!v) return;
+  let email=null, name='';
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) email=lc(v);
+  else { for(const m of S.members.values()){ if(m.name && fold(m.name)===fold(v)){ email=lc(m.email); name=m.name; break; } } }
+  if(!email){ toast(L()==='ar'?'اكتب بريد العمل أو اختر من القائمة.':'Type a work email or pick from the list.', true); return; }
+  if(!name) name=personName(email)===email? '' : personName(email);
+  D.draft.owners=D.draft.owners||[]; if(!D.draft.owners.some(o=>lc(o.email)===email)) D.draft.owners.push({email, name});
+  oxRenderDrawer(); setTimeout(()=>$('#ox-owners')?.focus(),10); }
+document.addEventListener('change', (ev)=>{
+  const el=ev.target;
+  if(el.dataset.action==='ox-sel'){ oxFilters(S.oxPage).sel[el.dataset.k]=el.value; oxRefreshBody(); return; }
+  if(el.dataset.action==='ox-flag'){ oxFilters(S.oxPage)[el.dataset.k]=el.checked; oxRefreshBody(); return; }
+  if(el.id==='ox-owners'){ oxAddOwner(el.value); return; }
+  const D=S.oxDrawer; if(!D || !el.closest('#oxdrawerhost')) return;
+  if(el.dataset.ms!==undefined){ const m=D.draft.milestones[+el.dataset.ms]; if(m) m[el.dataset.mk]=el.value; return; }
+  if(el.dataset.oxf){ const k=el.dataset.oxf; D.draft[k]= el.dataset.num? (el.value===''? '' : Number(el.value)) : el.value;
+    if(k==='status' && D.draft.page!=='project'){ const p=oxPage(D.draft.page); if(p.closed.includes(el.value) && oxF(p,'progress')) D.draft.progress=100; }
+    if(k==='due' || k==='status' || k==='progress') oxRenderDrawer(); }
+});
+document.addEventListener('input', (ev)=>{
+  const el=ev.target;
+  if(el.id==='oxq'){ oxFilters(S.oxPage).q=el.value; oxRefreshBody(); return; }
+  const D=S.oxDrawer; if(!D || !el.closest('#oxdrawerhost')) return;
+  if(el.type==='range'){ const o=$('#'+el.id+'-o'); if(o) o.textContent=el.value+'%'; D.draft[el.dataset.oxf]=Number(el.value); return; }
+  if(el.dataset.ms!==undefined){ const m=D.draft.milestones[+el.dataset.ms]; if(m) m[el.dataset.mk]=el.value; return; }
+  if(el.dataset.oxf && el.tagName!=='SELECT' && el.type!=='date'){ D.draft[el.dataset.oxf]= el.dataset.num? (el.value===''? '' : Number(el.value)) : el.value; }
+});
+document.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter' && ev.target.id==='ox-owners'){ ev.preventDefault(); oxAddOwner(ev.target.value); } if(ev.key==='Escape' && S.oxDrawer){ S.oxDrawer=null; oxRenderDrawer(); } });
+
 /* ---------- boot ---------- */
 async function boot(){
   try{ const l=localStorage.getItem('marn.lang'); if(l==='en'||l==='ar') S.lang=l; }catch(e){}
   try{ const v=localStorage.getItem('marn.bview'); if(['table','kanban','timeline'].includes(v)) S.boardView=v; }catch(e){}
   const hash=(location.hash||'').replace('#','');
   const [h1,h2]=hash.split('/');
-  if(['home','ceo','access','mine','overdue','activity'].includes(h1)) S.view=h1; else if(BOARDS.some(b=>b.id===h1)){ S.view='board'; S.board=h1; if(SECTIONS.includes(h2)) S.section=h2; }
+  if(['home','ceo','access','mine','overdue','activity'].includes(h1)) S.view=h1; else if(BOARDS.some(b=>b.id===h1)){ S.view='board'; S.board=h1; if(SECTIONS.includes(h2)) S.section=h2; } else if(h1==='ox' && oxPage(h2)){ S.view='ox'; S.oxPage=h2; }
   setLang(S.lang);
   await restoreKey();
   const caps = window.__marnCapsPromise ? await window.__marnCapsPromise : (window.__marnCaps || null);
