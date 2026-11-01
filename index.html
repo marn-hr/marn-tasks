@@ -1028,6 +1028,129 @@ svg.fish .more{fill:var(--g5);font-size:12px;font-weight:700}
 .mvadd{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .mvadd input,.mvadd select{height:34px;border:1px solid var(--g3);border-radius:var(--radius);padding:0 8px;background:var(--surface);font:inherit;min-width:0;flex:1}
 
+
+/* ---------- 1 Nov 2026: home overview and the Operational Excellence group ---------- */
+.ov{display:flex;flex-direction:column;gap:22px;max-width:1180px}
+.ov-top{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.ov-hero{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:6px 0}
+.ov-hero .hello{margin:0;color:var(--g5);font-size:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ov-hero .hello i{width:3px;height:3px;border-radius:50%;background:var(--g4);display:inline-block}
+.ov-hero h1{margin:0;font-size:34px;line-height:1.2;font-weight:700;letter-spacing:-.015em;text-wrap:balance}
+#app[lang="ar"] .ov-hero h1{letter-spacing:0;line-height:1.4}
+.ov-hero h1 .big{font-size:1.25em;font-variant-numeric:tabular-nums}
+.ov-hero .lead{margin:0;color:var(--g5);max-width:560px}
+.ov-hero .ov-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.ov-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0}
+.ov-kpis .tile{display:flex;flex-direction:column;justify-content:space-between;min-height:118px;margin:0}
+.ov-kpis .tile .v{font-size:44px}
+.ov-kpis .tile .s{font-size:12px;color:var(--g5);margin-top:4px}
+.ov-kpis .tile.overdue .s{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.ov-kpis .tile.calm .v{color:var(--g4)}
+.ov-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+.ov-row.one{grid-template-columns:minmax(0,1fr)}
+.ov-card{border:1px solid var(--g2);border-radius:calc(var(--radius) + 4px);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);overflow:hidden}
+.ov-card > header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:16px 20px 12px;border-bottom:1px solid var(--g2)}
+.ov-card > header h2{margin:0;font-size:16px;font-weight:700}
+.ov-card > header .linkbtn{font-size:13px}
+.ov-card > header .sub{color:var(--g5);font-size:12px}
+.ov-list{list-style:none;margin:0;padding:6px 8px 8px}
+.ov-list li + li{border-top:1px solid var(--g1)}
+.ov-it{display:flex;align-items:center;gap:14px;width:100%;border:0;background:transparent;text-align:start;padding:11px 12px;border-radius:var(--radius-s,7px);cursor:pointer;color:inherit}
+.ov-it:hover{background:var(--g1)}
+.ov-it .mk{width:3px;align-self:stretch;border-radius:3px;background:var(--g2);flex:none}
+.ov-it.od .mk{background:var(--fg)}
+.ov-kpis .tile .v::after{display:none}
+.ov-it .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ov-it .tx b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov-it .tx span{font-size:12px;color:var(--g5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov-it .due{flex:none;font-size:12px;border:1px solid var(--g3);border-radius:999px;padding:3px 10px;color:var(--g6);white-space:nowrap}
+.ov-it.od .due{background:var(--fg);border-color:var(--fg);color:var(--bg);font-weight:600}
+.ov-empty{padding:26px 20px;display:flex;flex-direction:column;gap:4px}
+.ov-empty b{font-size:15px}
+.ov-empty span{color:var(--g5);font-size:13px}
+.ov-rep{width:100%;border-collapse:collapse;font-size:13px}
+.ov-rep th{font-weight:500;color:var(--g5);font-size:12px;text-align:start;padding:10px 20px 6px}
+.ov-rep td{padding:10px 20px;border-top:1px solid var(--g1)}
+.ov-rep tr.row{cursor:pointer}
+.ov-rep tr.row:hover td{background:var(--g1)}
+.ov-rep td.n{font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;color:var(--g5)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;border:1.5px solid var(--g4);box-sizing:border-box}
+.pill.draft{color:var(--g6)}.pill.draft::before{background:var(--g4);border-color:var(--g4)}
+.pill.final{color:var(--accent);font-weight:600}.pill.final::before{background:var(--accent);border-color:var(--accent)}
+.ov-sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 -6px}
+.ov-sec h2{margin:0;font-size:18px;font-weight:700}
+.ov-sec p{margin:0;color:var(--g5);font-size:13px}
+.ov-doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.ovd{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;border:1px solid var(--g2);border-radius:calc(var(--radius) + 4px);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);padding:18px 18px 16px;transition:transform .15s,box-shadow .15s}
+a.ovd:hover{transform:translateY(-2px);box-shadow:var(--shadow-2),inset 0 1px 0 var(--hi)}
+a.ovd:hover .go{color:var(--accent)}
+.ovd-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.ovd .ibox,.ovx .ibox{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:10px;background:var(--g1);color:var(--fg);box-shadow:var(--shadow-in)}
+.ovd .ic,.ovx-head .ic{width:20px;height:20px}
+.ovd.unl .ibox,.ovx.unl .ovx-head .ibox{background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 16px -8px rgba(5,109,105,.7)}
+.ovd-st{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--g5);border:1px solid var(--g2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.ovd-st svg.lock{width:12px;height:12px;margin:0}
+.ovd.unl .ovd-st,.ovx.unl .ovd-st{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:var(--accent-soft)}
+.ovd h3,.ovx h3{margin:0;font-size:19px;line-height:1.3;font-weight:700}
+.ovd p,.ovx-head p{margin:0;color:var(--g5);font-size:13px}
+.ovd-n{display:flex;align-items:center;gap:14px;margin-top:auto;padding-top:14px;font-size:13px;color:var(--g5)}
+.ovd-n b{color:var(--fg);font-size:15px}
+.ovd-n .bad b{background:var(--fg);color:var(--bg);border-radius:6px;padding:0 6px}
+.ovd-n .go{margin-inline-start:auto;display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--fg);transition:color .15s}
+.ovd.off{background:var(--g1);box-shadow:var(--shadow-in);border-color:transparent;color:var(--g5)}
+.ovd.off h3{color:var(--g5)}
+.ovd.off .ibox{background:transparent;box-shadow:none;color:var(--g4)}
+.ovd.off .ovd-st{border-style:dashed}
+.ovx{display:grid;grid-template-columns:minmax(220px,280px) minmax(0,1fr);border:1px solid var(--g2);border-radius:calc(var(--radius) + 4px);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);overflow:hidden}
+.ovx-head{display:flex;flex-direction:column;gap:6px;padding:20px;border-inline-end:1px solid var(--g2);background:var(--g1);text-decoration:none;color:inherit}
+a.ovx-head:hover .go{color:var(--accent)}
+.ovx-head .ovd-n{flex-wrap:wrap}
+.ovx-body{padding:16px 18px 18px}
+.ovx-body h4{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--g5);display:flex;align-items:center;gap:8px}
+.ovx-body h4 span{border:1px solid var(--g3);border-radius:999px;padding:0 8px;font-weight:500}
+.ovx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.ovt{display:flex;align-items:center;gap:10px;border:1px solid var(--g2);border-radius:var(--radius-s,7px);background:var(--surface);padding:9px 10px;text-align:start;cursor:pointer;color:inherit;transition:border-color .15s,background .15s}
+.ovt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.ovt .ibox{width:28px;height:28px;border-radius:8px;box-shadow:none;background:var(--g1);color:var(--g6)}
+.ovt .ibox .ic{width:15px;height:15px}
+.ovt .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ovt .tx b{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ovt .tx span{font-size:11.5px;color:var(--g5);display:flex;align-items:center;gap:5px}
+.ovt .tx span svg.lock{width:10px;height:10px;margin:0}
+.ovt .tx span b{font-size:11.5px;color:var(--fg)}
+.ov-foot{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:-6px}
+.crumbs{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12px;color:var(--g5)}
+.crumbs .linkbtn{font-size:12px;text-decoration:none;color:var(--g5)}
+.crumbs .linkbtn:hover{color:var(--accent);text-decoration:underline}
+/* sidebar: Operational Excellence group */
+.rgrp-h{display:flex;align-items:center;gap:2px}
+.rgrp-h .item{flex:1;min-width:0}
+.rtog{flex:none;width:28px;height:28px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center;color:var(--g4);cursor:pointer;padding:0}
+.rtog:hover{background:var(--g1);color:var(--fg)}
+.rtog .chev,#app[dir="rtl"] .rtog .chev{width:15px;height:15px;transform:rotate(90deg);transition:transform .18s}
+.rgrp.open .rtog .chev,#app[dir="rtl"] .rgrp.open .rtog .chev{transform:rotate(-90deg)}
+.rgrp-b{display:none;position:relative;margin:2px 0 6px;padding-inline-start:20px}
+.rgrp.open .rgrp-b{display:block}
+.rgrp-b::before{content:"";position:absolute;inset-inline-start:23px;top:6px;bottom:6px;width:1px;background:var(--g2)}
+.rail .item.sub{min-height:34px;padding:4px 8px;padding-inline-start:12px;font-size:13px;gap:9px}
+.rail .item.sub .ibox{width:24px;height:24px;border-radius:7px;box-shadow:none;background:transparent}
+.rail .item.sub .ic{width:14px;height:14px}
+.rail .item.sub.on .ibox{background:var(--accent);color:var(--accent-ink)}
+@media (max-width:1100px){ .ov-top,.ov-row{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:900px){
+  .ov-hero h1{font-size:26px}
+  .ov-kpis .tile{min-height:0}
+  .ov-kpis .tile .v{font-size:32px}
+  .ov-doors{grid-template-columns:minmax(0,1fr)}
+  .ovx{grid-template-columns:minmax(0,1fr)}
+  .ovx-head{border-inline-end:0;border-bottom:1px solid var(--g2)}
+  .ovx-grid{grid-template-columns:minmax(0,1fr)}
+  .rgrp,.rgrp-h,.rgrp .rgrp-b,.rgrp.open .rgrp-b{display:contents}
+  .rtog,.rgrp-b::before{display:none}
+  .rail .item.sub{min-height:0;font-size:inherit}
+}
+@media (max-width:560px){ .ov-kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px} .ov-kpis .tile{padding:12px} .ov-kpis .tile .v{font-size:26px} .ov-kpis .tile .s{display:none} }
 </style>
 <script>
 (function(){
@@ -1600,13 +1723,12 @@ function renderRail(){
     if(isCEO()) h += item('ceo', t('ceoView'), S.view==='ceo');
     if(hasAnyAccess()){ h += item('mine', t('mine'), S.view==='mine'); h += item('overdue', t('overdueV'), S.view==='overdue'); }
     if(isAdmin()) h += item('access', t('accessV'), S.view==='access');
-    const mb=myBoards();
+    const mb=BOARDS.filter(b=> canSee(b.id) || (b.id===OPX && oxPages().length));
     if(mb.length){
       h += `<span class="rsep"></span><h4>${esc(t('depts'))}</h4>`;
-      for(const b of mb){ const o=open(b).length, s=stuck(b).length;
+      for(const b of mb){ if(b.id===OPX){ h += oxRailGroup(b, open, stuck); continue; } const o=open(b).length, s=stuck(b).length;
         h += `<button class="item ${S.view==='board'&&S.board===b.id?'on':''}" data-action="nav" data-nav="board:${b.id}" type="button" title="${esc(b[L()])}">${icon(b.id)}<span class="lbl">${esc(b[L()])}</span>${keyOf(b.id)?'':LOCK_SVG}<span class="cnt">${s?`<b>${s}</b> · `:''}${o}</span></button>`; }
     }
-    h += oxRailHTML();
   }
   const me=S.me;
   if(me.id){
@@ -2054,7 +2176,7 @@ function nav(target){
     S.filters={q:'',status:'',owner:'',priority:'',hideDone:false,dept:'',focus:''}; $('#q').value='';
     if(keyOf(b)) logEvent(b,'open',null,'open');
   }
-  else if(target.startsWith('ox:')){ S.view='ox'; S.oxPage=target.slice(3); S.board=null; S.oxDrawer=null; oxRenderDrawer(); }
+  else if(target.startsWith('ox:')){ if(S.oxGrp===false) S.oxGrp=null; S.view='ox'; S.oxPage=target.slice(3); S.board=null; S.oxDrawer=null; oxRenderDrawer(); }
   else { S.view=target; S.board=null; }
   setHash(); S.mainKey=''; render(); $('#main').scrollTop=0;
 }
@@ -2497,14 +2619,87 @@ function doorHTML(b){
     <dl class="dstats"><div><dt>${esc(t('openTasks'))}</dt><dd class="num">${open}${od?`<small> · ${esc(t('overdue'))} ${od}</small>`:''}</dd></div><div><dt>${esc(t('thisWeek'))}</dt><dd class="s-${st(wk)}">${esc(t('rs')[st(wk)])}</dd></div><div><dt>${esc(t('monthReport')(periodLabel('monthly', ym)))}</dt><dd class="s-${st(mo)}">${esc(t('rs')[st(mo)])}</dd></div>${feat(id,'issue')? issDoorStat(id) : ''}</dl>
     <span class="dgo">${esc(t('enter'))}${CHEV_SVG}</span></a>`;
 }
+const HX={
+ ar:{ stOd:(n)=>`${arN(n,'بند متأخر','بندان متأخران','بنود متأخرة','بندًا متأخرًا')} بانتظارك`, stSoon:(n)=>`${arN(n,'بند يستحق','بندان يستحقان','بنود تستحق','بندًا يستحق')} خلال سبعة أيام`, stClear:'لا شيء متأخر عليك اليوم',
+  subOd:'ابدأ بالأقدم: أنجزه، أو حدّث حالته واكتب سبب التأخير.', subSoon:'لا متأخرات عليك. هذه المواعيد القريبة.', subClear:'لا مهام مسندة إليك تستحق خلال الأيام السبعة القادمة.',
+  kOpen:'مفتوحة عليّ', kOd:'متأخرة', kSoon:'تستحق خلال 7 أيام', sOpen:'في الإدارات والمتتبعات', sOd:'تجاوزت موعدها', sSoon:'تبدأ من اليوم',
+  att:'يحتاج انتباهك', attAll:'كل مهامي', attEmpty:'لا شيء يحتاج انتباهك الآن', attEmptyHint:'تظهر هنا المهام المسندة إليك المتأخرة أو القريبة من موعدها.',
+  today:'اليوم', late:(n)=>`متأخرة ${arN(n,'يومًا واحدًا','يومين','أيام','يومًا')}`, inD:(n)=>`بعد ${arN(n,'يوم واحد','يومين','أيام','يومًا')}`,
+  reps:'تقارير الإدارات', wk:'هذا الأسبوع', mo:(m)=>`تقرير ${m}`, dept:'الإدارة',
+  depts:'الإدارات', deptsSub:'تُفتح كل إدارة لأعضائها بكلمة مرور خاصة بها، ومتتبعات التميز التشغيلي ضمن إدارتها.',
+  openW:'مفتوحة', odW:'متأخرة', trackers:'المتتبعات', pub:'عامة', res:'مقيّدة', lowW:'تحت حد الطلب',
+  membersOnly:'صفحات الإدارة لأعضائها فقط، والمتتبعات متاحة لك.', trackersOnly:'المتتبعات المتاحة لك', showTr:'إظهار المتتبعات أو إخفاؤها', inTracker:'في' },
+ en:{ stOd:(n)=>`${n} overdue ${n===1?'item is':'items are'} waiting on you`, stSoon:(n)=>`${n} ${n===1?'item is':'items are'} due in the next seven days`, stClear:'Nothing overdue on you today',
+  subOd:'Start with the oldest: finish it, or update its status and give the reason for delay.', subSoon:'Nothing overdue. These are your nearest deadlines.', subClear:'No item assigned to you is due in the next seven days.',
+  kOpen:'Open on me', kOd:'Overdue', kSoon:'Due in 7 days', sOpen:'Across departments and trackers', sOd:'Past their due date', sSoon:'Starting today',
+  att:'Needs your attention', attAll:'All my tasks', attEmpty:'Nothing needs your attention right now', attEmptyHint:'Items assigned to you show here when they are overdue or close to their due date.',
+  today:'Today', late:(n)=>`${n} day${n===1?'':'s'} late`, inD:(n)=>`In ${n} day${n===1?'':'s'}`,
+  reps:'Department reports', wk:'This week', mo:(m)=>`${m} report`, dept:'Department',
+  depts:'Departments', deptsSub:'Each department opens to its members with its own password; the Operational Excellence trackers sit inside their department.',
+  openW:'open', odW:'overdue', trackers:'Trackers', pub:'Public', res:'Restricted', lowW:'below reorder',
+  membersOnly:'Department pages are for its members; the trackers are open to you.', trackersOnly:'Trackers open to you', showTr:'Show or hide the trackers', inTracker:'in' } };
+const ht=(k)=> HX[L()][k];
+function ovMine(){
+  const me=myMail(), today=todayISO(), out=[];
+  for(const x of S.tasks.values()){ if(x.locked || x.status==='done' || isAch(x.board) || !isMine(x)) continue; out.push({kind:'task', id:x.id, title:titleOf(x), where:boardName(x.board), due:x.due||'', od:isOverdue(x)}); }
+  for(const r of S.ox.values()){ const p=oxPage(r.page); if(!p || !p.due || oxClosed(r)) continue; if(!(r.ownerEmails||[]).includes(me)) continue; out.push({kind:'ox', id:r.id, title:(r.code?r.code+' · ':'')+(r.title||'…'), where:optL(p.name), due:oxDueOf(r)||'', od:oxOverdue(r)}); }
+  const soon=out.filter(x=>!x.od && x.due && daysBetween(today,x.due)>=0 && daysBetween(today,x.due)<=7);
+  return {all:out, od:out.filter(x=>x.od), soon};
+}
+function ovDueLabel(x){ if(!x.due) return ''; const n=daysBetween(todayISO(), x.due); return n<0? ht('late')(-n) : n===0? ht('today') : n<=7? ht('inD')(n) : fmtDate(x.due); }
+function ovDoor(b){
+  const id=b.id, name=b[L()], desc=DEPT_DESC[id][L()];
+  if(!canSee(id)) return `<div class="ovd off" aria-disabled="true"><div class="ovd-top">${icon(id)}<span class="ovd-st">${LOCK_SVG}${esc(t('restricted'))}</span></div><h3>${esc(name)}</h3><p>${esc(desc)}</p></div>`;
+  const list=boardTasks(id), open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length, unl=!!keyOf(id);
+  const state = (isCEO() && !memberOf(id)) ? (unl? t('ceoAccess') : t('ceoWaitTitle')) : unl ? t('isOpen') : t('pwNeeded');
+  return `<a href="#${id}/tasks" class="ovd ${unl?'unl':''}" data-action="nav" data-nav="board:${id}"><div class="ovd-top">${icon(id)}<span class="ovd-st">${unl?'':LOCK_SVG}${esc(state)}</span></div><h3>${esc(name)}</h3><p>${esc(desc)}</p>
+    <div class="ovd-n"><span><b class="num">${open}</b> ${esc(ht('openW'))}</span>${od?`<span class="bad"><b class="num">${od}</b> ${esc(ht('odW'))}</span>`:''}<span class="go">${esc(t('enter'))}${CHEV_SVG}</span></div></a>`;
+}
+function ovOpx(){
+  const b=BOARDS.find(x=>x.id===OPX), pages=oxPages(), see=canSee(OPX);
+  if(!see && !pages.length) return `<div class="ov-doors">${ovDoor(b)}</div>`;
+  const name=b[L()], desc=DEPT_DESC[OPX][L()], unl=see && !!keyOf(OPX);
+  let head;
+  if(see){ const list=boardTasks(OPX), open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length;
+    const state = (isCEO() && !memberOf(OPX)) ? (unl? t('ceoAccess') : t('ceoWaitTitle')) : unl ? t('isOpen') : t('pwNeeded');
+    head=`<a href="#${OPX}/tasks" class="ovx-head" data-action="nav" data-nav="board:${OPX}"><div class="ovd-top">${icon(OPX)}<span class="ovd-st">${unl?'':LOCK_SVG}${esc(state)}</span></div><h3>${esc(name)}</h3><p>${esc(desc)}</p><div class="ovd-n"><span><b class="num">${open}</b> ${esc(ht('openW'))}</span>${od?`<span class="bad"><b class="num">${od}</b> ${esc(ht('odW'))}</span>`:''}<span class="go">${esc(t('enter'))}${CHEV_SVG}</span></div></a>`; }
+  else head=`<div class="ovx-head"><div class="ovd-top">${icon(OPX)}<span class="ovd-st">${LOCK_SVG}${esc(t('restricted'))}</span></div><h3>${esc(name)}</h3><p>${esc(ht('membersOnly'))}</p></div>`;
+  let g='';
+  for(const p of pages){ const l=oxRows(p.id), open=l.filter(r=>!oxClosed(r)).length, od=l.filter(r=>oxOverdue(r)).length, low=l.filter(oxLow).length;
+    const flag = p.id==='inventory'? (low?` · <b class="num">${low}</b> ${esc(ht('lowW'))}`:'') : (od?` · <b class="num">${od}</b> ${esc(ht('odW'))}`:'');
+    g+=`<button class="ovt" data-action="nav" data-nav="ox:${p.id}" type="button" title="${esc(optL(p.desc))}">${icon(p.icon)}<span class="tx"><b>${esc(optL(p.name))}</b><span>${p.access==='public'?'':LOCK_SVG}${esc(p.access==='public'?ht('pub'):ht('res'))} · <span class="num">${open}</span> ${esc(ht('openW'))}${flag}</span></span></button>`; }
+  return `<section class="ovx ${unl?'unl':''}">${head}<div class="ovx-body"><h4>${esc(see? ht('trackers') : ht('trackersOnly'))}<span class="num">${pages.length}</span></h4><div class="ovx-grid">${g}</div></div></section>`;
+}
 function homeHTML(){
-  const nm=(myName()||'').trim().split(/\s+/)[0]||'', hr=new Date().getHours();
-  let h=`<section class="hero"><p class="hello">${esc(hr<12?t('goodMorning'):t('goodEvening'))}${nm?esc(t('comma')+nm):''}</p><h1>${esc(t('homeTitle'))}</h1><p class="lead">${esc(isCEO()?t('homeSubCEO'):t('homeSub'))}</p></section>`;
-  h+=`<div class="doors">${BOARDS.map(doorHTML).join('')}</div>`;
-  h+=oxHomeSection();
-  if(isCEO()) h+=`<button class="ceo-cta" data-action="nav" data-nav="ceo" type="button">${icon('ceo')}<span><b>${esc(t('ceoView'))}</b><span>${esc(t('ceoCta'))}</span></span>${CHEV_SVG}</button>`;
-  if(isAdmin()) h+=`<p class="home-foot"><button class="linkbtn" data-action="nav" data-nav="access" type="button">${esc(t('manageAccess'))}</button></p>`;
-  return h;
+  const nm=(myName()||'').trim().split(/\s+/)[0]||'', hr=new Date().getHours(), M=ovMine();
+  let day=''; try{ day=new Intl.DateTimeFormat(t('dateFmt'),{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date()); }catch(e){}
+  const od=M.od.length, soon=M.soon.length, open=M.all.length;
+  const state = od? ht('stOd')(od) : soon? ht('stSoon')(soon) : ht('stClear');
+  const sub = od? ht('subOd') : soon? ht('subSoon') : ht('subClear');
+  let h=`<div class="ov"><div class="ov-top"><section class="ov-hero"><p class="hello"><span>${esc(hr<12?t('goodMorning'):t('goodEvening'))}${nm?esc(t('comma')+nm):''}</span>${day?`<i></i><span>${esc(day)}</span>`:''}</p><h1>${esc(state)}</h1><p class="lead">${esc(sub)}</p>`;
+  if(isCEO()) h+=`<div class="ov-acts"><button class="btn primary" data-action="nav" data-nav="ceo" type="button">${esc(t('ceoView'))}</button></div>`;
+  h+=`</section><div class="ov-kpis">
+    <button class="tile ${open?'':'calm'}" data-action="nav" data-nav="mine" type="button"><div class="k">${esc(ht('kOpen'))}</div><div><div class="v num">${open}</div><div class="s">${esc(ht('sOpen'))}</div></div></button>
+    <button class="tile ${od?'overdue':'calm'}" data-action="nav" data-nav="mine" type="button"><div class="k">${esc(ht('kOd'))}</div><div><div class="v num">${od}</div><div class="s">${esc(ht('sOd'))}</div></div></button>
+    <button class="tile ${soon?'':'calm'}" data-action="nav" data-nav="mine" type="button"><div class="k">${esc(ht('kSoon'))}</div><div><div class="v num">${soon}</div><div class="s">${esc(ht('sSoon'))}</div></div></button>
+  </div></div>`;
+  // needs attention and department reports
+  const items=[...M.od.sort((a,b)=>String(a.due).localeCompare(String(b.due))), ...M.soon.sort((a,b)=>String(a.due).localeCompare(String(b.due)))].slice(0,7);
+  let att=`<section class="ov-card"><header><h2>${esc(ht('att'))}</h2>${hasAnyAccess()&&myBoards().length?`<button class="linkbtn" data-action="nav" data-nav="mine" type="button">${esc(ht('attAll'))}</button>`:''}</header>`;
+  if(!items.length) att+=`<div class="ov-empty"><b>${esc(ht('attEmpty'))}</b><span>${esc(ht('attEmptyHint'))}</span></div>`;
+  else att+=`<ul class="ov-list">${items.map(x=>`<li><button class="ov-it ${x.od?'od':''}" data-action="${x.kind==='ox'?'ox-open':'open'}" data-id="${esc(x.id)}" type="button"><i class="mk"></i><span class="tx"><b>${esc(x.title)}</b><span>${esc(x.where)}</span></span><span class="due">${esc(ovDueLabel(x))}</span></button></li>`).join('')}</ul>`;
+  att+=`</section>`;
+  const mb=myBoards();
+  let rep='';
+  if(mb.length){ const ym=reportingMonth(), st=(r)=> r? (r.status==='final'?'final':'draft') : 'missing';
+    rep=`<section class="ov-card"><header><h2>${esc(ht('reps'))}</h2></header><table class="ov-rep"><thead><tr><th>${esc(ht('dept'))}</th><th>${esc(ht('wk'))}</th><th>${esc(ht('mo')(periodLabel('monthly', ym)))}</th></tr></thead><tbody>${mb.map(b=>{ const w=st(weeklyThisWeek(b.id)), m=st(monthlyFor(b.id, ym)); return `<tr class="row" data-action="nav" data-nav="board:${b.id}"><td class="n">${esc(b[L()])}</td><td><span class="pill ${w}">${esc(t('rs')[w])}</span></td><td><span class="pill ${m}">${esc(t('rs')[m])}</span></td></tr>`; }).join('')}</tbody></table></section>`; }
+  h+=`<div class="ov-row ${rep?'':'one'}">${att}${rep}</div>`;
+  // departments, with the Operational Excellence trackers inside their department
+  h+=`<div class="ov-sec"><h2>${esc(ht('depts'))}</h2><p>${esc(ht('deptsSub'))}</p></div>`;
+  h+=`<div class="ov-doors">${BOARDS.filter(b=>b.id!==OPX).map(ovDoor).join('')}</div>`;
+  h+=ovOpx();
+  if(isAdmin()) h+=`<p class="ov-foot"><button class="linkbtn" data-action="nav" data-nav="access" type="button">${esc(t('manageAccess'))}</button></p>`;
+  return h+`</div>`;
 }
 function noAccessHTML(){ return `<div class="notice"><h2>${esc(t('noAccessTitle'))}</h2><p>${esc(t('noAccessText')(S.me.email||''))}</p><p><button class="btn" data-action="signout" type="button">${esc(t('signOut'))}</button></p></div>`; }
 
@@ -3455,6 +3650,7 @@ const isOxOwner=(r)=> (r.ownerEmails||[]).includes(myMail()) || (!!oxPage(r.page
 function oxCanEdit(r){ return oxCanManage(r.page) || (oxPage(r.page).ownerKeys.length>0 && isOxOwner(r)); }
 
 /* state and data */
+S.oxGrp=(()=>{ try{ const v=localStorage.getItem('marn.oxgrp'); return v==='1'? true : v==='0'? false : null; }catch(e){ return null; } })();
 S.ox=new Map(); S.oxPage='meeting'; S.oxView={}; S.oxF={}; S.oxDrawer=null; S.oxDir=[]; S.oxPublic=false; S.oxLoaded={};
 const OX_SUBS=new Map(); let oxDirSub=null;
 function oxResubscribe(){
@@ -3531,6 +3727,19 @@ function oxHomeSection(){
     h+=`<button class="oxcard" data-action="nav" data-nav="ox:${p.id}" type="button"><span class="oxtag ${p.access==='public'?'pub':''}">${esc(p.access==='public'?ot('publicPg'):ot('restricted'))}</span><b>${esc(optL(p.name))}</b><span class="muted small">${esc(optL(p.desc))}</span><span class="oxnums"><span class="num">${open}</span> ${esc(ot('open'))}${od?` · <b class="num">${od}</b> ${esc(p.id==='inventory'?ot('lowStock'):ot('overdue'))}`:''}</span></button>`; }
   return h+`</div></section>`;
 }
+// the Operational Excellence department and its trackers, as one group in the sidebar (1 Nov 2026)
+function oxRailGroup(b, open, stuck){
+  const pages=oxPages(), see=canSee(OPX), active=(S.view==='board'&&S.board===OPX) || S.view==='ox';
+  const exp = S.oxGrp===null ? active : S.oxGrp;
+  const nm=b[L()];
+  const head = see
+    ? `<button class="item ${S.view==='board'&&S.board===OPX?'on':''}" data-action="nav" data-nav="board:${OPX}" type="button" title="${esc(nm)}">${icon(OPX)}<span class="lbl">${esc(nm)}</span>${keyOf(OPX)?'':LOCK_SVG}<span class="cnt">${stuck(b).length?`<b>${stuck(b).length}</b> · `:''}${open(b).length}</span></button>`
+    : `<button class="item" data-action="ox-grp" type="button" title="${esc(nm)}" aria-expanded="${exp}">${icon(OPX)}<span class="lbl">${esc(nm)}</span><span class="cnt">${pages.length}</span></button>`;
+  let sub='';
+  for(const p of pages){ const od=oxRows(p.id).filter(r=>oxOverdue(r)||oxLow(r)).length, op=oxRows(p.id).filter(r=>!oxClosed(r)).length;
+    sub+=`<button class="item sub ${S.view==='ox'&&S.oxPage===p.id?'on':''}" data-action="nav" data-nav="ox:${p.id}" type="button" title="${esc(optL(p.name))}">${icon(p.icon)}<span class="lbl">${esc(optL(p.name))}</span>${p.access==='public'?'':LOCK_SVG}<span class="cnt">${od?`<b>${od}</b> · `:''}${op}</span></button>`; }
+  return `<div class="rgrp ${exp?'open':''}"><div class="rgrp-h">${head}${pages.length?`<button class="rtog" data-action="ox-grp" type="button" aria-expanded="${exp}" aria-label="${esc(ht('showTr'))}" title="${esc(ht('showTr'))}">${CHEV_SVG}</button>`:''}</div>${pages.length?`<div class="rgrp-b">${sub}</div>`:''}</div>`;
+}
 function oxRailHTML(){
   const pages=oxPages(); if(!pages.length) return '';
   let h=`<span class="rsep"></span><h4>${esc(ot('areaShort'))}</h4>`;
@@ -3542,7 +3751,8 @@ function oxMainHTML(){
   const p=oxPage(S.oxPage); if(!p || !oxCanRead(p.id)) return `<div class="notice"><h2>${esc(ot('noAccess'))}</h2></div>`;
   const all=oxRows(p.id), view=S.oxView[p.id] || p.views[0], f=oxFilters(p.id);
   const od=all.filter(oxOverdue).length, soon=all.filter(oxSoon).length, low=all.filter(oxLow).length, msod=p.id==='project'? all.reduce((n,r)=>n+(r.milestones||[]).filter(msOverdue).length,0) : 0;
-  let h=`<div class="vhead"><h1>${esc(optL(p.name))}</h1><span class="sub">${esc(optL(p.desc))}</span><div class="actions">`;
+  const ob=BOARDS.find(x=>x.id===OPX);
+  let h=`<p class="crumbs"><button class="linkbtn" data-action="nav" data-nav="${canSee(OPX)?'board:'+OPX:'home'}" type="button">${esc(ob[L()])}</button><span aria-hidden="true">/</span><span>${esc(ht('trackers'))}</span></p><div class="vhead"><h1>${esc(optL(p.name))}</h1><span class="sub">${esc(optL(p.desc))}</span><div class="actions">`;
   if(p.views.length>1) h+=`<div class="tabs" role="tablist">${p.views.map(v=>`<button type="button" class="${view===v?'on':''}" data-action="ox-view" data-v="${v}">${esc(ot({table:'vTable',dept:'vDept',owner:'vOwner',dash:'vDash',board:'vBoard'}[v]))}</button>`).join('')}</div>`;
   if(S.downloads) h+=`<button class="btn" data-action="ox-export" type="button">${esc(ot('exportX'))}</button>`;
   if(oxCanCreate(p.id)) h+=`<button class="btn primary" data-action="ox-new" type="button">+ ${esc(p.publicCreate? ot('logIssue') : ot('newRow'))}</button>`;
@@ -3570,7 +3780,7 @@ function oxBodyHTML(){
   if(view==='dept' || view==='owner'){
     const groups=new Map();
     for(const r of list){ const keys = view==='dept' ? [r.dept||''] : ((r.ownerEmails||[]).length? r.ownerEmails : ['']); for(const k of keys){ if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(r); } }
-    let h=''; const names=(k)=> k? (view==='dept'? deptName(k) : personName(k)) : (view==='dept'? '—' : ot('noOwner'));
+    let h=''; const names=(k)=> k? (view==='dept'? deptName(k) : personName(k)) : (view==='dept'? '-' : ot('noOwner'));
     for(const [k,rs] of [...groups].sort((a,b)=> names(a[0]).localeCompare(names(b[0]), L()))){ const done=rs.filter(oxClosed).length, od=rs.filter(oxOverdue).length;
       h+=`<section class="oxgrp"><header><h3>${esc(names(k))}</h3><span class="muted small">${esc(ot('total'))} ${rs.length} · ${esc(ot('done'))} ${done} · ${esc(ot('overdue'))} ${od} · ${esc(ot('pctDone'))} ${Math.round(done/rs.length*100)}%</span></header>${oxTable(p, rs)}</section>`; }
     return h;
@@ -3592,7 +3802,7 @@ function oxDashHTML(p, list){
     for(const [k,rs] of [...m].sort((a,b)=>b[1].length-a[1].length)){ const d=rs.filter(oxClosed).length, o=rs.filter(oxOverdue).length, pc=Math.round(d/rs.length*100), av=Math.round(rs.reduce((n,r)=>n+(+r.progress||0),0)/rs.length);
       t2+=`<tr><td>${esc(nameOf2(k))}</td><td class="num">${rs.length}</td><td class="num">${rs.length-d}</td><td class="num">${o?`<b>${o}</b>`:'0'}</td><td class="num">${d}</td><td><span class="pbar"><i style="width:${av}%"></i></span><span class="num small">${av}%</span></td><td><span class="pbar strong"><i style="width:${pc}%"></i></span><span class="num small">${pc}%</span></td></tr>`; }
     return t2+`</tbody></table></div></div>`; };
-  h+=perf(r=>[r.dept||''], k=>k? deptName(k) : '—', ot('deptPerf'));
+  h+=perf(r=>[r.dept||''], k=>k? deptName(k) : '-', ot('deptPerf'));
   h+=perf(r=>(r.ownerEmails||[]).length? r.ownerEmails : [''], k=>k? personName(k) : ot('noOwner'), ot('workload'));
   return h;
 }
@@ -3729,6 +3939,7 @@ document.addEventListener('click', async (ev)=>{
   if(a==='ox-view'){ S.oxView[S.oxPage]=el.dataset.v; S.mainKey=''; render(); }
   else if(a==='ox-new'){ oxNew(); }
   else if(a==='ox-open'){ ev.stopPropagation(); oxOpen(el.dataset.id); }
+  else if(a==='ox-grp'){ const act=(S.view==='board'&&S.board===OPX)||S.view==='ox'; const cur=S.oxGrp===null? act : S.oxGrp; S.oxGrp=!cur; try{ localStorage.setItem('marn.oxgrp', S.oxGrp?'1':'0'); }catch(e){} renderRail(); }
   else if(a==='ox-close'){ S.oxDrawer=null; oxRenderDrawer(); }
   else if(a==='ox-save'){ await oxSave(); }
   else if(a==='ox-delask'){ D.confirm=true; oxRenderDrawer(); }
