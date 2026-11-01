@@ -1023,6 +1023,8 @@ svg.fish .more{fill:var(--g5);font-size:12px;font-weight:700}
 .ttable.ms td{padding:4px}
 .ttable.ms input,.ttable.ms select{width:100%;height:32px;border:1px solid var(--g3);border-radius:var(--radius);padding:0 6px;background:var(--surface);font:inherit}
 .ttable.ms tr.late input[data-mk="deadline"]{border-color:var(--fg);font-weight:700}
+.oxchk{display:flex;align-items:center;gap:10px;border:1px solid var(--g3);border-radius:var(--radius);padding:10px 12px;background:var(--surface);cursor:pointer;font-weight:500}
+.oxchk input{width:18px!important;height:18px!important;flex:none;margin:0;accent-color:var(--accent,var(--fg))}
 .mvadd{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .mvadd input,.mvadd select{height:34px;border:1px solid var(--g3);border-radius:var(--radius);padding:0 8px;background:var(--surface);font:inherit;min-width:0;flex:1}
 
@@ -3315,7 +3317,7 @@ const OXT={
  ar:{
   area:'متتبعات التميز التشغيلي', areaShort:'المتتبعات', newRow:'إضافة', exportX:'تصدير إلى Excel', searchPh:'ابحث في كل الحقول',
   all:'الكل', onlyOverdue:'المتأخرة فقط', hideClosed:'إخفاء المغلقة', rows:(n)=>arN(n,'سجل واحد','سجلان','سجلات','سجلًا'),
-  overdueN:(n)=>`${n} متأخرة`, soonN:(n)=>`${n} تستحق خلال 7 أيام`, lowN:(n)=>`${n} أصناف تحت حد إعادة الطلب`,
+  overdueN:(n)=>`${n} متأخرة`, soonN:(n)=>`${n} تستحق خلال 7 أيام`, lowN:(n)=>`${arN(n,'صنف واحد','صنفان','أصناف','صنفًا')} تحت حد إعادة الطلب`,
   vTable:'الجدول', vDept:'حسب الإدارة', vOwner:'حسب المسؤول', vDash:'لوحة الأداء', vBoard:'لوحة المشاريع',
   save:'حفظ', create:'إضافة', cancel:'إلغاء', close:'إغلاق', del:'حذف', delAsk:'حذف هذا السجل نهائيًا؟', yesDel:'نعم، احذف',
   saved:'تم الحفظ', deleted:'تم الحذف', saveFail:'تعذّر الحفظ. تحقق من صلاحيتك.', needTitle:'اكتب العنوان أولًا.',
@@ -3330,7 +3332,7 @@ const OXT={
   lowStock:'تحت حد الطلب', pendingWith:'بانتظار', openLink:'فتح', restricted:'مقيّدة', publicPg:'عامة',
   oxList:'مديرو الإدارات والقادة', oxListSub:'يرون صفحات التميز التشغيلي العامة ويحدّثون المهام المسندة إليهم.',
   intro:'صفحات المتابعة التي يديرها التميز التشغيلي. العامة لمديري الإدارات والقادة، والمقيّدة لمن حُددت لهم.',
-  nextDue:'أقرب موعد', lastUpd:'آخر تحديث', projIssues:'مشكلات المشروع', noProj:'بلا مشروع',
+  nextDue:'أقرب موعد', lastUpd:'آخر تحديث', projIssues:'مشكلات المشروع', noProj:'بلا مشروع', openIss:'المشكلات المفتوحة', itemIssues:'مشكلات الصنف', noItem:'بلا صنف', yes:'نعم', no:'لا', adjusted:(n,c)=>`خُصمت ${n} من الصنف (${c})`, adjustNeed:'اختر الصنف واكتب الكمية المتأثرة قبل الخصم.', logIssue:'تسجيل مشكلة', creatorNote:'تسجّل المشكلة وتتابعها، ويغلقها التميز التشغيلي.',
  },
  en:{
   area:'Operational Excellence trackers', areaShort:'Trackers', newRow:'Add', exportX:'Export to Excel', searchPh:'Search every field',
@@ -3350,7 +3352,7 @@ const OXT={
   lowStock:'Below reorder level', pendingWith:'Pending with', openLink:'Open', restricted:'Restricted', publicPg:'Public',
   oxList:'Department managers and leads', oxListSub:'They see the public Operational Excellence pages and update the tasks assigned to them.',
   intro:'Follow-up pages run by Operational Excellence. Public pages are for department managers and leads; restricted pages for the groups named.',
-  nextDue:'Next deadline', lastUpd:'Last updated', projIssues:'Project issues', noProj:'No project',
+  nextDue:'Next deadline', lastUpd:'Last updated', projIssues:'Project issues', noProj:'No project', openIss:'Open issues', itemIssues:'Issues on this item', noItem:'No item', yes:'Yes', no:'No', adjusted:(n,c)=>`${n} deducted from the item (${c})`, adjustNeed:'Pick the item and enter the quantity affected before deducting.', logIssue:'Log an issue', creatorNote:'You log the issue and follow it; Operational Excellence closes it.',
  }};
 const ot=(k)=> OXT[S.lang][k] ?? OXT.en[k] ?? k;
 const O=(en,ar)=>({en,ar});
@@ -3383,7 +3385,7 @@ const OX_PAGES=[
    F('serial','text','Serial number','الرقم التسلسلي'),F('location','text','Warehouse / location','المستودع أو الموقع'),F('qty','num','Quantity on hand','الكمية المتاحة'),F('reorder','num','Reorder level','حد إعادة الطلب'),
    F('istatus','sel','Status','الحالة',{opts:{stock:O('In stock','في المخزون'),reserved:O('Reserved','محجوز'),merchant:O('With a merchant','مسلَّم لعميل'),employee:O('With an employee','لدى موظف'),repair:O('Under repair','تحت الصيانة'),lost:O('Lost','مفقود')},def:'stock'}),
    F('assignedTo','text','Assigned to','مسلَّم إلى'),F('notes','area','Notes','ملاحظات',{wide:1}),F('moves','moves','Stock movements','حركة المخزون',{wide:1})],
-  cols:['code','itemCode','title','category','location','qty','reorder','istatus','assignedTo']},
+  cols:['code','itemCode','title','category','location','qty','reorder','istatus','openIssues','assignedTo']},
  {id:'pissue', icon:'overdue', prefix:'PI', access:'pissue', name:O('Project Issue Log','سجل مشكلات المشاريع'), desc:O('Issues and risks of each project','مشكلات كل مشروع ومخاطره'),
   due:'due', closed:['closed'], ownerKeys:[], views:['table'],
   fields:[F('projectId','proj','Project','المشروع'),F('kind','sel','Type','النوع',{opts:{issue:O('Issue','مشكلة'),risk:O('Risk','خطر')},def:'issue'}),F('title','text','Description','الوصف',{req:1,wide:1}),
@@ -3419,6 +3421,19 @@ const OX_PAGES=[
   fields:[F('title','text','Task','المهمة',{req:1,wide:1}),F('owners','people','Owner','المسؤول'),F('priority','sel','Priority','الأولوية',{opts:PRI,def:'med'}),F('status','sel','Status','الحالة',{opts:ST4,def:'todo'}),
    F('due','date','Due date','الموعد'),F('progress','pct','Progress','نسبة الإنجاز'),F('notes','area','Notes','ملاحظات',{wide:1})],
   cols:['code','title','owners','priority','status','due','progress']},
+ {id:'wissue', icon:'overdue', prefix:'WI', access:'public', publicCreate:true, name:O('Warehouse and Inventory Issue Log','سجل مشكلات المخزون والمستودع'), desc:O('Stock issues from discovery to closure: shortages, damage, loss, faults','مشكلات المخزون من اكتشافها إلى إغلاقها: العجز والتلف والفقد والأعطال'),
+  due:'due', closed:['resolved','closed'], ownerStatus:['open','progress','waiting'],
+  ownerKeys:['status','details','rootCause','action','pendingWith','notes'],
+  createKeys:['title','found','foundBy','itemId','serial','location','itype','qtyAff','cost','severity','details','rootCause','action','owners','pendingWith','due','notes'], views:['table'],
+  fields:[F('title','text','Issue','المشكلة',{req:1,wide:1}),F('found','date','Date found','تاريخ الاكتشاف'),F('foundBy','text','Found by','المكتشِف'),
+   F('itemId','item','Related item','الصنف المرتبط'),F('serial','text','Serial number','الرقم التسلسلي'),F('location','text','Warehouse / location','المستودع أو الموقع'),
+   F('itype','sel','Issue type','نوع المشكلة',{opts:{shortage:O('Stock count shortage','عجز في الجرد'),damage:O('Damage','تلف'),loss:O('Loss','فقد'),faulty:O('Faulty device','جهاز معطل'),receiving:O('Receiving error','خطأ استلام'),delivery:O('Delivery error','خطأ تسليم'),supply:O('Supply delay','تأخر توريد'),other:O('Other','أخرى')},def:'shortage'}),
+   F('qtyAff','num','Quantity affected','الكمية المتأثرة'),F('cost','money','Financial impact (SAR, optional)','الأثر المالي (ريال، اختياري)'),F('severity','sel','Severity','الخطورة',{opts:SEV,def:'medium'}),
+   F('details','area','Description','الوصف',{wide:1}),F('rootCause','area','Root cause','السبب الجذري',{wide:1}),F('action','area','Corrective action','الإجراء التصحيحي',{wide:1}),
+   F('owners','people','Owner','المسؤول'),F('pendingWith','text','Pending with','بانتظار'),F('due','date','Due date','الموعد'),
+   F('status','sel','Status','الحالة',{opts:{open:O('Open','مفتوحة'),progress:O('In progress','قيد المعالجة'),waiting:O('Waiting for another party','بانتظار طرف آخر'),resolved:O('Resolved','محلولة'),closed:O('Closed','مغلقة')},def:'open'}),
+   F('resolved','date','Resolved on','تاريخ الحل'),F('adjust','check','Deduct the affected quantity from the item when closing','خصم الكمية المتأثرة من الصنف عند الإغلاق',{wide:1,mgr:1}),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','title','itemId','itype','qtyAff','severity','owners','due','status']}
 ];
 const oxPage=(id)=> OX_PAGES.find(p=>p.id===id);
 const oxF=(p,k)=> p.fields.find(f=>f.k===k);
@@ -3433,9 +3448,10 @@ function oxCanRead(id){ const p=oxPage(id); if(!p) return false;
   if(p.access==='internal') return oxMember() || oxHR();
   return false; }
 function oxCanManage(id){ const p=oxPage(id); if(!p || !oxCanRead(id)) return false; return p.access==='public' ? (oxMember()||isCEO()) : true; }
+function oxCanCreate(id){ const p=oxPage(id); return oxCanManage(id) || (!!p && !!p.publicCreate && oxCanRead(id)); }
 function oxPages(){ return OX_PAGES.filter(p=>oxCanRead(p.id)); }
 const myMail=()=> lc(S.me.email);
-const isOxOwner=(r)=> (r.ownerEmails||[]).includes(myMail());
+const isOxOwner=(r)=> (r.ownerEmails||[]).includes(myMail()) || (!!oxPage(r.page) && !!oxPage(r.page).publicCreate && lc(r.createdByEmail)===myMail());
 function oxCanEdit(r){ return oxCanManage(r.page) || (oxPage(r.page).ownerKeys.length>0 && isOxOwner(r)); }
 
 /* state and data */
@@ -3459,6 +3475,7 @@ const oxClosed=(r)=> { const p=oxPage(r.page); return p.closed.includes(r.status
 const oxDueOf=(r)=> { const p=oxPage(r.page); return p.due ? (r[p.due]||'') : ''; };
 const oxOverdue=(r)=> { const d=oxDueOf(r); return !!d && !oxClosed(r) && d < todayISO(); };
 const oxSoon=(r)=> { const d=oxDueOf(r); if(!d || oxClosed(r)) return false; const n=daysBetween(todayISO(), d); return n>=0 && n<=7; };
+const OX_DEDUCT=['shortage','damage','loss'];
 const oxLow=(r)=> r.page==='inventory' && r.reorder!==undefined && r.reorder!=='' && Number(r.qty||0) <= Number(r.reorder);
 const msOverdue=(m)=> m && m.deadline && m.status!=='done' && m.deadline < todayISO();
 function oxNextCode(p){ const pg=oxPage(p); let n=0; for(const r of oxRows(p)){ const m=String(r.code||'').match(/(\d+)$/); if(m) n=Math.max(n, +m[1]); } return `${pg.prefix}-${String(n+1).padStart(3,'0')}`; }
@@ -3467,6 +3484,7 @@ const deptName=(k)=> { const d=OX_DEPTS.find(x=>x[0]===k); return d? optL(d[1]) 
 function personName(e){ e=lc(e); for(const m of S.members.values()){ if(lc(m.email)===e && m.name) return m.name; } return e; }
 const ownersText=(r)=> (r.owners||[]).map(o=> o.name || personName(o.email)).join('، ');
 function projName(id){ const r=S.ox.get(id); return r? `${r.code||''} ${r.title||''}`.trim() : ''; }
+function itemName(id){ const r=S.ox.get(id); return r? `${r.itemCode||r.code||''} ${r.title||''}`.trim() : ''; }
 
 /* cells */
 function oxCell(p, r, k){
@@ -3482,15 +3500,17 @@ function oxCell(p, r, k){
     case 'pct': { const n=Math.max(0,Math.min(100,+v||0)); return `<span class="pbar" title="${n}%"><i style="width:${n}%"></i></span><span class="num small">${n}%</span>`; }
     case 'num': case 'money': return (v===''||v===undefined||v===null)? '' : `<span class="num">${Number(v).toLocaleString('en-US')}</span>${k==='qty'&&oxLow(r)?` <span class="oxpri p-high">${esc(ot('lowStock'))}</span>`:''}`;
     case 'proj': return esc(projName(v)) || `<span class="muted">${esc(ot('noProj'))}</span>`;
+    case 'item': return esc(itemName(v)) || `<span class="muted">${esc(ot('noItem'))}</span>`;
+    case 'check': return v? esc(ot('yes')) : '';
     case 'link': return v? `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(ot('openLink'))}</a>` : '';
     default: return esc(v||'');
   }
 }
-function oxColLabel(p,k){ if(k==='code') return '#'; if(k==='openIssues') return ot('projIssues'); const f=oxF(p,k); return f? optL(f.label) : k; }
+function oxColLabel(p,k){ if(k==='code') return '#'; if(k==='openIssues') return p.id==='project'? ot('projIssues') : ot('openIss'); const f=oxF(p,k); return f? optL(f.label) : k; }
 
 /* filtering */
 function oxFilters(pid){ return S.oxF[pid] || (S.oxF[pid]={q:'',od:false,hide:false,sel:{}}); }
-function oxText(p, r){ return fold(p.fields.map(f=>{ const v=r[f.k]; if(f.type==='people') return ownersText(r)+' '+(r.ownerEmails||[]).join(' '); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); if(f.type==='milestones') return (v||[]).map(m=>m.name+' '+m.owner).join(' '); return v==null?'':String(v); }).join(' ')+' '+(r.code||'')); }
+function oxText(p, r){ return fold(p.fields.map(f=>{ const v=r[f.k]; if(f.type==='people') return ownersText(r)+' '+(r.ownerEmails||[]).join(' '); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); if(f.type==='item') return itemName(v); if(f.type==='milestones') return (v||[]).map(m=>m.name+' '+m.owner).join(' '); return v==null?'':String(v); }).join(' ')+' '+(r.code||'')); }
 function oxApply(p, list){
   const f=oxFilters(p.id), q=fold(f.q.trim());
   return list.filter(r=>{
@@ -3525,7 +3545,7 @@ function oxMainHTML(){
   let h=`<div class="vhead"><h1>${esc(optL(p.name))}</h1><span class="sub">${esc(optL(p.desc))}</span><div class="actions">`;
   if(p.views.length>1) h+=`<div class="tabs" role="tablist">${p.views.map(v=>`<button type="button" class="${view===v?'on':''}" data-action="ox-view" data-v="${v}">${esc(ot({table:'vTable',dept:'vDept',owner:'vOwner',dash:'vDash',board:'vBoard'}[v]))}</button>`).join('')}</div>`;
   if(S.downloads) h+=`<button class="btn" data-action="ox-export" type="button">${esc(ot('exportX'))}</button>`;
-  if(oxCanManage(p.id)) h+=`<button class="btn primary" data-action="ox-new" type="button">+ ${esc(ot('newRow'))}</button>`;
+  if(oxCanCreate(p.id)) h+=`<button class="btn primary" data-action="ox-new" type="button">+ ${esc(p.publicCreate? ot('logIssue') : ot('newRow'))}</button>`;
   h+=`</div></div>`;
   if(od || soon || low || msod) h+=`<div class="oxalerts">${od?`<button class="oxal bad" data-action="ox-od" type="button">${esc(ot('overdueN')(od))}</button>`:''}${msod?`<span class="oxal bad">${esc(ot('milestones'))}: ${esc(ot('overdueN')(msod))}</span>`:''}${soon?`<span class="oxal">${esc(ot('soonN')(soon))}</span>`:''}${low?`<button class="oxal bad" data-action="ox-od" type="button">${esc(ot('lowN')(low))}</button>`:''}</div>`;
   // toolbar: search plus one filter per choice field
@@ -3593,7 +3613,7 @@ function oxProjectBoard(p, list){
 /* drawer */
 function oxBlank(pid){ const p=oxPage(pid), r={page:pid}; for(const f of p.fields){ if(f.def!==undefined) r[f.k]=f.def; else if(f.type==='people') { r.owners=[]; r.ownerEmails=[]; } else if(f.type==='milestones'||f.type==='moves') r[f.k]=[]; else if(f.type==='pct') r[f.k]=0; else r[f.k]=''; } if(pid==='hsdev') r.requested=todayISO(); if(pid==='hsissue') r.found=todayISO(); return r; }
 function oxOpen(id){ const r=S.ox.get(id); if(!r) return; S.oxDrawer={mode:'edit', id, draft:clone(r), confirm:false, err:''}; oxRenderDrawer(); }
-function oxNew(){ if(!oxCanManage(S.oxPage)) return; S.oxDrawer={mode:'new', id:null, draft:oxBlank(S.oxPage), confirm:false, err:''}; oxRenderDrawer(); setTimeout(()=>$('#ox-title')?.focus(),30); }
+function oxNew(){ if(!oxCanCreate(S.oxPage)) return; S.oxDrawer={mode:'new', id:null, draft:oxBlank(S.oxPage), confirm:false, err:''}; oxRenderDrawer(); setTimeout(()=>$('#ox-title')?.focus(),30); }
 function oxFieldHTML(p, f, x, canAll, ownKeys){
   const ro = !(canAll || ownKeys.includes(f.k)); const dis=ro?'disabled':''; const id='ox-'+f.k; const v=x[f.k]; const lab=optL(f.label);
   const wrap=(inner)=> `<div class="field ${f.wide?'full':''} ${f.delay&&oxOverdue(x)&&!String(x.delayReason||'').trim()?'need':''}"><label for="${id}">${esc(lab)}</label>${inner}</div>`;
@@ -3604,7 +3624,9 @@ function oxFieldHTML(p, f, x, canAll, ownKeys){
     case 'date': return wrap(`<input id="${id}" type="date" data-oxf="${f.k}" value="${esc(v||'')}" ${dis}>`);
     case 'num': case 'money': return wrap(`<input id="${id}" type="number" step="any" data-oxf="${f.k}" data-num="1" value="${esc(v??'')}" ${dis}>`);
     case 'pct': return wrap(`<div class="pctin"><input id="${id}" type="range" min="0" max="100" step="5" data-oxf="${f.k}" data-num="1" value="${+v||0}" ${dis}><output id="${id}-o" class="num">${+v||0}%</output></div>`);
-    case 'sel': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}>${Object.entries(f.opts).map(([k,o])=>`<option value="${esc(k)}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
+    case 'item': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value="">${esc(ot('noItem'))}</option>${oxRows('inventory').map(r=>`<option value="${esc(r.id)}" ${v===r.id?'selected':''}>${esc(itemName(r.id))}</option>`).join('')}</select>`);
+    case 'check': return `<div class="field full"><label class="oxchk"><input id="${id}" type="checkbox" data-oxf="${f.k}" data-check="1" ${v?'checked':''} ${dis}><span>${esc(lab)}</span></label></div>`;
+    case 'sel': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}>${Object.entries(f.opts).filter(([k])=> canAll || f.k!=='status' || !p.ownerStatus || p.ownerStatus.includes(k) || k===v).map(([k,o])=>`<option value="${esc(k)}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
     case 'dept': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value=""></option>${OX_DEPTS.map(([k,o])=>`<option value="${k}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
     case 'proj': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value="">${esc(ot('noProj'))}</option>${oxRows('project').map(r=>`<option value="${esc(r.id)}" ${v===r.id?'selected':''}>${esc(projName(r.id))}</option>`).join('')}</select>`);
     case 'people': { const chips=(x.owners||[]).map((o,i)=>`<span class="ochip">${esc(o.name||personName(o.email))}${ro?'':`<button type="button" data-action="ox-rmowner" data-i="${i}" aria-label="×">×</button>`}</span>`).join('');
@@ -3622,14 +3644,16 @@ function oxDirOptions(){ const set=new Map(); for(const m of S.members.values())
 function oxRenderDrawer(){
   const host=$('#oxdrawerhost') || (()=>{ const d=document.createElement('div'); d.id='oxdrawerhost'; document.getElementById('app').appendChild(d); return d; })();
   const D=S.oxDrawer; if(!D){ host.innerHTML=''; return; }
-  const x=D.draft, p=oxPage(x.page), canAll=oxCanManage(p.id), ownKeys = (!canAll && isOxOwner(S.ox.get(D.id)||x)) ? p.ownerKeys : [];
+  const x=D.draft, p=oxPage(x.page), canAll=oxCanManage(p.id), ownKeys = (!canAll && D.mode==='new' && p.publicCreate) ? (p.createKeys||[]) : (!canAll && D.mode==='edit' && isOxOwner(S.ox.get(D.id)||x)) ? p.ownerKeys : [];
   const ro=!canAll && !ownKeys.length;
   let h=`<div class="scrim" data-action="ox-close"></div><aside class="drawer oxdrawer" role="dialog" aria-modal="true"><div class="dh"><span class="bname">${esc(optL(p.name))}${x.code?' · '+esc(x.code):''}</span><button class="iconbtn" data-action="ox-close" type="button" aria-label="${esc(ot('close'))}">✕</button></div><div class="db">`;
-  if(ownKeys.length) h+=`<div class="callout small"><span class="dot"></span><span>${esc(ot('ownerOnly'))}</span></div>`;
+  if(ownKeys.length) h+=`<div class="callout small"><span class="dot"></span><span>${esc(p.publicCreate? ot('creatorNote') : ot('ownerOnly'))}</span></div>`;
   if(ro) h+=`<div class="callout small"><span class="dot"></span><span>${esc(ot('readOnly'))}</span></div>`;
   if(D.err) h+=`<div class="err">${esc(D.err)}</div>`;
-  h+=`<div class="fgrid">${p.fields.filter(f=> !(f.delay && !oxOverdue(x) && !x.delayReason)).map(f=>oxFieldHTML(p,f,x,canAll,ownKeys)).join('')}</div>`;
+  h+=`<div class="fgrid">${p.fields.filter(f=> !(f.delay && !oxOverdue(x) && !x.delayReason) && !(f.mgr && (!canAll || !OX_DEDUCT.includes(x.itype) || x.adjusted))).map(f=>oxFieldHTML(p,f,x,canAll,ownKeys)).join('')}</div>`;
   if(p.id==='project' && D.mode==='edit' && (isCEO()||oxMember()||oxHR())){ const iss=oxRows('pissue').filter(r=>r.projectId===D.id); if(iss.length) h+=`<div class="dsec"><h3>${esc(ot('projIssues'))}</h3>${oxTable(oxPage('pissue'), iss)}</div>`; }
+  if(p.id==='inventory' && D.mode==='edit'){ const iss=oxRows('wissue').filter(r=>r.itemId===D.id); if(iss.length) h+=`<div class="dsec"><h3>${esc(ot('itemIssues'))}</h3>${oxTable(oxPage('wissue'), iss)}</div>`; }
+  if(x.adjusted) h+=`<p class="muted small">${esc(ot('adjusted')(x.qtyAff, x.adjustedAt? fmtDate(x.adjustedAt.slice(0,10)) : ''))}</p>`;
   if(D.mode==='edit'){ const hs=(x.history||[]).slice().reverse().slice(0,25); if(hs.length) h+=`<div class="dsec"><h3>${esc(ot('history'))}</h3><ul class="hist">${hs.map(e=>`<li><span class="w">${esc(fmtDateTime(e.at))}</span><span>${esc(e.name||personName(e.email||''))} · ${esc(e.what==='created'?ot('created'):ot('changed')(e.fields.map(k=>{ const f=oxF(p,k); return f? optL(f.label):k; }).join('، ')))}</span></li>`).join('')}</ul></div>`; }
   h+=`</div><div class="dfoot">`;
   if(!ro) h+=`<button class="btn primary" data-action="ox-save" type="button">${esc(D.mode==='new'?ot('create'):ot('save'))}</button>`;
@@ -3643,34 +3667,49 @@ async function oxSave(){
   x.title=String(x.title||'').trim(); if(!x.title){ D.err=ot('needTitle'); oxRenderDrawer(); return; }
   const closing = p.closed.includes(x.status);
   if(p.id==='meeting' && x.due && x.due<todayISO() && !closing && !String(x.delayReason||'').trim()){ D.err=ot('needReason'); oxRenderDrawer(); $('#ox-delayReason')?.focus(); return; }
+  if(!oxCanManage(p.id) && p.ownerStatus && !p.ownerStatus.includes(x.status) && !(prev && prev.status===x.status)) x.status=prev? prev.status : 'open';
+  if(!oxCanManage(p.id)) x.adjust = prev? !!prev.adjust : false;
+  const doAdjust = p.id==='wissue' && oxCanManage(p.id) && closing && x.adjust && !x.adjusted && OX_DEDUCT.includes(x.itype);
+  if(doAdjust && (!x.itemId || !(Number(x.qtyAff)>0) || !S.ox.get(x.itemId))){ D.err=ot('adjustNeed'); oxRenderDrawer(); return; }
   const now=new Date().toISOString(), me={at:now, email:myMail(), name:myName()||''};
   const rec=clone(x); delete rec.id;
+  if(doAdjust){ rec.adjusted=true; rec.adjustedAt=now; }
+  if(p.id==='wissue' && closing && !rec.resolved) rec.resolved=now.slice(0,10);
   rec.ownerEmails=[...new Set((rec.owners||[]).map(o=>lc(o.email)).filter(Boolean))];
   if(closing && !(prev && p.closed.includes(prev.status))) rec.doneAt=now; else if(!closing) delete rec.doneAt;
   if(p.id==='project' && prev) rec.openIssues=prev.openIssues||0;
-  const fields = prev ? Object.keys({...rec, ...prev}).filter(k=>!['history','updatedAt','updatedBy','updatedByEmail','doneAt','openIssues'].includes(k) && JSON.stringify(rec[k]??null)!==JSON.stringify(prev[k]??null)) : [];
+  if(p.id==='inventory' && prev) rec.openIssues=prev.openIssues||0;
+  const fields = prev ? Object.keys({...rec, ...prev}).filter(k=>!['history','updatedAt','updatedBy','updatedByEmail','doneAt','openIssues','adjusted','adjustedAt'].includes(k) && JSON.stringify(rec[k]??null)!==JSON.stringify(prev[k]??null)) : [];
   if(prev && !fields.length && rec.doneAt===prev.doneAt){ S.oxDrawer=null; oxRenderDrawer(); return; }
   rec.updatedAt=now; rec.updatedBy=S.me.id||null; rec.updatedByEmail=myMail();
+  if(!prev && !oxCanManage(p.id)){ rec.status='open'; rec.adjust=false; }
   if(!prev){ rec.code=oxNextCode(p.id); rec.createdAt=now; rec.createdBy=S.me.id||null; rec.createdByEmail=myMail(); rec.history=[{...me, what:'created', fields:[]}]; }
   else rec.history=[...(prev.history||[]), {...me, what:'field', fields}].slice(-30);
   const id = D.id || S.db.collection('ox').doc().id;
   try{ await S.db.collection('ox').doc(id).set(rec); }catch(e){ console.warn(e); D.err=ot('saveFail'); oxRenderDrawer(); return; }
   S.ox.set(id, {id, ...rec});
   if(p.id==='pissue') await oxSyncIssues([rec.projectId, prev && prev.projectId]);
+  if(p.id==='wissue'){ if(doAdjust) await oxDeduct(rec, id); await oxSyncIssues([rec.itemId, prev && prev.itemId], 'wissue'); }
   S.oxDrawer=null; oxRenderDrawer(); toast(ot('saved')); render();
 }
 // the public project page shows only the number of open issues; it is written by whoever saves an issue
-async function oxSyncIssues(ids){
-  for(const pid of [...new Set(ids.filter(Boolean))]){ const pr=S.ox.get(pid); if(!pr) continue; const n=oxRows('pissue').filter(r=>r.projectId===pid && r.status!=='closed').length;
+async function oxSyncIssues(ids, kind){
+  const page=kind||'pissue', key=page==='wissue'?'itemId':'projectId', shut=oxPage(page).closed;
+  for(const pid of [...new Set(ids.filter(Boolean))]){ const pr=S.ox.get(pid); if(!pr) continue; const n=oxRows(page).filter(r=>r[key]===pid && !shut.includes(r.status)).length;
     if((pr.openIssues||0)===n) continue; try{ await S.db.collection('ox').doc(pid).update({openIssues:n}); pr.openIssues=n; }catch(e){ console.warn('issues count', e); } }
 }
-async function oxDelete(){ const D=S.oxDrawer; if(!D||!D.id) return; const r=S.ox.get(D.id); try{ await S.db.collection('ox').doc(D.id).delete(); S.ox.delete(D.id); if(r && r.page==='pissue') await oxSyncIssues([r.projectId]); toast(ot('deleted')); }catch(e){ toast(ot('saveFail'), true); } S.oxDrawer=null; oxRenderDrawer(); render(); }
+// closing a loss or damage issue with the box ticked records an outgoing movement on the item
+async function oxDeduct(rec, id){ const it=S.ox.get(rec.itemId); if(!it) return; const q=Math.abs(Number(rec.qtyAff)||0); if(!q) return;
+  const now=new Date().toISOString(); const moves=[...(it.moves||[]), {date:now.slice(0,10), type:'out', qty:q, ref:rec.code||id, by:myMail()}];
+  const next={...it, qty:(Number(it.qty)||0)-q, moves, updatedAt:now, updatedBy:S.me.id||null, updatedByEmail:myMail(), history:[...(it.history||[]), {at:now, email:myMail(), name:myName()||'', what:'field', fields:['qty','moves']}].slice(-30)}; delete next.id;
+  try{ await S.db.collection('ox').doc(it.id).set(next); S.ox.set(it.id, {id:it.id, ...next}); toast(ot('adjusted')(q, rec.code||'')); }catch(e){ console.warn('deduct', e); toast(ot('saveFail'), true); } }
+async function oxDelete(){ const D=S.oxDrawer; if(!D||!D.id) return; const r=S.ox.get(D.id); try{ await S.db.collection('ox').doc(D.id).delete(); S.ox.delete(D.id); if(r && r.page==='pissue') await oxSyncIssues([r.projectId]); if(r && r.page==='wissue') await oxSyncIssues([r.itemId], 'wissue'); toast(ot('deleted')); }catch(e){ toast(ot('saveFail'), true); } S.oxDrawer=null; oxRenderDrawer(); render(); }
 async function oxExport(){
   const p=oxPage(S.oxPage); if(!p||!S.downloads) return;
   const list=oxSort(p, oxApply(p, oxRows(p.id)));
   const cols=['code', ...p.fields.filter(f=>!['milestones','moves'].includes(f.type)).map(f=>f.k)].concat(p.id==='project'?['openIssues']:[]);
   const head=cols.map(k=> k==='code'?'#': k==='openIssues'? ot('projIssues') : optL(oxF(p,k).label)).concat([ot('overdue'), ot('lastUpd')]);
-  const val=(r,k)=>{ if(k==='code'||k==='openIssues') return r[k]??''; const f=oxF(p,k), v=r[k]; if(f.type==='people') return ownersText(r); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); return v??''; };
+  const val=(r,k)=>{ if(k==='code'||k==='openIssues') return r[k]??''; const f=oxF(p,k), v=r[k]; if(f.type==='people') return ownersText(r); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); if(f.type==='item') return itemName(v); if(f.type==='check') return v? ot('yes') : ''; return v??''; };
   const rows=list.map(r=> cols.map(k=>val(r,k)).concat([oxOverdue(r)? -daysBetween(todayISO(), oxDueOf(r)) : '', (r.updatedAt||'').slice(0,16).replace('T',' ')]));
   const name=`Marn_${p.prefix}_${optL(p.name).replace(/[^\w]+/g,'_')}_${todayISO()}`;
   try{
@@ -3718,7 +3757,8 @@ document.addEventListener('change', (ev)=>{
   if(el.id==='ox-owners'){ oxAddOwner(el.value); return; }
   const D=S.oxDrawer; if(!D || !el.closest('#oxdrawerhost')) return;
   if(el.dataset.ms!==undefined){ const m=D.draft.milestones[+el.dataset.ms]; if(m) m[el.dataset.mk]=el.value; return; }
-  if(el.dataset.oxf){ const k=el.dataset.oxf; D.draft[k]= el.dataset.num? (el.value===''? '' : Number(el.value)) : el.value;
+  if(el.dataset.oxf){ const k=el.dataset.oxf; D.draft[k]= el.dataset.check? el.checked : el.dataset.num? (el.value===''? '' : Number(el.value)) : el.value;
+    if(k==='itype') oxRenderDrawer();
     if(k==='status' && D.draft.page!=='project'){ const p=oxPage(D.draft.page); if(p.closed.includes(el.value) && oxF(p,'progress')) D.draft.progress=100; }
     if(k==='due' || k==='status' || k==='progress') oxRenderDrawer(); }
 });
