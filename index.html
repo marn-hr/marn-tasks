@@ -1151,6 +1151,63 @@ a.ovx-head:hover .go{color:var(--accent)}
   .rail .item.sub{min-height:0;font-size:inherit}
 }
 @media (max-width:560px){ .ov-kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px} .ov-kpis .tile{padding:12px} .ov-kpis .tile .v{font-size:26px} .ov-kpis .tile .s{display:none} }
+
+/* ---------- 5 Nov 2026: urgent and important matrix (Eisenhower) ---------- */
+.mx-key{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin:0 0 12px;font-size:12.5px;color:var(--g5)}
+.mx-key b{color:var(--fg);font-weight:600}
+.mx{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);gap:12px}
+.mx-ax{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--g5);text-transform:uppercase}
+#app[lang="ar"] .mx-ax{letter-spacing:0;font-size:13px}
+.mx-ax.top{padding:0 0 2px;border-bottom:2px solid var(--g2)}
+.mx-ax.top.u{border-bottom-color:var(--fg);color:var(--fg)}
+.mx-ax.side{border-inline-end:2px solid var(--g2);font-size:13px}
+.mx-ax.side span{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}
+#app[dir="rtl"] .mx-ax.side span{transform:none}
+.mx-ax.side.i{color:var(--fg);border-inline-end-color:var(--fg)}
+.mxq{display:flex;flex-direction:column;min-height:220px;border:1px solid var(--g2);border-radius:calc(var(--radius) + 4px);background:var(--surface);box-shadow:var(--shadow-1),inset 0 1px 0 var(--hi);overflow:hidden;transition:box-shadow .15s}
+.mxq.over{box-shadow:var(--shadow-1),0 0 0 2px var(--accent)}
+.mxq > header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--g2)}
+.mxq > header .tx{flex:1;min-width:0}
+.mxq > header h3{margin:0;font-size:16px;font-weight:700}
+.mxq > header p{margin:2px 0 0;font-size:12px;color:var(--g5)}
+.mxq > header .n{font-size:30px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.mxq > header .tag{display:none;font-size:11px;border:1px solid currentColor;border-radius:999px;padding:1px 8px;opacity:.75;white-space:nowrap}
+.mxq.q1 > header{background:var(--fg);color:var(--bg);border-bottom-color:var(--fg)}
+.mxq.q1 > header p{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.mxq.q1 > header .n{font-size:40px}
+.mxq.q2{border-top:3px solid var(--accent)}
+.mxq.q2 > header .n{color:var(--accent)}
+.mxq.q3 > header .n{color:var(--g6)}
+.mxq.q4{background:var(--g1);box-shadow:var(--shadow-in);border-color:transparent}
+.mxq.q4 > header{border-bottom-color:var(--g2)}
+.mxq.q4 > header h3,.mxq.q4 > header .n{color:var(--g5)}
+.mxl{flex:1;display:flex;flex-direction:column;gap:8px;padding:12px;overflow:auto;max-height:440px}
+.mxe{margin:auto;color:var(--g4);font-size:13px;padding:18px 0;text-align:center}
+.mxc{position:relative;display:flex;flex-direction:column;gap:6px;border:1px solid var(--g2);border-radius:var(--radius-s,7px);background:var(--surface);padding:10px 12px;padding-inline-end:40px;box-shadow:var(--shadow-1)}
+.mxc[draggable="true"]{cursor:grab}
+.mxc.dragging{opacity:.55;transform:rotate(-1.5deg)}
+.mxc.od{border-inline-start:3px solid var(--fg)}
+.mxq.q4 .mxc{box-shadow:none}
+.mxc .mxt{border:0;background:transparent;padding:0;text-align:start;font:inherit;font-weight:600;color:inherit;cursor:pointer;line-height:1.4}
+.mxc .mxt:hover{text-decoration:underline;text-underline-offset:3px}
+.mxc .mxm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--g5)}
+.mxc .mxm .w{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.mxc .mxm .d{border:1px solid var(--g3);border-radius:999px;padding:1px 8px;white-space:nowrap;color:var(--g6)}
+.mxc.od .mxm .d{background:var(--fg);border-color:var(--fg);color:var(--bg);font-weight:600}
+.mxc .mxs{position:absolute;inset-inline-end:8px;top:8px;width:26px;height:26px;border:0;border-radius:7px;background:transparent;display:grid;place-items:center;color:var(--g4);cursor:pointer;padding:0}
+.mxc .mxs:hover{background:var(--g1);color:var(--fg)}
+.mxc .mxs svg{width:16px;height:16px}
+.mxc .mxs.on{color:var(--accent)}
+.mxc .mxs.on svg{fill:currentColor}
+.mxc span.mxs{cursor:default}
+.mxc span.mxs:hover{background:transparent}
+@media (max-width:900px){
+  .mx{grid-template-columns:minmax(0,1fr);grid-template-rows:none}
+  .mx-ax{display:none}
+  .mxq > header .tag{display:inline-block}
+  .mxq{min-height:0}
+  .mxl{max-height:none}
+}
 </style>
 <script>
 (function(){
@@ -1789,7 +1846,7 @@ function headHTML(){
   } else if(S.view==='board'){
     const b=boardOf(S.board); const list=boardTasks(S.board); const open=list.filter(x=>x.status!=='done').length, od=list.filter(isOverdue).length;
     title=b[L()]; sub=`${t('tasksCount')(list.length)} · ${t('open')} ${open}${od?` · ${t('overdue')} ${od}`:''}`;
-    tabs=`<div class="tabs" role="tablist">${['table','kanban','timeline'].map(v=>`<button type="button" class="${S.boardView===v?'on':''}" data-action="bview" data-v="${v}">${esc(t(v))}</button>`).join('')}</div>`;
+    tabs=`<div class="tabs" role="tablist">${['table','kanban','timeline','matrix'].map(v=>`<button type="button" class="${S.boardView===v?'on':''}" data-action="bview" data-v="${v}">${esc(v==='matrix'? mt('tab') : t(v))}</button>`).join('')}</div>`;
     const owners=[...new Set(list.flatMap(ownerNames))].sort((a,b)=>a.localeCompare(b,L()));
     tools=`<div class="toolbar">
       <select id="flt-status" data-action="filter" data-f="status"><option value="">${esc(t('allStatuses'))}</option>${STATUSES.map(s=>`<option value="${s}" ${S.filters.status===s?'selected':''}>${esc(t('st')[s])}</option>`).join('')}</select>
@@ -1799,7 +1856,7 @@ function headHTML(){
       <span class="spacer"></span><span class="count" id="count"></span>
       ${isLocked(S.board) && keyOf(S.board)? `<button class="btn" data-action="lock" type="button">${esc(t('lock'))}</button>${memberOf(S.board)?`<button class="btn" data-action="changepw" type="button">${esc(t('changePw'))}</button>`:''}`:''}
     </div>`;
-  } else if(S.view==='mine'){ title=t('mine'); }
+  } else if(S.view==='mine'){ title=t('mine'); tabs=`<div class="tabs" role="tablist">${['matrix','list'].map(v=>`<button type="button" class="${S.mineView===v?'on':''}" data-action="mview" data-v="${v}">${esc(mt(v==='matrix'?'tab':'list'))}</button>`).join('')}</div>`; }
   else if(S.view==='overdue'){ title=t('overdueV'); }
   else if(S.view==='activity'){ title=t('activity'); }
   else if(S.view==='search'){ title=t('searchResults'); sub=S.filters.q; }
@@ -1809,7 +1866,7 @@ function headHTML(){
 function renderBody(){
   const body=$('#body'); if(!body) return;
   if(S.view==='overview') body.innerHTML=overviewHTML();
-  else if(S.view==='mine') body.innerHTML=listViewHTML('mine');
+  else if(S.view==='mine') body.innerHTML= S.mineView==='list'? listViewHTML('mine') : matrixHTML(mxMineItems());
   else if(S.view==='overdue') body.innerHTML=listViewHTML('overdue');
   else if(S.view==='activity') body.innerHTML=activityHTML();
   else if(S.view==='search') body.innerHTML=listViewHTML('search');
@@ -1818,6 +1875,7 @@ function renderBody(){
     if(isAch(S.board)) body.innerHTML=achHTML(list);
     else if(S.boardView==='kanban') body.innerHTML=kanbanHTML(list);
     else if(S.boardView==='timeline') body.innerHTML=timelineHTML(list);
+    else if(S.boardView==='matrix') body.innerHTML=matrixHTML(mxBoardItems(list));
     else body.innerHTML=tableHTML(list, {committee:S.board===COMMITTEE});
   }
 }
@@ -2200,6 +2258,8 @@ document.addEventListener('click', async (ev)=>{
   const el=ev.target.closest('[data-action]'); if(!el) return;
   const a=el.dataset.action;
   if(a==='nav'){ nav(el.dataset.nav); }
+  else if(a==='mview'){ S.mineView=el.dataset.v; try{ localStorage.setItem('marn.mview', S.mineView);}catch(e){} S.mainKey=''; render(); }
+  else if(a==='mx-imp'){ ev.stopPropagation(); const on=el.getAttribute('aria-pressed')==='true'; await mxSetImp(el.dataset.mk, el.dataset.id, !on); }
   else if(a==='bview'){ S.boardView=el.dataset.v; try{ localStorage.setItem('marn.bview', S.boardView);}catch(e){} S.mainKey=''; render(); }
   else if(a==='open'){ ev.stopPropagation(); openTask(el.dataset.id); }
   else if(a==='new'){ newTask(); }
@@ -2606,6 +2666,70 @@ async function removeReport(){
   logEvent(R.board,'report.delete',{kind:R.kind, period:R.period});
   S.reports.delete(R.id); S.report=null; S.mainKey=''; toast(t('repDeleted')); render();
 }
+
+
+/* ---------- urgent and important matrix (Eisenhower), 5 November 2026 ----------
+   Urgent: overdue, or due within two days. Important: priority High (in the trackers: priority High, or severity High or Critical).
+   Moving a card between the rows (drag, or the star) changes its priority; urgency follows the due date only. */
+const MX_DAYS=2;
+const MXT={
+ ar:{ tab:'المصفوفة', list:'القائمة', urg:'عاجل', nurg:'غير عاجل', imp:'مهم', nimp:'غير مهم',
+  q1:'نفّذ الآن', q1s:'عاجل ومهم: ابدأ بها اليوم.', q2:'خطّط لها', q2s:'مهم وغير عاجل: حدّد لها وقتًا وابدأ مبكرًا.', q3:'فوّضها', q3s:'عاجل وغير مهم: أسندها لغيرك أو أنجزها بسرعة.', q4:'أجّلها أو ألغِها', q4s:'غير عاجل وغير مهم: لا تشغل بها وقتك الآن.',
+  key1:'العاجل:', key1v:'متأخر أو يستحق خلال يومين', key2:'المهم:', key2v:'أولوية عالية، أو خطورة عالية أو حرجة في المتتبعات', key3:'اسحب البطاقة بين الصفين أو اضغط النجمة لتغيير أهميتها.',
+  empty:'لا شيء هنا', noDue:'بلا موعد', starOn:'مهمة: اضغط لجعلها غير مهمة', starOff:'غير مهمة: اضغط لجعلها مهمة', starRo:'مهمة',
+  toImp:'نُقلت إلى المهم (أولوية عالية)', toNimp:'نُقلت إلى غير المهم', urgHint:'العجلة تتبع تاريخ الاستحقاق؛ لنقل المهمة بين العاجل وغير العاجل غيّر تاريخها من بطاقتها.', noMove:'لا تملك تعديل أولوية هذا البند.', noOwner:'بلا مسؤول' },
+ en:{ tab:'Matrix', list:'List', urg:'Urgent', nurg:'Not urgent', imp:'Important', nimp:'Not important',
+  q1:'Do now', q1s:'Urgent and important: start today.', q2:'Plan it', q2s:'Important, not urgent: book the time and start early.', q3:'Delegate', q3s:'Urgent, not important: hand it over or finish it fast.', q4:'Defer or drop', q4s:'Neither urgent nor important: keep it off today.',
+  key1:'Urgent:', key1v:'overdue or due within two days', key2:'Important:', key2v:'High priority, or High or Critical severity in the trackers', key3:'Drag a card between the rows, or press the star, to change its importance.',
+  empty:'Nothing here', noDue:'No due date', starOn:'Important: press to mark not important', starOff:'Not important: press to mark important', starRo:'Important',
+  toImp:'Moved to important (High priority)', toNimp:'Moved to not important', urgHint:'Urgency follows the due date; to move a task between urgent and not urgent, change its due date on the task.', noMove:'You cannot change this item\'s priority.', noOwner:'No owner' } };
+const mt=(k)=> MXT[L()][k];
+const STAR_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
+function mxUrgent(due){ if(!due) return false; return daysBetween(todayISO(), due) <= MX_DAYS; }
+function mxOxKey(p){ return oxF(p,'priority')? 'priority' : oxF(p,'severity')? 'severity' : null; }
+function mxOxImp(r){ return r.priority==='high' || ['critical','high'].includes(r.severity); }
+function mxTaskItem(x, where){ return {kind:'task', id:x.id, title:titleOf(x), where, due:x.due||'', od:isOverdue(x), urg:mxUrgent(x.due)||isOverdue(x), imp:x.priority==='high', can:canWrite() && !x.locked}; }
+function mxOxItem(r){ const p=oxPage(r.page); const due=oxDueOf(r)||''; return {kind:'ox', id:r.id, title:(r.code?r.code+' · ':'')+(r.title||'…'), where:optL(p.name), due, od:oxOverdue(r), urg:mxUrgent(due)||oxOverdue(r), imp:mxOxImp(r), can:!!mxOxKey(p) && oxCanManage(r.page)}; }
+function mxMineItems(){
+  const me=myMail(), q=fold(S.filters.q||''), out=[];
+  for(const x of S.tasks.values()){ if(x.locked || x.status==='done' || isAch(x.board) || !isMine(x)) continue; out.push(mxTaskItem(x, boardName(x.board))); }
+  for(const r of S.ox.values()){ const p=oxPage(r.page); if(!p || r.page==='inventory' || oxClosed(r)) continue; if(!(r.ownerEmails||[]).includes(me)) continue; out.push(mxOxItem(r)); }
+  return q? out.filter(i=> fold(i.title+' '+i.where).includes(q)) : out;
+}
+function mxBoardItems(list){ return list.filter(x=>x.status!=='done').map(x=> mxTaskItem(x, ownerNames(x).join('، ') || mt('noOwner'))); }
+function mxLabel(i){ if(!i.due) return mt('noDue'); const n=daysBetween(todayISO(), i.due); return n<0? ht('late')(-n) : n===0? ht('today') : n<=7? ht('inD')(n) : fmtDate(i.due); }
+function matrixHTML(items){
+  const by=(u,m)=> items.filter(i=>i.urg===u && i.imp===m).sort((a,b)=> String(a.due||'9999').localeCompare(String(b.due||'9999')) || String(a.title).localeCompare(String(b.title)));
+  const card=(i)=>{ const star = i.can? `<button class="mxs ${i.imp?'on':''}" data-action="mx-imp" data-mk="${i.kind}" data-id="${esc(i.id)}" type="button" aria-pressed="${i.imp}" title="${esc(i.imp?mt('starOn'):mt('starOff'))}" aria-label="${esc(i.imp?mt('starOn'):mt('starOff'))}">${STAR_SVG}</button>` : (i.imp? `<span class="mxs on" title="${esc(mt('starRo'))}">${STAR_SVG}</span>` : '');
+    return `<div class="mxc ${i.od?'od':''}" draggable="${i.can?'true':'false'}" data-mk="${i.kind}" data-id="${esc(i.id)}" data-imp="${i.imp?1:0}" data-urg="${i.urg?1:0}"><button class="mxt" data-action="${i.kind==='ox'?'ox-open':'open'}" data-id="${esc(i.id)}" type="button">${esc(i.title)}</button><div class="mxm"><span class="d">${esc(mxLabel(i))}</span><span class="w">${esc(i.where)}</span></div>${star}</div>`; };
+  const quad=(n,u,m)=>{ const l=by(u,m); return `<section class="mxq q${n}" data-imp="${m?1:0}" data-urg="${u?1:0}"><header><div class="tx"><h3>${esc(mt('q'+n))}</h3><p>${esc(mt('q'+n+'s'))}</p></div><span class="tag">${esc(mt(u?'urg':'nurg'))} · ${esc(mt(m?'imp':'nimp'))}</span><span class="n">${l.length}</span></header><div class="mxl">${l.length? l.map(card).join('') : `<p class="mxe">${esc(mt('empty'))}</p>`}</div></section>`; };
+  return `<p class="mx-key"><span><b>${esc(mt('key1'))}</b> ${esc(mt('key1v'))}</span><span><b>${esc(mt('key2'))}</b> ${esc(mt('key2v'))}</span><span>${esc(mt('key3'))}</span></p>
+  <div class="mx"><span></span><div class="mx-ax top u">${esc(mt('urg'))}</div><div class="mx-ax top">${esc(mt('nurg'))}</div>
+  <div class="mx-ax side i"><span>${esc(mt('imp'))}</span></div>${quad(1,true,true)}${quad(2,false,true)}
+  <div class="mx-ax side"><span>${esc(mt('nimp'))}</span></div>${quad(3,true,false)}${quad(4,false,false)}</div>`;
+}
+async function mxSetImp(kind, id, imp){
+  if(kind==='task'){
+    const tk=S.tasks.get(id); if(!tk || tk.locked || !canWrite()){ toast(mt('noMove'), true); return; }
+    const pr = imp? 'high' : (tk.priority==='high'? 'med' : tk.priority); if(pr===tk.priority) return;
+    await saveTask({...tk, priority:pr}, hist('field',{field:'priority'})); toast(mt(imp?'toImp':'toNimp')); render(); return;
+  }
+  const r=S.ox.get(id); if(!r) return; const p=oxPage(r.page), k=mxOxKey(p);
+  if(!k || !oxCanManage(r.page)){ toast(mt('noMove'), true); return; }
+  const v = k==='priority'? (imp? 'high' : (r.priority==='high'? 'med' : (r.priority||'med'))) : (imp? (r.severity==='critical'? 'critical' : 'high') : (['critical','high'].includes(r.severity)? 'medium' : (r.severity||'medium')));
+  if(v===r[k]) return;
+  const now=new Date().toISOString(); const next={...r, [k]:v, updatedAt:now, updatedBy:S.me.id||null, updatedByEmail:myMail(), history:[...(r.history||[]), {at:now, email:myMail(), name:myName()||'', what:'field', fields:[k]}].slice(-30)}; delete next.id;
+  try{ await S.db.collection('ox').doc(id).set(next); S.ox.set(id, {id, ...next}); toast(mt(imp?'toImp':'toNimp')); }catch(e){ console.warn('mx', e); toast(ot('saveFail'), true); }
+  render();
+}
+document.addEventListener('dragstart', (ev)=>{ const c=ev.target.closest && ev.target.closest('.mxc'); if(!c || c.getAttribute('draggable')!=='true') return; ev.dataTransfer.setData('text/plain', JSON.stringify({k:c.dataset.mk, id:c.dataset.id, imp:c.dataset.imp, urg:c.dataset.urg})); ev.dataTransfer.effectAllowed='move'; c.classList.add('dragging'); });
+document.addEventListener('dragend', ()=>{ document.querySelectorAll('.mxc.dragging').forEach(c=>c.classList.remove('dragging')); document.querySelectorAll('.mxq.over').forEach(c=>c.classList.remove('over')); });
+document.addEventListener('dragover', (ev)=>{ const q=ev.target.closest && ev.target.closest('.mxq'); if(!q) return; ev.preventDefault(); ev.dataTransfer.dropEffect='move'; document.querySelectorAll('.mxq.over').forEach(c=>c!==q&&c.classList.remove('over')); q.classList.add('over'); });
+document.addEventListener('dragleave', (ev)=>{ const q=ev.target.closest && ev.target.closest('.mxq'); if(q && !q.contains(ev.relatedTarget)) q.classList.remove('over'); });
+document.addEventListener('drop', async (ev)=>{ const q=ev.target.closest && ev.target.closest('.mxq'); if(!q) return; ev.preventDefault(); q.classList.remove('over');
+  let d=null; try{ d=JSON.parse(ev.dataTransfer.getData('text/plain')); }catch(e){} if(!d || !d.id) return;
+  if(d.urg!==q.dataset.urg) toast(mt('urgHint'));
+  if(d.imp!==q.dataset.imp) await mxSetImp(d.k, d.id, q.dataset.imp==='1'); });
 
 /* ---------- landing page ---------- */
 function doorHTML(b){
@@ -3650,6 +3774,7 @@ const isOxOwner=(r)=> (r.ownerEmails||[]).includes(myMail()) || (!!oxPage(r.page
 function oxCanEdit(r){ return oxCanManage(r.page) || (oxPage(r.page).ownerKeys.length>0 && isOxOwner(r)); }
 
 /* state and data */
+S.mineView=(()=>{ try{ return localStorage.getItem('marn.mview')==='list'? 'list' : 'matrix'; }catch(e){ return 'matrix'; } })();
 S.oxGrp=(()=>{ try{ const v=localStorage.getItem('marn.oxgrp'); return v==='1'? true : v==='0'? false : null; }catch(e){ return null; } })();
 S.ox=new Map(); S.oxPage='meeting'; S.oxView={}; S.oxF={}; S.oxDrawer=null; S.oxDir=[]; S.oxPublic=false; S.oxLoaded={};
 const OX_SUBS=new Map(); let oxDirSub=null;
@@ -3661,7 +3786,7 @@ function oxResubscribe(){
     OX_SUBS.set(p, db.collection('ox').where('page','==',p).onSnapshot(snap=>{
       for(const [id,r] of [...S.ox]) if(r.page===p) S.ox.delete(id);
       snap.docs.forEach(d=>{ if(d.exists) S.ox.set(d.id, {id:d.id, ...d.data()}); });
-      S.oxLoaded[p]=true; if(S.view==='ox' || S.view==='home') render();
+      S.oxLoaded[p]=true; if(S.view==='ox' || S.view==='home' || S.view==='mine') render();
     }, err=>{ console.warn('ox', p, err); S.oxLoaded[p]=true; OX_SUBS.delete(p); }));
   }
   if(!oxDirSub && want.size){ oxDirSub=db.doc('oxdir/people').onSnapshot(s=>{ const d=s.exists? s.data(): null; S.oxDir=(d && Array.isArray(d.emails))? d.emails : []; }, e=>{ console.warn('oxdir', e); oxDirSub=null; }); }
@@ -3986,7 +4111,7 @@ document.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter' && ev.target.id
 /* ---------- boot ---------- */
 async function boot(){
   try{ const l=localStorage.getItem('marn.lang'); if(l==='en'||l==='ar') S.lang=l; }catch(e){}
-  try{ const v=localStorage.getItem('marn.bview'); if(['table','kanban','timeline'].includes(v)) S.boardView=v; }catch(e){}
+  try{ const v=localStorage.getItem('marn.bview'); if(['table','kanban','timeline','matrix'].includes(v)) S.boardView=v; }catch(e){}
   const hash=(location.hash||'').replace('#','');
   const [h1,h2]=hash.split('/');
   if(['home','ceo','access','mine','overdue','activity'].includes(h1)) S.view=h1; else if(BOARDS.some(b=>b.id===h1)){ S.view='board'; S.board=h1; if(SECTIONS.includes(h2)) S.section=h2; } else if(h1==='ox' && oxPage(h2)){ S.view='ox'; S.oxPage=h2; }
