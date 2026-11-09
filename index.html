@@ -1208,6 +1208,39 @@ a.ovx-head:hover .go{color:var(--accent)}
   .mxq{min-height:0}
   .mxl{max-height:none}
 }
+
+/* ---------- 9 Nov 2026: Excellence Management Issues Log ---------- */
+.oxst.st-improving{background:var(--g2);border-color:var(--g2)}
+.oxst.st-mitigated{border-color:var(--accent);color:var(--accent)}
+.oxdepts{display:flex;flex-wrap:wrap;gap:6px}
+.oxdepts label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--g3);border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;background:var(--surface);user-select:none}
+.oxdepts label:has(input:checked){background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.oxdepts input{width:14px!important;height:14px!important;margin:0;accent-color:var(--accent)}
+.oxdepts label.dis{cursor:default;opacity:.8}
+.ems{display:flex;flex-direction:column;gap:18px}
+.ems-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.ems-tiles .tile{margin:0}
+.ems-tiles .tile .v{font-size:34px}
+.ems-tiles .tile.st-closed .v{color:var(--accent)}
+.ems-flags{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ems-flag{display:flex;align-items:center;gap:14px;border:1px solid var(--g2);border-radius:calc(var(--radius) + 4px);background:var(--surface);padding:14px 18px;box-shadow:var(--shadow-1)}
+.ems-flag .v{font-size:34px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.ems-flag .k{font-weight:600}
+.ems-flag .s{font-size:12px;color:var(--g5)}
+.ems-flag.hot{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.ems-flag.hot .s{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.ems-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ems-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--g3);border-radius:999px;padding:5px 12px;font-size:13px;background:var(--surface)}
+.ems-chip b{font-variant-numeric:tabular-nums}
+.ems-chip.zero{color:var(--g4);border-style:dashed}
+.ems-chip.top{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.ems h2{margin:0 0 8px;font-size:16px}
+.ems .hint{margin:-4px 0 8px;font-size:12px;color:var(--g5)}
+.ems table.ttable td.num,.ems table.ttable th.num{text-align:center}
+.ems table.ttable tr.tot td{font-weight:700;border-top:2px solid var(--g3)}
+.ems table.ttable td b.hi{background:var(--fg);color:var(--bg);border-radius:6px;padding:0 6px}
+.ems .clsrow td.clsh{background:var(--g1);font-weight:700;font-size:12.5px}
+@media (max-width:900px){ .ems-tiles{grid-template-columns:repeat(3,minmax(0,1fr))} .ems-flags{grid-template-columns:minmax(0,1fr)} }
 </style>
 <script>
 (function(){
@@ -2675,19 +2708,19 @@ const MX_DAYS=2;
 const MXT={
  ar:{ tab:'المصفوفة', list:'القائمة', urg:'عاجل', nurg:'غير عاجل', imp:'مهم', nimp:'غير مهم',
   q1:'نفّذ الآن', q1s:'عاجل ومهم: ابدأ بها اليوم.', q2:'خطّط لها', q2s:'مهم وغير عاجل: حدّد لها وقتًا وابدأ مبكرًا.', q3:'فوّضها', q3s:'عاجل وغير مهم: أسندها لغيرك أو أنجزها بسرعة.', q4:'أجّلها أو ألغِها', q4s:'غير عاجل وغير مهم: لا تشغل بها وقتك الآن.',
-  key1:'العاجل:', key1v:'متأخر أو يستحق خلال يومين', key2:'المهم:', key2v:'أولوية عالية، أو خطورة عالية أو حرجة في المتتبعات', key3:'اسحب البطاقة بين الصفين أو اضغط النجمة لتغيير أهميتها.',
+  key1:'العاجل:', key1v:'متأخر أو يستحق خلال يومين', key2:'المهم:', key2v:'أولوية عالية، أو خطورة عالية أو حرجة، أو أثر عالٍ في المتتبعات', key3:'اسحب البطاقة بين الصفين أو اضغط النجمة لتغيير أهميتها.',
   empty:'لا شيء هنا', noDue:'بلا موعد', starOn:'مهمة: اضغط لجعلها غير مهمة', starOff:'غير مهمة: اضغط لجعلها مهمة', starRo:'مهمة',
   toImp:'نُقلت إلى المهم (أولوية عالية)', toNimp:'نُقلت إلى غير المهم', urgHint:'العجلة تتبع تاريخ الاستحقاق؛ لنقل المهمة بين العاجل وغير العاجل غيّر تاريخها من بطاقتها.', noMove:'لا تملك تعديل أولوية هذا البند.', noOwner:'بلا مسؤول' },
  en:{ tab:'Matrix', list:'List', urg:'Urgent', nurg:'Not urgent', imp:'Important', nimp:'Not important',
   q1:'Do now', q1s:'Urgent and important: start today.', q2:'Plan it', q2s:'Important, not urgent: book the time and start early.', q3:'Delegate', q3s:'Urgent, not important: hand it over or finish it fast.', q4:'Defer or drop', q4s:'Neither urgent nor important: keep it off today.',
-  key1:'Urgent:', key1v:'overdue or due within two days', key2:'Important:', key2v:'High priority, or High or Critical severity in the trackers', key3:'Drag a card between the rows, or press the star, to change its importance.',
+  key1:'Urgent:', key1v:'overdue or due within two days', key2:'Important:', key2v:'High priority, or High or Critical severity, or High impact in the trackers', key3:'Drag a card between the rows, or press the star, to change its importance.',
   empty:'Nothing here', noDue:'No due date', starOn:'Important: press to mark not important', starOff:'Not important: press to mark important', starRo:'Important',
   toImp:'Moved to important (High priority)', toNimp:'Moved to not important', urgHint:'Urgency follows the due date; to move a task between urgent and not urgent, change its due date on the task.', noMove:'You cannot change this item\'s priority.', noOwner:'No owner' } };
 const mt=(k)=> MXT[L()][k];
 const STAR_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
 function mxUrgent(due){ if(!due) return false; return daysBetween(todayISO(), due) <= MX_DAYS; }
-function mxOxKey(p){ return oxF(p,'priority')? 'priority' : oxF(p,'severity')? 'severity' : null; }
-function mxOxImp(r){ return r.priority==='high' || ['critical','high'].includes(r.severity); }
+function mxOxKey(p){ return oxF(p,'priority')? 'priority' : oxF(p,'severity')? 'severity' : oxF(p,'impact')? 'impact' : null; }
+function mxOxImp(r){ return r.priority==='high' || ['critical','high'].includes(r.severity) || r.impact==='high'; }
 function mxTaskItem(x, where){ return {kind:'task', id:x.id, title:titleOf(x), where, due:x.due||'', od:isOverdue(x), urg:mxUrgent(x.due)||isOverdue(x), imp:x.priority==='high', can:canWrite() && !x.locked}; }
 function mxOxItem(r){ const p=oxPage(r.page); const due=oxDueOf(r)||''; return {kind:'ox', id:r.id, title:(r.code?r.code+' · ':'')+(r.title||'…'), where:optL(p.name), due, od:oxOverdue(r), urg:mxUrgent(due)||oxOverdue(r), imp:mxOxImp(r), can:!!mxOxKey(p) && oxCanManage(r.page)}; }
 function mxMineItems(){
@@ -2716,7 +2749,7 @@ async function mxSetImp(kind, id, imp){
   }
   const r=S.ox.get(id); if(!r) return; const p=oxPage(r.page), k=mxOxKey(p);
   if(!k || !oxCanManage(r.page)){ toast(mt('noMove'), true); return; }
-  const v = k==='priority'? (imp? 'high' : (r.priority==='high'? 'med' : (r.priority||'med'))) : (imp? (r.severity==='critical'? 'critical' : 'high') : (['critical','high'].includes(r.severity)? 'medium' : (r.severity||'medium')));
+  const v = k==='impact'? (imp? 'high' : (r.impact==='high'? 'medium' : (r.impact||'medium'))) : k==='priority'? (imp? 'high' : (r.priority==='high'? 'med' : (r.priority||'med'))) : (imp? (r.severity==='critical'? 'critical' : 'high') : (['critical','high'].includes(r.severity)? 'medium' : (r.severity||'medium')));
   if(v===r[k]) return;
   const now=new Date().toISOString(); const next={...r, [k]:v, updatedAt:now, updatedBy:S.me.id||null, updatedByEmail:myMail(), history:[...(r.history||[]), {at:now, email:myMail(), name:myName()||'', what:'field', fields:[k]}].slice(-30)}; delete next.id;
   try{ await S.db.collection('ox').doc(id).set(next); S.ox.set(id, {id, ...next}); toast(mt(imp?'toImp':'toNimp')); }catch(e){ console.warn('mx', e); toast(ot('saveFail'), true); }
@@ -3678,6 +3711,21 @@ const O=(en,ar)=>({en,ar});
 const OX_DEPTS=[['marketing',O('Marketing','التسويق')],['sales',O('Sales','المبيعات')],['commercial',O('Commercial and Partnerships','التجاري والشراكات')],['customer-experience',O('Customer Experience','تجربة العملاء')],['technology',O('Technology','التقنية')],['finance',O('Finance','المالية')],['human-capital',O('Human Capital','رأس المال البشري')],['grc-legal',O('GRC and Legal','الحوكمة والالتزام والقانونية')],[OPX,O('Operational Excellence','التميز التشغيلي')],['ceo-office',O('CEO Office','مكتب الرئيس التنفيذي')]];
 const ST4={todo:O('Not started','لم تبدأ'),doing:O('In progress','قيد التنفيذ'),stuck:O('On hold','متوقفة'),done:O('Done','منجزة')};
 const PRI={high:O('High','عالية'),med:O('Medium','متوسطة'),low:O('Low','منخفضة')};
+const EM_CLS={sla:O('SLA','اتفاقية مستوى الخدمة (SLA)'),process:O('Process & Procedures','العمليات والإجراءات'),missing:O('Missing data','بيانات ناقصة'),cleaning:O('Data Cleaning','تنظيف البيانات'),standards:O('Standards','المعايير'),proddev:O('Product development','تطوير المنتج'),prodinfo:O('Product Information','معلومات المنتج'),comms:O('Internal communication','التواصل الداخلي')};
+const EM_IMP={high:O('High','عالٍ'),medium:O('Medium','متوسط'),low:O('Low','منخفض')};
+const EM_FREQ={always:O('Always','دائمًا'),often:O('Often','غالبًا'),sometimes:O('Sometimes','أحيانًا'),rare:O('Rare','نادرًا')};
+const EM_ST={open:O('Open','مفتوحة'),improving:O('Improving','قيد التحسين'),mitigated:O('Mitigated','مخففة'),closed:O('Closed','مغلقة')};
+const EM_STK=['open','improving','mitigated','closed'];
+const EMT={
+ ar:{ vSum:'الملخص', total:'الإجمالي', hiOpen:'مشكلات عالية الأثر غير مغلقة', hiOpenS:'الأثر عالٍ والحالة ليست مغلقة', od:'مشكلات متأخرة', odS:'تجاوزت تاريخ الاستحقاق ولم تُغلق',
+  openByCls:'المشكلات المفتوحة حسب التصنيف', openByClsS:'عدد المشكلات بحالة "مفتوحة" في كل تصنيف.',
+  byCls:'حسب التصنيف', byDept:'حسب الإدارة', byDeptS:'تُحسب كل مشكلة على الإدارة الرافعة لها.', cls:'التصنيف', dept:'الإدارة', hiNC:'عالية الأثر غير مغلقة', sum:'الإجمالي',
+  sorted:'المشكلات مرتبة حسب التصنيف ثم الحالة', none:'-', noDept:'بلا إدارة' },
+ en:{ vSum:'Summary', total:'Total', hiOpen:'High impact issues not closed', hiOpenS:'Impact High and status not Closed', od:'Overdue issues', odS:'Past the due date and not closed',
+  openByCls:'Open issues per classification', openByClsS:'Issues with status Open in each classification.',
+  byCls:'By classification', byDept:'By department', byDeptS:'Each issue counts once, under the department raising it.', cls:'Classification', dept:'Department', hiNC:'High impact not closed', sum:'Total',
+  sorted:'Issues sorted by classification, then status', none:'-', noDept:'No department' } };
+const emt=(k)=> EMT[L()][k];
 const SEV={critical:O('Critical','حرجة'),high:O('High','عالية'),medium:O('Medium','متوسطة'),low:O('Low','منخفضة')};
 const F=(k,type,en,ar,x)=>({k,type,label:O(en,ar),...(x||{})});
 // page definitions: fields, which field is the due date, which status values close a row, and what an owner may update
@@ -3752,7 +3800,15 @@ const OX_PAGES=[
    F('owners','people','Owner','المسؤول'),F('pendingWith','text','Pending with','بانتظار'),F('due','date','Due date','الموعد'),
    F('status','sel','Status','الحالة',{opts:{open:O('Open','مفتوحة'),progress:O('In progress','قيد المعالجة'),waiting:O('Waiting for another party','بانتظار طرف آخر'),resolved:O('Resolved','محلولة'),closed:O('Closed','مغلقة')},def:'open'}),
    F('resolved','date','Resolved on','تاريخ الحل'),F('adjust','check','Deduct the affected quantity from the item when closing','خصم الكمية المتأثرة من الصنف عند الإغلاق',{wide:1,mgr:1}),F('notes','area','Notes','ملاحظات',{wide:1})],
-  cols:['code','title','itemId','itype','qtyAff','severity','owners','due','status']}
+  cols:['code','title','itemId','itype','qtyAff','severity','owners','due','status']},
+ {id:'emissue', icon:'overdue', prefix:'EMI', access:'opx', name:O('Excellence Management Issues Log','سجل مشكلات إدارة التميز'), desc:O('Excellence issues from raising to closure, by classification and department','مشكلات إدارة التميز من رفعها إلى إغلاقها، حسب التصنيف والإدارة'),
+  due:'due', closed:['closed'], closedKey:'closedOn', ownerKeys:[], views:['table','summary'], filters:['cls','status','impact','dept'],
+  fields:[F('raised','date','Date raised','تاريخ الرفع'),F('dept','dept','Department raising it','الإدارة الرافعة'),F('title','text','Issue','المشكلة',{req:1,wide:1}),
+   F('depts','depts','Departments involved','الإدارات المعنية',{wide:1}),F('cls','sel','Classification','التصنيف',{opts:EM_CLS,def:'sla'}),
+   F('rootCause','area','Root cause','السبب الجذري',{wide:1}),F('impact','sel','Impact','الأثر',{opts:EM_IMP,def:'medium'}),F('freq','sel','Frequency','التكرار',{opts:EM_FREQ,def:'sometimes'}),
+   F('solution','area','Solution','الحل',{wide:1}),F('owners','people','Owner','المسؤول'),F('due','date','Due date','تاريخ الاستحقاق'),
+   F('status','sel','Status','الحالة',{opts:EM_ST,def:'open'}),F('closedOn','date','Date closed','تاريخ الإغلاق'),F('notes','area','Notes','ملاحظات',{wide:1})],
+  cols:['code','raised','dept','title','depts','cls','impact','freq','owners','due','status','closedOn']}
 ];
 const oxPage=(id)=> OX_PAGES.find(p=>p.id===id);
 const oxF=(p,k)=> p.fields.find(f=>f.k===k);
@@ -3763,7 +3819,7 @@ const oxHR=()=> memberOf('human-capital');
 function oxCanRead(id){ const p=oxPage(id); if(!p) return false;
   if(p.access==='public') return oxMember() || isCEO() || !!S.oxPublic;
   if(p.access==='pissue') return oxMember() || isCEO() || oxHR();
-  if(p.access==='hubspot') return oxMember() || isCEO();
+  if(p.access==='hubspot' || p.access==='opx') return oxMember() || isCEO();
   if(p.access==='internal') return oxMember() || oxHR();
   return false; }
 function oxCanManage(id){ const p=oxPage(id); if(!p || !oxCanRead(id)) return false; return p.access==='public' ? (oxMember()||isCEO()) : true; }
@@ -3816,7 +3872,8 @@ function oxCell(p, r, k){
   switch(f.type){
     case 'people': return esc(ownersText(r)) || `<span class="muted">${esc(ot('noOwner'))}</span>`;
     case 'dept': return esc(deptName(v));
-    case 'sel': { if(!v) return ''; const lab=optL(f.opts[v]); if(k==='status'||k==='istatus') return `<span class="oxst st-${esc(v)}">${esc(lab)}</span>`; if(k==='health') return `<span class="oxh h-${esc(v)}">${esc(lab)}</span>`; if(k==='priority'||k==='severity') return `<span class="oxpri p-${esc(v)}">${esc(lab)}</span>`; return esc(lab); }
+    case 'depts': return esc((v||[]).map(deptName).join('، '));
+    case 'sel': { if(!v) return ''; const lab=optL(f.opts[v]); if(k==='status'||k==='istatus') return `<span class="oxst st-${esc(v)}">${esc(lab)}</span>`; if(k==='health') return `<span class="oxh h-${esc(v)}">${esc(lab)}</span>`; if(k==='priority'||k==='severity'||k==='impact') return `<span class="oxpri p-${esc(v)}">${esc(lab)}</span>`; return esc(lab); }
     case 'date': { if(!v) return ''; const od = k===p.due && oxOverdue(r); return `<span class="due ${od?'overdue':''}">${esc(fmtDate(v))}</span>`; }
     case 'pct': { const n=Math.max(0,Math.min(100,+v||0)); return `<span class="pbar" title="${n}%"><i style="width:${n}%"></i></span><span class="num small">${n}%</span>`; }
     case 'num': case 'money': return (v===''||v===undefined||v===null)? '' : `<span class="num">${Number(v).toLocaleString('en-US')}</span>${k==='qty'&&oxLow(r)?` <span class="oxpri p-high">${esc(ot('lowStock'))}</span>`:''}`;
@@ -3831,7 +3888,7 @@ function oxColLabel(p,k){ if(k==='code') return '#'; if(k==='openIssues') return
 
 /* filtering */
 function oxFilters(pid){ return S.oxF[pid] || (S.oxF[pid]={q:'',od:false,hide:false,sel:{}}); }
-function oxText(p, r){ return fold(p.fields.map(f=>{ const v=r[f.k]; if(f.type==='people') return ownersText(r)+' '+(r.ownerEmails||[]).join(' '); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); if(f.type==='item') return itemName(v); if(f.type==='milestones') return (v||[]).map(m=>m.name+' '+m.owner).join(' '); return v==null?'':String(v); }).join(' ')+' '+(r.code||'')); }
+function oxText(p, r){ return fold(p.fields.map(f=>{ const v=r[f.k]; if(f.type==='people') return ownersText(r)+' '+(r.ownerEmails||[]).join(' '); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='depts') return (v||[]).map(deptName).join(' '); if(f.type==='proj') return projName(v); if(f.type==='item') return itemName(v); if(f.type==='milestones') return (v||[]).map(m=>m.name+' '+m.owner).join(' '); return v==null?'':String(v); }).join(' ')+' '+(r.code||'')); }
 function oxApply(p, list){
   const f=oxFilters(p.id), q=fold(f.q.trim());
   return list.filter(r=>{
@@ -3878,13 +3935,13 @@ function oxMainHTML(){
   const od=all.filter(oxOverdue).length, soon=all.filter(oxSoon).length, low=all.filter(oxLow).length, msod=p.id==='project'? all.reduce((n,r)=>n+(r.milestones||[]).filter(msOverdue).length,0) : 0;
   const ob=BOARDS.find(x=>x.id===OPX);
   let h=`<p class="crumbs"><button class="linkbtn" data-action="nav" data-nav="${canSee(OPX)?'board:'+OPX:'home'}" type="button">${esc(ob[L()])}</button><span aria-hidden="true">/</span><span>${esc(ht('trackers'))}</span></p><div class="vhead"><h1>${esc(optL(p.name))}</h1><span class="sub">${esc(optL(p.desc))}</span><div class="actions">`;
-  if(p.views.length>1) h+=`<div class="tabs" role="tablist">${p.views.map(v=>`<button type="button" class="${view===v?'on':''}" data-action="ox-view" data-v="${v}">${esc(ot({table:'vTable',dept:'vDept',owner:'vOwner',dash:'vDash',board:'vBoard'}[v]))}</button>`).join('')}</div>`;
+  if(p.views.length>1) h+=`<div class="tabs" role="tablist">${p.views.map(v=>`<button type="button" class="${view===v?'on':''}" data-action="ox-view" data-v="${v}">${esc((v==='summary'? emt('vSum') : ot({table:'vTable',dept:'vDept',owner:'vOwner',dash:'vDash',board:'vBoard'}[v])))}</button>`).join('')}</div>`;
   if(S.downloads) h+=`<button class="btn" data-action="ox-export" type="button">${esc(ot('exportX'))}</button>`;
   if(oxCanCreate(p.id)) h+=`<button class="btn primary" data-action="ox-new" type="button">+ ${esc(p.publicCreate? ot('logIssue') : ot('newRow'))}</button>`;
   h+=`</div></div>`;
   if(od || soon || low || msod) h+=`<div class="oxalerts">${od?`<button class="oxal bad" data-action="ox-od" type="button">${esc(ot('overdueN')(od))}</button>`:''}${msod?`<span class="oxal bad">${esc(ot('milestones'))}: ${esc(ot('overdueN')(msod))}</span>`:''}${soon?`<span class="oxal">${esc(ot('soonN')(soon))}</span>`:''}${low?`<button class="oxal bad" data-action="ox-od" type="button">${esc(ot('lowN')(low))}</button>`:''}</div>`;
   // toolbar: search plus one filter per choice field
-  const selF=p.fields.filter(x=>['sel','dept'].includes(x.type) && x.k!=='kind').slice(0,4);
+  const selF=p.filters? p.filters.map(k=>oxF(p,k)) : p.fields.filter(x=>['sel','dept'].includes(x.type) && x.k!=='kind').slice(0,4);
   const ownersAll=[...new Set(all.flatMap(r=>r.ownerEmails||[]))];
   h+=`<div class="toolbar"><input id="oxq" class="oxq" type="search" placeholder="${esc(ot('searchPh'))}" value="${esc(f.q)}">`;
   for(const x of selF){ const opts = x.type==='dept'? OX_DEPTS.map(d=>[d[0], optL(d[1])]) : Object.entries(x.opts).map(([k,o])=>[k,optL(o)]);
@@ -3900,6 +3957,7 @@ function oxBodyHTML(){
   const all=oxRows(p.id), list=oxSort(p, oxApply(p, all));
   const c=$('#oxcount'); if(c) c.textContent=ot('rows')(list.length);
   if(view==='dash') return oxDashHTML(p, oxApply(p, all));
+  if(view==='summary') return emSummaryHTML(p, oxApply(p, all));
   if(view==='board') return oxProjectBoard(p, list);
   if(!list.length) return `<div class="empty"><b>${esc(all.length? ot('emptyF') : ot('empty'))}</b></div>`;
   if(view==='dept' || view==='owner'){
@@ -3931,6 +3989,34 @@ function oxDashHTML(p, list){
   h+=perf(r=>(r.ownerEmails||[]).length? r.ownerEmails : [''], k=>k? personName(k) : ot('noOwner'), ot('workload'));
   return h;
 }
+
+/* Excellence Management Issues Log: summary (9 Nov 2026) */
+function emSummaryHTML(p, list){
+  const st=(k)=> list.filter(r=>r.status===k).length;
+  const notClosed=(r)=> r.status!=='closed';
+  const hiNC=list.filter(r=>r.impact==='high' && notClosed(r)).length, od=list.filter(oxOverdue).length;
+  let h=`<div class="ems"><div class="ems-tiles"><div class="tile"><div class="k">${esc(emt('total'))}</div><div class="v num">${list.length}</div></div>${EM_STK.map(k=>`<div class="tile st-${k}"><div class="k">${esc(optL(EM_ST[k]))}</div><div class="v num">${st(k)}</div></div>`).join('')}</div>`;
+  h+=`<div class="ems-flags"><div class="ems-flag ${hiNC?'hot':''}"><span class="v">${hiNC}</span><span><span class="k">${esc(emt('hiOpen'))}</span><br><span class="s">${esc(emt('hiOpenS'))}</span></span></div><div class="ems-flag ${od?'hot':''}"><span class="v">${od}</span><span><span class="k">${esc(emt('od'))}</span><br><span class="s">${esc(emt('odS'))}</span></span></div></div>`;
+  // open issues per classification
+  const clsKeys=Object.keys(EM_CLS), openBy=clsKeys.map(k=>[k, list.filter(r=>r.cls===k && r.status==='open').length]).sort((a,b)=>b[1]-a[1]);
+  const mx=Math.max(0,...openBy.map(x=>x[1]));
+  h+=`<section><h2>${esc(emt('openByCls'))}</h2><p class="hint">${esc(emt('openByClsS'))}</p><div class="ems-chips">${openBy.map(([k,n])=>`<span class="ems-chip ${n? (n===mx?'top':'') : 'zero'}">${esc(optL(EM_CLS[k]))}: <b>${n}</b></span>`).join('')}</div></section>`;
+  // table by classification
+  const row=(label, rs, withHi)=> `<td>${esc(label)}</td><td class="num">${rs.length}</td>${EM_STK.map(k=>`<td class="num">${rs.filter(r=>r.status===k).length}</td>`).join('')}${withHi? (()=>{ const n=rs.filter(r=>r.impact==='high' && notClosed(r)).length; return `<td class="num">${n?`<b class="hi">${n}</b>`:'0'}</td>`; })() : ''}`;
+  const head=(first, withHi)=> `<thead><tr><th>${esc(first)}</th><th class="num">${esc(emt('total'))}</th>${EM_STK.map(k=>`<th class="num">${esc(optL(EM_ST[k]))}</th>`).join('')}${withHi?`<th class="num">${esc(emt('hiNC'))}</th>`:''}</tr></thead>`;
+  h+=`<section><h2>${esc(emt('byCls'))}</h2><div class="tscroll"><table class="ttable">${head(emt('cls'), true)}<tbody>${clsKeys.map(k=>`<tr>${row(optL(EM_CLS[k]), list.filter(r=>r.cls===k), true)}</tr>`).join('')}<tr class="tot">${row(emt('sum'), list, true)}</tr></tbody></table></div></section>`;
+  // table by department (department raising the issue)
+  const dk=OX_DEPTS.map(d=>d[0]).filter(k=> list.some(r=>r.dept===k)); const noD=list.filter(r=>!r.dept);
+  h+=`<section><h2>${esc(emt('byDept'))}</h2><p class="hint">${esc(emt('byDeptS'))}</p><div class="tscroll"><table class="ttable">${head(emt('dept'), false)}<tbody>${dk.map(k=>`<tr>${row(deptName(k), list.filter(r=>r.dept===k), false)}</tr>`).join('')}${noD.length?`<tr>${row(emt('noDept'), noD, false)}</tr>`:''}<tr class="tot">${row(emt('sum'), list, false)}</tr></tbody></table></div></section>`;
+  // issues sorted by classification, then status
+  const ord=(r)=> [clsKeys.indexOf(r.cls)<0? 99 : clsKeys.indexOf(r.cls), EM_STK.indexOf(r.status)<0? 9 : EM_STK.indexOf(r.status)];
+  const srt=[...list].sort((a,b)=>{ const x=ord(a), y=ord(b); return (x[0]-y[0]) || (x[1]-y[1]) || String(a.code||'').localeCompare(String(b.code||'')); });
+  if(srt.length){ let t=`<div class="tscroll"><table class="ttable oxt"><thead><tr>${['code','title','status','impact','freq','dept','owners','due'].map(k=>`<th>${esc(oxColLabel(p,k))}</th>`).join('')}</tr></thead><tbody>`; let cur=null;
+    for(const r of srt){ if(r.cls!==cur){ cur=r.cls; t+=`<tr class="clsrow"><td class="clsh" colspan="8">${esc(optL(EM_CLS[cur])||emt('none'))}</td></tr>`; }
+      t+=`<tr class="task ${oxClosed(r)?'done':''} ${oxOverdue(r)?'late':''}" data-action="ox-open" data-id="${esc(r.id)}">${['code','title','status','impact','freq','dept','owners','due'].map(k=>`<td class="${k==='title'?'title':''}">${k==='title'?`<div class="t">${esc(r.title||'…')}</div>`:oxCell(p,r,k)}</td>`).join('')}</tr>`; }
+    h+=`<section><h2>${esc(emt('sorted'))}</h2>${t}</tbody></table></div></section>`; }
+  return h+`</div>`;
+}
 function oxProjectBoard(p, list){
   const act=list.filter(r=>!oxClosed(r)), risk=act.filter(r=>r.health==='risk').length, off=act.filter(r=>r.health==='off').length;
   let h=`<div class="tiles"><div class="tile"><div class="k">${esc(ot('projects'))}</div><div class="v num">${list.length}</div></div><div class="tile"><div class="k">${esc(ot('active'))}</div><div class="v num">${act.length}</div></div><div class="tile"><div class="k">${esc(ot('atRisk'))}</div><div class="v num">${risk}</div></div><div class="tile ${off?'overdue':''}"><div class="k">${esc(ot('offTrack'))}</div><div class="v num">${off}</div></div></div>`;
@@ -3946,7 +4032,7 @@ function oxProjectBoard(p, list){
 }
 
 /* drawer */
-function oxBlank(pid){ const p=oxPage(pid), r={page:pid}; for(const f of p.fields){ if(f.def!==undefined) r[f.k]=f.def; else if(f.type==='people') { r.owners=[]; r.ownerEmails=[]; } else if(f.type==='milestones'||f.type==='moves') r[f.k]=[]; else if(f.type==='pct') r[f.k]=0; else r[f.k]=''; } if(pid==='hsdev') r.requested=todayISO(); if(pid==='hsissue') r.found=todayISO(); return r; }
+function oxBlank(pid){ const p=oxPage(pid), r={page:pid}; for(const f of p.fields){ if(f.def!==undefined) r[f.k]=f.def; else if(f.type==='people') { r.owners=[]; r.ownerEmails=[]; } else if(f.type==='milestones'||f.type==='moves'||f.type==='depts') r[f.k]=[]; else if(f.type==='pct') r[f.k]=0; else r[f.k]=''; } if(pid==='hsdev') r.requested=todayISO(); if(pid==='hsissue') r.found=todayISO(); if(pid==='emissue') r.raised=todayISO(); return r; }
 function oxOpen(id){ const r=S.ox.get(id); if(!r) return; S.oxDrawer={mode:'edit', id, draft:clone(r), confirm:false, err:''}; oxRenderDrawer(); }
 function oxNew(){ if(!oxCanCreate(S.oxPage)) return; S.oxDrawer={mode:'new', id:null, draft:oxBlank(S.oxPage), confirm:false, err:''}; oxRenderDrawer(); setTimeout(()=>$('#ox-title')?.focus(),30); }
 function oxFieldHTML(p, f, x, canAll, ownKeys){
@@ -3962,6 +4048,7 @@ function oxFieldHTML(p, f, x, canAll, ownKeys){
     case 'item': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value="">${esc(ot('noItem'))}</option>${oxRows('inventory').map(r=>`<option value="${esc(r.id)}" ${v===r.id?'selected':''}>${esc(itemName(r.id))}</option>`).join('')}</select>`);
     case 'check': return `<div class="field full"><label class="oxchk"><input id="${id}" type="checkbox" data-oxf="${f.k}" data-check="1" ${v?'checked':''} ${dis}><span>${esc(lab)}</span></label></div>`;
     case 'sel': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}>${Object.entries(f.opts).filter(([k])=> canAll || f.k!=='status' || !p.ownerStatus || p.ownerStatus.includes(k) || k===v).map(([k,o])=>`<option value="${esc(k)}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
+    case 'depts': { const cur=Array.isArray(v)? v : []; return `<div class="field full"><label>${esc(lab)}</label><div class="oxdepts" id="${id}">${OX_DEPTS.map(([k,o])=>`<label class="${ro?'dis':''}"><input type="checkbox" data-oxm="${f.k}" value="${k}" ${cur.includes(k)?'checked':''} ${dis}>${esc(optL(o))}</label>`).join('')}</div></div>`; }
     case 'dept': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value=""></option>${OX_DEPTS.map(([k,o])=>`<option value="${k}" ${v===k?'selected':''}>${esc(optL(o))}</option>`).join('')}</select>`);
     case 'proj': return wrap(`<select id="${id}" data-oxf="${f.k}" ${dis}><option value="">${esc(ot('noProj'))}</option>${oxRows('project').map(r=>`<option value="${esc(r.id)}" ${v===r.id?'selected':''}>${esc(projName(r.id))}</option>`).join('')}</select>`);
     case 'people': { const chips=(x.owners||[]).map((o,i)=>`<span class="ochip">${esc(o.name||personName(o.email))}${ro?'':`<button type="button" data-action="ox-rmowner" data-i="${i}" aria-label="×">×</button>`}</span>`).join('');
@@ -4010,6 +4097,7 @@ async function oxSave(){
   const rec=clone(x); delete rec.id;
   if(doAdjust){ rec.adjusted=true; rec.adjustedAt=now; }
   if(p.id==='wissue' && closing && !rec.resolved) rec.resolved=now.slice(0,10);
+  if(p.closedKey){ if(closing){ if(!rec[p.closedKey]) rec[p.closedKey]=now.slice(0,10); } else rec[p.closedKey]=''; }
   rec.ownerEmails=[...new Set((rec.owners||[]).map(o=>lc(o.email)).filter(Boolean))];
   if(closing && !(prev && p.closed.includes(prev.status))) rec.doneAt=now; else if(!closing) delete rec.doneAt;
   if(p.id==='project' && prev) rec.openIssues=prev.openIssues||0;
@@ -4044,7 +4132,7 @@ async function oxExport(){
   const list=oxSort(p, oxApply(p, oxRows(p.id)));
   const cols=['code', ...p.fields.filter(f=>!['milestones','moves'].includes(f.type)).map(f=>f.k)].concat(p.id==='project'?['openIssues']:[]);
   const head=cols.map(k=> k==='code'?'#': k==='openIssues'? ot('projIssues') : optL(oxF(p,k).label)).concat([ot('overdue'), ot('lastUpd')]);
-  const val=(r,k)=>{ if(k==='code'||k==='openIssues') return r[k]??''; const f=oxF(p,k), v=r[k]; if(f.type==='people') return ownersText(r); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='proj') return projName(v); if(f.type==='item') return itemName(v); if(f.type==='check') return v? ot('yes') : ''; return v??''; };
+  const val=(r,k)=>{ if(k==='code'||k==='openIssues') return r[k]??''; const f=oxF(p,k), v=r[k]; if(f.type==='people') return ownersText(r); if(f.type==='sel') return optL((f.opts||{})[v]); if(f.type==='dept') return deptName(v); if(f.type==='depts') return (v||[]).map(deptName).join('، '); if(f.type==='proj') return projName(v); if(f.type==='item') return itemName(v); if(f.type==='check') return v? ot('yes') : ''; return v??''; };
   const rows=list.map(r=> cols.map(k=>val(r,k)).concat([oxOverdue(r)? -daysBetween(todayISO(), oxDueOf(r)) : '', (r.updatedAt||'').slice(0,16).replace('T',' ')]));
   const name=`Marn_${p.prefix}_${optL(p.name).replace(/[^\w]+/g,'_')}_${todayISO()}`;
   try{
@@ -4093,6 +4181,7 @@ document.addEventListener('change', (ev)=>{
   if(el.id==='ox-owners'){ oxAddOwner(el.value); return; }
   const D=S.oxDrawer; if(!D || !el.closest('#oxdrawerhost')) return;
   if(el.dataset.ms!==undefined){ const m=D.draft.milestones[+el.dataset.ms]; if(m) m[el.dataset.mk]=el.value; return; }
+  if(el.dataset.oxm){ const k=el.dataset.oxm; D.draft[k]=[...document.querySelectorAll(`#oxdrawerhost input[data-oxm="${k}"]:checked`)].map(i=>i.value); return; }
   if(el.dataset.oxf){ const k=el.dataset.oxf; D.draft[k]= el.dataset.check? el.checked : el.dataset.num? (el.value===''? '' : Number(el.value)) : el.value;
     if(k==='itype') oxRenderDrawer();
     if(k==='status' && D.draft.page!=='project'){ const p=oxPage(D.draft.page); if(p.closed.includes(el.value) && oxF(p,'progress')) D.draft.progress=100; }
